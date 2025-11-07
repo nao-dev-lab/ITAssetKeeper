@@ -13,6 +13,11 @@ namespace ITAssetKeeper.Data
         public DbSet<Device> Devices { get; set; }
         public DbSet<DeviceHistory> DeviceHistory { get; set; }
 
+        // コンストラクタ
+        public ITAssetKeeperDbContext(DbContextOptions<ITAssetKeeperDbContext> options)
+            : base(options)
+        {
+        }
 
         ///////////////////////////////////////////
         // DB構成を設定

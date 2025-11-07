@@ -38,4 +38,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+// Seed Admin�̍쐬
+DbInitializer.SeedAsync();
+
 app.Run();
