@@ -3,9 +3,9 @@
 // Identity用定数クラス
 public class ApplicationIdentityConstants
 {
-    public static readonly int PasswordValidDays = 42;
-    public static readonly string DefaultName = "admin";
-    public static readonly string DefaultEmail = "admin@example.com";
-    public static readonly string DefaultPassword = "Admin@123";
+    public static readonly int PASSWORD_VALID_DAYS = 42;
+    public static readonly string DEFAULT_NAME = "admin";
+    public static readonly string DEFAULT_EMAIL = "admin@example.com";
+    public static readonly string DEFAULT_PASSWORD = "Admin@123";
     public enum Roles { Admin, Editor, Viewer } 
 }
