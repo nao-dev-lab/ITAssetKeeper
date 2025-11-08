@@ -14,6 +14,17 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ITAssetKeeperDbContext>()
     .AddDefaultTokenProviders();
 
+// ユーザーID: ロックアウトの設定
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    // ロックアウト時間:15分
+    // 失敗回数:5回まで
+    // 新規ユーザーにもこれらの設定を適用
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.AllowedForNewUsers = true;
+});
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
