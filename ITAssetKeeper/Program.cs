@@ -39,6 +39,14 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 // Seed Adminの作成
-DbInitializer.SeedAsync();
+// サービススコープ内で実行する
+using (var scope = app.Services.CreateScope())
+{
+    // Seed処理に必要なサービスを取得し、Seedメソッドを呼び出す
+    var services = scope.ServiceProvider;
+    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    await DbInitializer.SeedAsync(userManager, roleManager);
+}
 
 app.Run();
