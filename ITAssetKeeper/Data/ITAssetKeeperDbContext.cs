@@ -38,5 +38,21 @@ namespace ITAssetKeeper.Data
 
             base.OnModelCreating(modelBuilder);
         }
+
+        ///////////////////////////////////////////
+        // DBへの新規登録時に Device の CreatedAt に自動で現在日時を設定する
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            // Deviceテーブルの新規登録となる対象のデータを取得
+            var entries = ChangeTracker.Entries().Where(e => e.State == EntityState.Added && e.Entity is Device);
+
+            // CreatedAt に 現在日時を入れていく
+            foreach (var entry in entries)
+            {
+                ((Device)entry.Entity).CreatedAt = DateTime.Now;
+            }
+
+            return base.SaveChangesAsync(cancellationToken);
+        }
     }
 }
