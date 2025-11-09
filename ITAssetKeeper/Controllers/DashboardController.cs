@@ -1,4 +1,5 @@
 ﻿using ITAssetKeeper.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITAssetKeeper.Controllers;
@@ -14,6 +15,7 @@ public class DashboardController : Controller
     }
 
     // GET: Dashboard/Admin
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public IActionResult Admin()
     {
