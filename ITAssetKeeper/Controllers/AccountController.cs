@@ -1,30 +1,34 @@
 ﻿using ITAssetKeeper.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITAssetKeeper.Controllers;
 
 // Login用コントローラー
-public class LoginController : Controller
+public class AccountController : Controller
 {
     // フィールド
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
 
     // コンストラクタ
-    public LoginController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+    public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
     {
         _userManager = userManager;
         _signInManager = signInManager;
     }
 
+    // GET: Account/Login
+    [AllowAnonymous]
     [HttpGet]
     public IActionResult Login()
     {
         return View();
     }
 
-    // POST: Login
+    // POST: Account/Login
+    [AllowAnonymous]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login([Bind("UserName, Password, RememberMe")] LoginViewModel model)
@@ -55,5 +59,17 @@ public class LoginController : Controller
             ModelState.AddModelError(string.Empty, "ログインに失敗しました");
             return View(model);
         }
+    }
+
+    // POST: Account/Logout
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Logout()
+    {
+        // サインアウト処理
+        await _signInManager.SignOutAsync();
+
+        // ログイン画面にリダイレクト
+        return RedirectToAction("Login", "Account");
     }
 }
