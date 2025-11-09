@@ -4,6 +4,7 @@ using ITAssetKeeper.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ITAssetKeeper.Migrations
 {
     [DbContext(typeof(ITAssetKeeperDbContext))]
-    partial class ITAssetKeeperDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251109062446_251109_AddCreatedFieldsToDevices")]
+    partial class _251109_AddCreatedFieldsToDevices
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

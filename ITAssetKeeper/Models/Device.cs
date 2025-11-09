@@ -57,4 +57,8 @@ public class Device
     [Required]
     [Display(Name = "購入日")]
     public DateTime PurchaseDate { get; set; }
+
+    [Required]
+    [Display(Name = "登録日")]
+    public DateTime CreatedAt { get; set; }
 }
