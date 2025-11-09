@@ -48,10 +48,10 @@ public class AccountController : Controller
             lockoutOnFailure: true
         );
 
-        // ログインに成功したらIndexに飛ばす
+        // ログインに成功したらDashboardに飛ばす
         if (result.Succeeded)
         {
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Admin", "Dashboard");
         }
         // ログインに失敗したら戻す
         else
