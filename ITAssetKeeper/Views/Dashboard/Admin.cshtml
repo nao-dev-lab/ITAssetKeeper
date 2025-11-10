@@ -57,7 +57,8 @@
             <div class="card h-100">
                 <div class="card-body">
                     <h5 class="card-title">過去7日間の更新履歴件数</h5>
-                    <!-- 中身は後で -->
+                    <!-- 描画した棒グラフを表示 -->
+                    <canvas id="historyCountChart" width="400", height="400"></canvas>
                 </div>
             </div>
         </div>
@@ -72,9 +73,53 @@
         </div>
     </div>
 </div>
-<!-- ドーナツ型グラフの描画 -->
+<!-- グラフの描画 -->
 @section Scripts {
     <script>
+        // 棒グラフの描画
+        const updateCtx = document.getElementById('historyCountChart').getContext('2d');
+        const updateHistoryChart = new Chart(updateCtx, {
+            type: 'bar',
+            data: {
+                labels: ['11/4', '11/5', '11/6', '11/7', '11/8', '11/9', '11/10'],
+                datasets: [{
+                    label: '更新件数',
+                    data: [3, 5, 2, 4, 6, 1, 4], // ← ここはサーバーから渡す値に置き換え
+                    backgroundColor: 'rgba(170, 140, 255, 0.7)',
+                    borderColor: 'rgba(170, 140, 255, 0.5)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: false,
+                            text: '件数'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: false,
+                            text: '日付'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: false,
+                        text: '過去7日間の更新履歴件数'
+                    }
+                }
+            }
+        });
+
+        // ドーナツ型グラフの描画
         const ctx = document.getElementById('statusChart').getContext('2d');
         const statusChart = new Chart(ctx, {
             type: 'doughnut',
