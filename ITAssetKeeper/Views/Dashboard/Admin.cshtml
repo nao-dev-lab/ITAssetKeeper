@@ -65,9 +65,53 @@
             <div class="card h-100">
                 <div class="card-body">
                     <h5 class="card-title">状態別の台数集計</h5>
-                    <!-- 中身は後で -->
+                    <!-- 描画したドーナツ型グラフを表示 -->
+                    <canvas id="statusChart" width="400" height="400"></canvas>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<!-- ドーナツ型グラフの描画 -->
+@section Scripts {
+    <script>
+        const ctx = document.getElementById('statusChart').getContext('2d');
+        const statusChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['稼働中', '予備', '故障','廃棄予定','廃棄済'],
+                datasets: [{
+                    label: '状態別台数',
+                    data: [45, 25, 15, 10, 5], // ← ここはサーバーから渡す値に置き換え
+                    backgroundColor: [
+                        'rgba(170, 140, 255, 0.7)',  // 稼働中
+                        'rgba(140, 167, 255, 0.7)',  // 予備
+                        'rgba(140, 199, 255, 0.7)',  // 故障
+                        'rgba(140, 224, 255, 0.7)',  // 廃棄予定
+                        'rgba(207, 235, 234, 0.7)'   // 廃棄済
+                    ],
+                    borderColor: [
+                        'rgba(170, 140, 255, 0.5)',
+                        'rgba(140, 167, 255, 0.5)',
+                        'rgba(140, 199, 255, 0.5)',
+                        'rgba(140, 224, 255, 0.5)',
+                        'rgba(207, 235, 234, 0.5)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    },
+                    title: {
+                        display: false,
+                        text: '状態別の台数集計'
+                    }
+                }
+            }
+        });
+    </script>
+}
