@@ -1,35 +1,71 @@
-﻿@{
+﻿@model ITAssetKeeper.Models.ViewModels.Dashboard.DashboardAdminViewModel
+
+@{
     ViewData["Title"] = "Dashboard - Admin";
 }
 
 <div class="container mt-4">
-    <!-- 1行目：1列 -->
+    <!-- 1行目：1列（テーブル入りカード） -->
     <div class="row mb-3">
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">最近追加された機器一覧 (5件)</h5>
-                    <p class="card-text">テスト</p>
+                    <h5 class="card-title">最近追加された機器一覧(5件)</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-sm">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>@Html.DisplayNameFor(model => model.RecentlyHeader.DisplayDate)</th>
+                                    <th>@Html.DisplayNameFor(model => model.RecentlyHeader.ManagementId)</th>
+                                    <th>@Html.DisplayNameFor(model => model.RecentlyHeader.Category)</th>
+                                    <th>@Html.DisplayNameFor(model => model.RecentlyHeader.ModelNumber)</th>
+                                    <th>@Html.DisplayNameFor(model => model.RecentlyHeader.HostName)</th>
+                                    <th>@Html.DisplayNameFor(model => model.RecentlyHeader.Location)</th>
+                                    <th>@Html.DisplayNameFor(model => model.RecentlyHeader.UserName)</th>
+                                    <th>@Html.DisplayNameFor(model => model.RecentlyHeader.Status)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.RecentlyAddedDevices?.Any() != true)
+                                {
+                                    <tr><td colspan="8" class="text-muted">データがありません</td></tr>
+                                }
+                                @foreach (var item in Model.RecentlyAddedDevices)
+                                {
+                                    <tr>
+                                        <td>@Html.DisplayFor(modelItem => item.DisplayDate)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.ManagementId)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Category)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.ModelNumber)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.HostName)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Location)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.UserName)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 2行目：2列 -->
+    <!-- 2行目：2列（枠だけのカード） -->
     <div class="row">
         <div class="col-md-6 mb-3">
-            <div class="card">
+            <div class="card h-100">
                 <div class="card-body">
                     <h5 class="card-title">過去7日間の更新履歴件数</h5>
-                    <p class="card-text">テスト</p>
+                    <!-- 中身は後で -->
                 </div>
             </div>
         </div>
         <div class="col-md-6 mb-3">
-            <div class="card">
+            <div class="card h-100">
                 <div class="card-body">
                     <h5 class="card-title">状態別の台数集計</h5>
-                    <p class="card-text">テスト</p>
+                    <!-- 中身は後で -->
                 </div>
             </div>
         </div>
