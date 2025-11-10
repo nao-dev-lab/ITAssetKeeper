@@ -1,4 +1,5 @@
 ﻿using ITAssetKeeper.Models;
+using ITAssetKeeper.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

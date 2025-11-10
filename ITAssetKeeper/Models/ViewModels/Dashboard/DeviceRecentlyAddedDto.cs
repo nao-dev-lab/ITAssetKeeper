@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ITAssetKeeper.ViewModels.Dashboard;
+namespace ITAssetKeeper.Models.ViewModels.Dashboard;
 
 // DTO:
 // Admin用Dashboard：最近追加された機器一覧(5件)

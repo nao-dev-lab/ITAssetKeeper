@@ -1,4 +1,4 @@
-﻿namespace ITAssetKeeper.ViewModels.Dashboard;
+﻿namespace ITAssetKeeper.Models.ViewModels.Dashboard;
 
 // DTO:
 // Admin用Dashboard：状態別の台数集計

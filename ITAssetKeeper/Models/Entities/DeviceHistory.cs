@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ITAssetKeeper.Models;
+namespace ITAssetKeeper.Models.Entities;
 
 // DeviceHistory Entity
 public class DeviceHistory

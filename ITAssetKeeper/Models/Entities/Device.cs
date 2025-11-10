@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ITAssetKeeper.Models;
+namespace ITAssetKeeper.Models.Entities;
 
 // Device Entity
 public class Device

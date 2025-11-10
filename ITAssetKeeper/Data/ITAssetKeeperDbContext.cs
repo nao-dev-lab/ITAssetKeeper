@@ -1,4 +1,4 @@
-﻿using ITAssetKeeper.Models;
+﻿using ITAssetKeeper.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

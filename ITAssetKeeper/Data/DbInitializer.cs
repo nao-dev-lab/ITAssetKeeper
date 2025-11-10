@@ -1,5 +1,5 @@
 ﻿using ITAssetKeeper.Constants;
-using ITAssetKeeper.Models;
+using ITAssetKeeper.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace ITAssetKeeper.Data;

@@ -1,4 +1,4 @@
-﻿namespace ITAssetKeeper.ViewModels.Dashboard;
+﻿namespace ITAssetKeeper.Models.ViewModels.Dashboard;
 
 // DTO:
 // Admin用Dashboard：過去7日間の更新履歴件数

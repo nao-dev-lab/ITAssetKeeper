@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
-namespace ITAssetKeeper.Models;
+namespace ITAssetKeeper.Models.Entities;
 
 // Identity用のクラス
 public class ApplicationUser : IdentityUser
