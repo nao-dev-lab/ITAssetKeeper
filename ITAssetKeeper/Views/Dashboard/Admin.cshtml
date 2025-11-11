@@ -51,14 +51,22 @@
         </div>
     </div>
 
-    <!-- 2行目：2列（枠だけのカード） -->
+    <!-- 2行目：2列（グラフ入りカード） -->
     <div class="row">
         <div class="col-md-6 mb-3">
             <div class="card h-100">
                 <div class="card-body">
                     <h5 class="card-title">過去7日間の更新履歴件数</h5>
                     <!-- 描画した棒グラフを表示 -->
-                    <canvas id="historyCountChart" width="400", height="400"></canvas>
+                    <!-- Listの中身が空じゃなければグラフを描画する -->
+                    @if (Model.HistoryLast7Days?.Any() == true)
+                    {
+                        <canvas id="historyCountChart" width="400" height="400"></canvas>
+                    }
+                    else
+                    {
+                        <p class="text-muted">データがありません</p>
+                    }
                 </div>
             </div>
         </div>
@@ -67,7 +75,23 @@
                 <div class="card-body">
                     <h5 class="card-title">状態別の台数集計</h5>
                     <!-- 描画したドーナツ型グラフを表示 -->
-                    <canvas id="statusChart" width="400" height="400"></canvas>
+                    <!-- Listの中身が空ではない&いずれかに1以上あればグラフを描画する -->
+                    @{
+                        var total = Model.StatusCount.WorkingCount
+                                  + Model.StatusCount.ReserveCount
+                                  + Model.StatusCount.WorkingCount
+                                  + Model.StatusCount.ScheduledForDisposalCount
+                                  + Model.StatusCount.DisposedCount;
+                    }
+
+                    @if (Model.StatusCount != null && total > 0)
+                    {
+                        <canvas id="statusChart" width="400" height="400"></canvas>
+                    }
+                    else
+                    {
+                        <p class="text-muted">データがありません</p>
+                    }
                 </div>
             </div>
         </div>
@@ -77,14 +101,19 @@
 @section Scripts {
     <script>
         // 棒グラフの描画
+        // Listの値を取得して、labelとdataを定数に入れる
+        const updateData = @Html.Raw(Json.Serialize(Model.HistoryLast7Days))
+        const labels = updateData.map(item => item.displayDate);
+        const data = updateData.map(item => item.count);
+
         const updateCtx = document.getElementById('historyCountChart').getContext('2d');
         const updateHistoryChart = new Chart(updateCtx, {
             type: 'bar',
             data: {
-                labels: ['11/4', '11/5', '11/6', '11/7', '11/8', '11/9', '11/10'],
+                labels: labels,
                 datasets: [{
                     label: '更新件数',
-                    data: [3, 5, 2, 4, 6, 1, 4], // ← ここはサーバーから渡す値に置き換え
+                    data: data,
                     backgroundColor: 'rgba(170, 140, 255, 0.7)',
                     borderColor: 'rgba(170, 140, 255, 0.5)',
                     borderWidth: 1
@@ -95,6 +124,10 @@
                 scales: {
                     y: {
                         beginAtZero: true,
+                        ticks: {
+                            stepSize:1,     // 目盛りの間隔を1に固定
+                            precision: 0    // 小数点以下を表示しない
+                        },
                         title: {
                             display: false,
                             text: '件数'
@@ -120,14 +153,31 @@
         });
 
         // ドーナツ型グラフの描画
+        // label の値を取得して定数に入れる
+        const statusLabels = [
+            @Html.Raw("'" + @Html.DisplayNameFor(model => model.StatusHeader.WorkingCount) + "'"),
+            @Html.Raw("'" + @Html.DisplayNameFor(model => model.StatusHeader.ReserveCount) + "'"),
+            @Html.Raw("'" + @Html.DisplayNameFor(model => model.StatusHeader.BrokenCount) + "'"),
+            @Html.Raw("'" + @Html.DisplayNameFor(model => model.StatusHeader.ScheduledForDisposalCount) + "'"),
+            @Html.Raw("'" + @Html.DisplayNameFor(model => model.StatusHeader.DisposedCount) + "'")
+        ]
+
+        // data の値を取得して定数に入れる
+        const statusData = [
+            @Model.StatusCount.WorkingCount,
+            @Model.StatusCount.ReserveCount,
+            @Model.StatusCount.BrokenCount,
+            @Model.StatusCount.ScheduledForDisposalCount,
+            @Model.StatusCount.DisposedCount,
+        ]
         const ctx = document.getElementById('statusChart').getContext('2d');
         const statusChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['稼働中', '予備', '故障','廃棄予定','廃棄済'],
+                labels: statusLabels,
                 datasets: [{
                     label: '状態別台数',
-                    data: [45, 25, 15, 10, 5], // ← ここはサーバーから渡す値に置き換え
+                    data: statusData,
                     backgroundColor: [
                         'rgba(170, 140, 255, 0.7)',  // 稼働中
                         'rgba(140, 167, 255, 0.7)',  // 予備
@@ -149,7 +199,10 @@
                 responsive: true,
                 plugins: {
                     legend: {
-                        position: 'top'
+                        position: 'top',
+                        labels: {
+                            padding: 20
+                        }
                     },
                     title: {
                         display: false,

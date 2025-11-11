@@ -54,7 +54,7 @@ public class DashboardController : Controller
             .Select(g => new DeviceHistoryLast7DaysDto
             {
                 Count = g.Count(),
-                DisplayDate = g.Key.ToString("yyyy/MM/dd")
+                DisplayDate = g.Key.ToString("MM/dd")
             });
 
         // 取得したDeviceテーブルのデータから機器の状態の件数を取得
