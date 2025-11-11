@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ITAssetKeeper.Models;
+namespace ITAssetKeeper.Models.ViewModels.Account;
 
 // Login画面のビューモデル
 public class LoginViewModel
