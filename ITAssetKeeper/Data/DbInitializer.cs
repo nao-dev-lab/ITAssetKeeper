@@ -1,4 +1,5 @@
 ﻿using ITAssetKeeper.Constants;
+using ITAssetKeeper.Models.Enum;
 using ITAssetKeeper.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 
@@ -9,7 +10,7 @@ public class DbInitializer
     public static async Task SeedAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
     {
         // Roleをすべてstringで取得
-        var allRoles = Enum.GetNames(typeof(ApplicationIdentityConstants.Roles));
+        var allRoles = Enum.GetNames(typeof(Roles));
 
         // Roleが存在しなければ追加する
         foreach (var role in allRoles)
@@ -39,6 +40,6 @@ public class DbInitializer
 
         // Seed Adminの作成とRoleの追加を実施
         await userManager.CreateAsync(adminUser, ApplicationIdentityConstants.DEFAULT_PASSWORD);
-        await userManager.AddToRoleAsync(adminUser,ApplicationIdentityConstants.Roles.Admin.ToString());
+        await userManager.AddToRoleAsync(adminUser,Roles.Admin.ToString());
     }
 }

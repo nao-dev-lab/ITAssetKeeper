@@ -1,8 +1,10 @@
 ﻿using ITAssetKeeper.Models;
+using ITAssetKeeper.Models.Enum;
 using ITAssetKeeper.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using static ITAssetKeeper.Constants.ApplicationIdentityConstants;
 
 namespace ITAssetKeeper.Controllers;
 
@@ -48,17 +50,32 @@ public class AccountController : Controller
             model.RememberMe,
             lockoutOnFailure: true
         );
-
-        // ログインに成功したらDashboardに飛ばす
-        if (result.Succeeded)
-        {
-            return RedirectToAction("Admin", "Dashboard");
-        }
+        
         // ログインに失敗したら戻す
-        else
+        if (!result.Succeeded)
         {
             ModelState.AddModelError(string.Empty, "ログインに失敗しました");
             return View(model);
+        }
+
+        // ユーザー情報を取得
+        // ユーザー情報が見つからなかったらログイン失敗とみなす
+        var user = await _userManager.FindByNameAsync(model.UserName);
+        if (user == null)
+        {
+            ModelState.AddModelError(string.Empty, "ログインに失敗しました");
+            return View(model);
+        }
+
+        // ログインに成功したら、
+        // AdminはDashboard、他RoleはIndexにリダイレクト
+        if (await _userManager.IsInRoleAsync(user, Roles.Admin.ToString()))
+        {
+            return RedirectToAction("Admin", "Dashboard");
+        }
+        else
+        {
+            return RedirectToAction("Index", "Home");
         }
     }
 

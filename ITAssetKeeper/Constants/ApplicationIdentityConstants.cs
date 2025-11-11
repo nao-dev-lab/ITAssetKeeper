@@ -7,5 +7,4 @@ public class ApplicationIdentityConstants
     public static readonly string DEFAULT_NAME = "admin";
     public static readonly string DEFAULT_EMAIL = "admin@example.com";
     public static readonly string DEFAULT_PASSWORD = "Admin@123";
-    public enum Roles { Admin, Editor, Viewer } 
 }

@@ -1,0 +1,39 @@
+﻿/* ===== Admin Dashboard UI Override ===== */
+
+/* サイドバー */
+.sidebar-wrapper {
+    background-color: #F1EDFF !important;
+}
+
+    /* サイドバー ボタン */
+    .sidebar-wrapper .btn,
+    .sidebar-wrapper .nav-link {
+        background-color: #8744CE !important;
+        border-color: #8744CE !important;
+        color: #ffffff !important;
+    }
+
+        .sidebar-wrapper .btn:hover,
+        .sidebar-wrapper .nav-link:hover {
+            opacity: 0.85;
+        }
+
+/* ダッシュボード カード Header */
+.card .card-title {
+    background-color: #7749F8;
+    color: #ffffff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin: -0.75rem -0.75rem 1rem -0.75rem;
+}
+
+/* テーブルヘッダー */
+table.table thead th {
+    background-color: #7749F8 !important;
+    color: #ffffff;
+}
+
+/* テーブルの色分け行 */
+table.table tbody tr:nth-child(even) {
+    background-color: #EBE5FC;
+}
