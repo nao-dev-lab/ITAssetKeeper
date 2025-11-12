@@ -3,8 +3,7 @@
 // Identity用定数クラス
 public class ApplicationIdentityConstants
 {
-    //public static readonly int PASSWORD_VALID_DAYS = 42;
-    public static readonly int PASSWORD_VALID_DAYS = -1;
+    public static readonly int PASSWORD_VALID_DAYS = 42;
 
     public static readonly string ADMIN_DEFAULT_NAME = "admin";
     public static readonly string ADMIN_DEFAULT_EMAIL = "admin@example.com";

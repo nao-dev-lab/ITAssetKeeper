@@ -1,14 +1,11 @@
-﻿using ITAssetKeeper.Constants;
-using ITAssetKeeper.Data;
+﻿using ITAssetKeeper.Data;
 using ITAssetKeeper.Models.Entities;
 using ITAssetKeeper.Models.Enum;
 using ITAssetKeeper.Models.ViewModels.Account;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using static ITAssetKeeper.Constants.ApplicationIdentityConstants;
+using ITAssetKeeper.Constants;
 
 namespace ITAssetKeeper.Controllers;
 
@@ -44,6 +41,19 @@ public class AccountController : Controller
         // 入力エラーがある場合、ビューに戻す
         if (!ModelState.IsValid)
         {
+            // Invalidの対象のみを取得
+            var errors = ModelState.Values
+                .Where(x => x.Errors.Count > 0)
+                .SelectMany(x => x.Errors)
+                .Select(x => x.ErrorMessage)
+                .ToList();
+
+            // エラーメッセージをモデルに渡す
+            foreach (var error in errors)
+            {
+                ModelState.AddModelError(string.Empty, error);
+            }
+
             return View(model);
         }
 
@@ -76,13 +86,9 @@ public class AccountController : Controller
         // パスワード期限が超過していないかチェック
         if (user.PasswordExpirationDate < DateTime.Now)
         {
-            // 超過している場合はログアウト処理を実施し、
-            // パスワード変更画面にリダイレクト
-            // リダイレクト先で User.Identity IsAuthenticated が False になるので、
-            // TempDataでユーザー名を渡す
-            await _signInManager.SignOutAsync();
-            TempData["PasswordExpiredMessage"] = "パスワードの有効期限が切れています。再設定してください";
-            TempData["UserName"] = user.UserName;
+            // 超過している場合はパスワード変更画面にリダイレクト
+            TempData[ChangePWTemp.PasswordExpiredMessage.ToString()]
+                = "パスワードの有効期限が切れています。新しいパスワードを設定してください。";
             return RedirectToAction("ChangePassword", "Account");
         }
 
@@ -114,23 +120,8 @@ public class AccountController : Controller
     [HttpGet]
     public IActionResult ChangePassword()
     {
-        // ビューモデルのインスタンス生成
-        var vm = new ChangePasswordViewModel();
-
-        // パスワード変更時に必要なユーザー名を取得
-        // 取得できなければログイン画面にリダイレクトする
-        vm.UserName = TempData.Peek("UserName") as string;
-        if (string.IsNullOrWhiteSpace(vm.UserName))
-        {
-            TempData["PasswordChangeMessage"] = "ユーザー情報の取得に失敗しました。ログインからやり直してください。";
-            return RedirectToAction("Login", "Account");
-        }
-
-        // 次のリクエストまで保持させる
-        TempData.Keep("UserName");
-
         // パスワード変更画面を表示
-        return View(vm);
+        return View();
     }
 
     // POST: Account/ChangePassword
@@ -141,24 +132,47 @@ public class AccountController : Controller
         // 入力エラーがある場合、ビューに戻す
         if (!ModelState.IsValid)
         {
+            // Invalidの対象のみを取得
+            var errors = ModelState.Values
+                .Where(x => x.Errors.Count > 0)
+                .SelectMany(x => x.Errors)
+                .Select(x => x.ErrorMessage)
+                .ToList();
+
+            // エラーメッセージをモデルに渡す
+            foreach (var error in errors)
+            {
+                ModelState.AddModelError(string.Empty, error);
+            }
+
             return View(model);
         }
 
-        // モデルからユーザー情報を取得
-        var user = await _userManager.FindByNameAsync(model.UserName);
+        // ユーザーが認証されていないか、ユーザー名が取得できなければ
+        // ログアウト + ログイン画面にリダイレクト
+        if (!User.Identity.IsAuthenticated || string.IsNullOrWhiteSpace(User.Identity.Name))
+        {
+            await _signInManager.SignOutAsync();
+            TempData[ChangePWTemp.PasswordChangeMessage.ToString()] = "ユーザーの検証に失敗しました。ログインからやり直してください。";
+            return RedirectToAction("Login", "Account");
+        }
+
+        // ログイン中のユーザー名からユーザー情報を取得
+        var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
         // ユーザー情報が取得できなかったら、
         // ログアウト処理 + ログイン画面にリダイレクトする
         if (user == null)
         {
-            TempData["PasswordChangeMessage"] = "ユーザーの検証に失敗しました。ログインからやり直してください。";
+            await _signInManager.SignOutAsync();
+            TempData[ChangePWTemp.PasswordChangeMessage.ToString()] = "ユーザーの検証に失敗しました。ログインからやり直してください。";
             return RedirectToAction("Login", "Account");
         }
 
         // 新旧パスワードが同一なら弾く
         if (model.CurrentPassword == model.NewPassword)
         {
-            ModelState.AddModelError(nameof(model.NewPassword), "現在のパスワードと同一のパスワードは使用できません。");
+            ModelState.AddModelError(string.Empty, "現在のパスワードと同一のパスワードに変更できません。");
             return View(model);
         }
 
@@ -172,20 +186,19 @@ public class AccountController : Controller
         // パスワード変更処理の結果が失敗であれば、パスワード変更画面に戻す
         if (!result.Succeeded)
         {
-            // エラー内容をコンソールに出力
+            // エラー内容をコンソールに出力、エラー理由をモデルに渡す
             foreach (var err in result.Errors)
             {
                 Console.WriteLine($"[PasswordUpdateError] User={user.UserName}, Description={err.Description}");
+                ModelState.AddModelError(string.Empty, err.Description);
             }
 
-            ModelState.AddModelError(string.Empty, "パスワード変更に失敗しました。ログインからやり直してください。");
             return View(model);
         }
 
         // パスワード変更に成功したら、
         // パスワード期限を更新
-        //user.PasswordExpirationDate = DateTime.Now.AddDays(PASSWORD_VALID_DAYS);
-        user.PasswordExpirationDate = DateTime.Now.AddDays(42);
+        user.PasswordExpirationDate = DateTime.Now.AddDays(ApplicationIdentityConstants.PASSWORD_VALID_DAYS);
         var updateResult = await _userManager.UpdateAsync(user);
 
         // DB側の更新に失敗していればコンソールにログを出力
@@ -197,8 +210,9 @@ public class AccountController : Controller
             }
         }
 
-        // ログイン画面にリダイレクトする
-        TempData["PasswordChangeMessage"] = "パスワード変更に成功しました。ログインしてください。";
+        // ログアウト + ログイン画面にリダイレクトする
+        await _signInManager.SignOutAsync();
+        TempData[ChangePWTemp.PasswordChangeMessage.ToString()] = "パスワード変更に成功しました。ログインしてください。";
         return RedirectToAction("Login", "Account");
     }
 }

@@ -26,5 +26,5 @@ public class ChangePasswordViewModel
 
     // パスワード更新に必要なユーザー情報取得用に、
     // ユーザー名をフォームで持ち回す
-    public string UserName { get; set; }
+    //public string UserName { get; set; }
 }

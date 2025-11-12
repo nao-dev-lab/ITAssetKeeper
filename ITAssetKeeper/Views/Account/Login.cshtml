@@ -1,4 +1,5 @@
 ﻿@using ITAssetKeeper.Models.ViewModels.Account
+@using ITAssetKeeper.Models.Enum
 @model LoginViewModel
 
 @{
@@ -20,9 +21,9 @@
         }
 
         <!-- パスワード変更からリダイレクトされた場合、ここにメッセージ表示 -->
-        @if (TempData["PasswordChangeMessage"] != null)
+        @if (TempData[@ChangePWTemp.PasswordChangeMessage.ToString()] != null)
         {
-            <div class="alert alert-warning">@TempData["PasswordChangeMessage"]</div>
+            <div class="alert alert-warning">@TempData[@ChangePWTemp.PasswordChangeMessage.ToString()]</div>
         }
 
         <div class="form-group">
