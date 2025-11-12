@@ -61,4 +61,16 @@ public class Device
     [Required]
     [Display(Name = "登録日")]
     public DateTime CreatedAt { get; set; }
+
+    [Required]
+    [Display(Name = "削除フラグ")]
+    // 規定値を 0 とするので false を初期値としておく
+    public bool IsDeleted { get; set; } = false;
+
+    [Display(Name = "削除日")]
+    public DateTime? DeletedAt { get; set; }
+
+    [MaxLength(100)]
+    [Display(Name = "削除実施者")]
+    public string? DeletedBy { get; set; }
 }
