@@ -1,4 +1,4 @@
-﻿namespace ITAssetKeeper.Models.Enum;
+﻿namespace ITAssetKeeper.Models.Enums;
 
 // 機器用途用Enum
 public enum DevicePurpose

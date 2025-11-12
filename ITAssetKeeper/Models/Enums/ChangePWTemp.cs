@@ -1,4 +1,4 @@
-﻿namespace ITAssetKeeper.Models.Enum;
+﻿namespace ITAssetKeeper.Models.Enums;
 
 public enum ChangePWTemp
 {

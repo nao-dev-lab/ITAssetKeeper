@@ -1,4 +1,4 @@
-﻿namespace ITAssetKeeper.Models.Enum;
+﻿namespace ITAssetKeeper.Models.Enums;
 
 // 機器状態用Enum
 public enum DeviceStatus

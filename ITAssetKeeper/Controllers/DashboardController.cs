@@ -1,5 +1,5 @@
 ﻿using ITAssetKeeper.Data;
-using ITAssetKeeper.Models.Enum;
+using ITAssetKeeper.Models.Enums;
 using ITAssetKeeper.Models.ViewModels.Dashboard;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -1,6 +1,6 @@
 ﻿using ITAssetKeeper.Data;
 using ITAssetKeeper.Models.Entities;
-using ITAssetKeeper.Models.Enum;
+using ITAssetKeeper.Models.Enums;
 using ITAssetKeeper.Models.ViewModels.Account;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

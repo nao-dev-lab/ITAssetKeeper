@@ -1,5 +1,5 @@
 ﻿using ITAssetKeeper.Constants;
-using ITAssetKeeper.Models.Enum;
+using ITAssetKeeper.Models.Enums;
 using ITAssetKeeper.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 
