@@ -7,17 +7,17 @@ namespace ITAssetKeeper.Models.ViewModels.Device;
 // Create / Edit / Details 共通のビューモデル
 public class DeviceManageViewModel
 {
-    // ドロップダウンリストで選択された値を格納
+    // ---ドロップダウン選択用 ---
     public string? SelectedCategory { get; set; }
     public string? SelectedPurpose { get; set; }
     public string? SelectedLocation { get; set; }
     public string? SelectedStatus { get; set; }
 
-    // Create / Edit / Details の判定用
+    // --- Create / Edit / Details の判定 ---
     // 保険で明示的にセットしておく
     public Mode Mode { get; set; } = Mode.Details;
 
-
+    // --- 入力(表示)項目 ---
     [Display(Name = "機器管理ID")]
     public string? ManagementId { get; set; }
 

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ITAssetKeeper.Models.ViewModels.Device;
 
+// Index(機器一覧)のビューモデル
 public class DeviceListViewModel
 {
     // --- 検索条件 ---

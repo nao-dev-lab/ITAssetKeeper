@@ -36,10 +36,10 @@ public class DeviceController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Create()
-    {
-        return View();
-    }
+    //public async Task<IActionResult> Create()
+    //{
+    //    return View();
+    //}
 
 
     [HttpGet]
@@ -52,10 +52,10 @@ public class DeviceController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "Admin, Editor")]
-    public async Task<IActionResult> Edit()
-    {
-        return View();
-    }
+    //public async Task<IActionResult> Edit()
+    //{
+    //    return View();
+    //}
 
 
     [HttpGet]
