@@ -8,17 +8,17 @@ namespace ITAssetKeeper.Models.ViewModels.Dashboard;
 public class DeviceStatusCountDto
 {
     [Display(Name = "稼働中")]
-    public int WorkingCount { get; set; }
+    public int ActiveCount { get; set; }
 
     [Display(Name = "予備")]
-    public int ReserveCount { get; set; }
+    public int SpareCount { get; set; }
 
     [Display(Name = "故障")]
     public int BrokenCount { get; set; }
 
     [Display(Name = "廃棄予定")]
-    public int ScheduledForDisposalCount { get; set; }
+    public int RetiringCount { get; set; }
 
     [Display(Name = "廃棄済")]
-    public int DisposedCount { get; set; }
+    public int RetiredCount { get; set; }
 }

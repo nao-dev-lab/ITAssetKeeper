@@ -26,6 +26,7 @@ namespace ITAssetKeeper.Data
         {
             // Devicesテーブル
             modelBuilder.Entity<Device>()
+                .HasQueryFilter(b => !b.IsDeleted)
                 .ToTable("Devices")
                 .HasIndex(b => b.ManagementId)
                 .IsUnique();

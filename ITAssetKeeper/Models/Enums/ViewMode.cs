@@ -1,6 +1,6 @@
 ﻿namespace ITAssetKeeper.Models.Enums;
 
-public enum Mode
+public enum ViewMode
 {
     Create,
     Edit,

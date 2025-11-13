@@ -1,6 +1,7 @@
 using ITAssetKeeper.Data;
 using ITAssetKeeper.Infrastructure.Identity;
 using ITAssetKeeper.Models.Entities;
+using ITAssetKeeper.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,6 +38,9 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredLength = 8;            // •¶š”‚ÌÅ’áŒÀ‚Ì’·‚³(8•¶š)
     options.Password.RequiredUniqueChars = 4;       // Å’á4í—Ş‚ÌˆÙ‚È‚é•¶š‚ª•K—v
 });
+
+// DeviceService ‚ğ“o˜^
+builder.Services.AddScoped<IDeviceService, DeviceService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

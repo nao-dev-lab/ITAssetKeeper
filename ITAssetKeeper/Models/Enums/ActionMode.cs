@@ -1,7 +1,7 @@
 ﻿namespace ITAssetKeeper.Models.Enums;
 
-public enum SortOrder
+public enum ActionMode
 {
-    Asc,
-    Desc
+    Search,
+    Sort
 }

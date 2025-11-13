@@ -75,11 +75,11 @@ public class DashboardController : Controller
         adminVM.HistoryLast7Days = await historyLast7days.ToListAsync();
 
         // 状態別の台数集計
-        adminVM.StatusCount.WorkingCount = status.Count(x => x == DeviceStatus.Working.ToString());
-        adminVM.StatusCount.ReserveCount = status.Count(x => x == DeviceStatus.Reserve.ToString());
+        adminVM.StatusCount.ActiveCount = status.Count(x => x == DeviceStatus.Active.ToString());
+        adminVM.StatusCount.SpareCount = status.Count(x => x == DeviceStatus.Spare.ToString());
         adminVM.StatusCount.BrokenCount = status.Count(x => x == DeviceStatus.Broken.ToString());
-        adminVM.StatusCount.ScheduledForDisposalCount = status.Count(x => x == DeviceStatus.ScheduledForDisposal.ToString());
-        adminVM.StatusCount.DisposedCount = status.Count(x => x == DeviceStatus.Disposed.ToString());
+        adminVM.StatusCount.RetiringCount = status.Count(x => x == DeviceStatus.Retiring.ToString());
+        adminVM.StatusCount.RetiredCount = status.Count(x => x == DeviceStatus.Retired.ToString());
 
         // 実行結果をビューに返す
         return View(adminVM);

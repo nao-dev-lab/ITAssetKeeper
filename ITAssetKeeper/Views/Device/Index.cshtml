@@ -1,5 +1,116 @@
-﻿@{
+﻿@using ITAssetKeeper.Models.Enums
+@model ITAssetKeeper.Models.ViewModels.Device.DeviceListViewModel
+
+@{
     ViewData["Title"] = "Index";
 }
 
 <h1>機器情報一覧</h1>
+
+<!-- 検索用のフォーム -->
+<div class="row">
+    <div class="col-md-4">
+        <form asp-controller="Device" asp-action="Index" method="get">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ManagementId" class="control-label"></label>
+                <input asp-for="ManagementId" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Category" class="control-label"></label>
+                <select asp-for="SelectedCategory" asp-items="Model.Category">
+                    <option value="">全て</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Purpose" class="control-label"></label>
+                <select asp-for="SelectedPurpose" asp-items="Model.Purpose">
+                    <option value="">全て</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="ModelNumber" class="control-label"></label>
+                <input asp-for="ModelNumber" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="SerialNumber" class="control-label"></label>
+                <input asp-for="SerialNumber" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="HostName" class="control-label"></label>
+                <input asp-for="HostName" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Location" class="control-label"></label>
+                <input asp-for="Location" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <select asp-for="SelectedStatus" asp-items="Model.Status">
+                    <option value="">全て</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="PurchaseDateFrom" class="control-label"></label>
+                <input asp-for="PurchaseDateFrom" class="form-control" type="date" />
+            </div>
+            <div class="form-group">
+                <label asp-for="PurchaseDateTo" class="control-label"></label>
+                <input asp-for="PurchaseDateTo" class="form-control" type="date" />
+            </div>
+            <div class="form-group">
+                <label asp-for="SortKey" class="control-label"></label>
+                <select asp-for="SelectedSortKey" asp-items="Model.SortKey">
+                    <option value="">未選択</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="SortOrder" class="control-label"></label>
+                <select asp-for="SelectedSortOrder" asp-items="Model.SortOrder">
+                    <option value="">未選択</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="検索" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+    
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.ManagementId)</th>
+            <th>@Html.DisplayNameFor(model => model.Category)</th>
+            <th>@Html.DisplayNameFor(model => model.ModelNumber)</th>
+            <th>@Html.DisplayNameFor(model => model.SerialNumber)</th>
+            <th>@Html.DisplayNameFor(model => model.HostName)</th>
+            <th>@Html.DisplayNameFor(model => model.Location)</th>
+            <th>@Html.DisplayNameFor(model => model.UserName)</th>
+            <th>@Html.DisplayNameFor(model => model.Status)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Devices){
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.ManagementId)</td>
+                <td>@Html.DisplayFor(modelItem => item.Category)</td>
+                <td>@Html.DisplayFor(modelItem => item.ModelNumber)</td>
+                <td>@Html.DisplayFor(modelItem => item.SerialNumber)</td>
+                <td>@Html.DisplayFor(modelItem => item.HostName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Location)</td>
+                <td>@Html.DisplayFor(modelItem => item.UserName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Status)</td>
+            </tr>
+        }
+    </tbody>
+</table>

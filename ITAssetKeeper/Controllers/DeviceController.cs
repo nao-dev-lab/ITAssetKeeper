@@ -1,22 +1,36 @@
 ﻿using ITAssetKeeper.Data;
+using ITAssetKeeper.Models.Enums;
+using ITAssetKeeper.Models.ViewModels.Dashboard;
+using ITAssetKeeper.Models.ViewModels.Device;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.IO;
+using ITAssetKeeper.Services;
 
 namespace ITAssetKeeper.Controllers;
 
 public class DeviceController : Controller
 {
     private readonly ITAssetKeeperDbContext _context;
+    private readonly IDeviceService _deviceService;
 
-    public DeviceController(ITAssetKeeperDbContext context)
+    public DeviceController(ITAssetKeeperDbContext context, IDeviceService deviceService)
     {
         _context = context;
+        _deviceService = deviceService;
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(DeviceListViewModel model)
     {
-        return View();
+        // 検索メソッド実行、結果を取得
+        var result = await _deviceService.SearchDevicesAsync(model);
+
+        // ビューに渡す
+        return View(result);
     }
 
     [HttpGet]

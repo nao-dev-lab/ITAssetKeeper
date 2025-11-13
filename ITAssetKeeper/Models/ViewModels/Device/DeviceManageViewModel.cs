@@ -4,18 +4,17 @@ using ITAssetKeeper.Models.Enums;
 
 namespace ITAssetKeeper.Models.ViewModels.Device;
 
-// Create / Edit / Details 共通のビューモデル
+// Create(機器登録)・Edit(機器情報編集)・Details(機器情報)共通のビューモデル
 public class DeviceManageViewModel
 {
     // ---ドロップダウン選択用 ---
     public string? SelectedCategory { get; set; }
     public string? SelectedPurpose { get; set; }
-    public string? SelectedLocation { get; set; }
     public string? SelectedStatus { get; set; }
 
     // --- Create / Edit / Details の判定 ---
     // 保険で明示的にセットしておく
-    public Mode Mode { get; set; } = Mode.Details;
+    public ViewMode Mode { get; set; } = ViewMode.Details;
 
     // --- 入力(表示)項目 ---
     [Display(Name = "機器管理ID")]
@@ -42,7 +41,7 @@ public class DeviceManageViewModel
 
     [Required]
     [Display(Name = "設置場所")]
-    public SelectList? Location { get; set; }
+    public string? Location { get; set; }
 
     [Display(Name = "使用者")]
     public string? UserName { get; set; }

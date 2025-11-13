@@ -77,11 +77,11 @@
                     <!-- 描画したドーナツ型グラフを表示 -->
                     <!-- Listの中身が空ではない&いずれかに1以上あればグラフを描画する -->
                     @{
-                        var total = Model.StatusCount.WorkingCount
-                                  + Model.StatusCount.ReserveCount
-                                  + Model.StatusCount.WorkingCount
-                                  + Model.StatusCount.ScheduledForDisposalCount
-                                  + Model.StatusCount.DisposedCount;
+                        var total = Model.StatusCount.ActiveCount
+                                  + Model.StatusCount.SpareCount
+                                  + Model.StatusCount.ActiveCount
+                                  + Model.StatusCount.RetiringCount
+                                  + Model.StatusCount.RetiredCount;
                     }
 
                     @if (Model.StatusCount != null && total > 0)
@@ -155,20 +155,20 @@
         // ドーナツ型グラフの描画
         // label の値を取得して定数に入れる
         const statusLabels = [
-            @Html.Raw("'" + @Html.DisplayNameFor(model => model.StatusHeader.WorkingCount) + "'"),
-            @Html.Raw("'" + @Html.DisplayNameFor(model => model.StatusHeader.ReserveCount) + "'"),
+            @Html.Raw("'" + @Html.DisplayNameFor(model => model.StatusHeader.ActiveCount) + "'"),
+            @Html.Raw("'" + @Html.DisplayNameFor(model => model.StatusHeader.SpareCount) + "'"),
             @Html.Raw("'" + @Html.DisplayNameFor(model => model.StatusHeader.BrokenCount) + "'"),
-            @Html.Raw("'" + @Html.DisplayNameFor(model => model.StatusHeader.ScheduledForDisposalCount) + "'"),
-            @Html.Raw("'" + @Html.DisplayNameFor(model => model.StatusHeader.DisposedCount) + "'")
+            @Html.Raw("'" + @Html.DisplayNameFor(model => model.StatusHeader.RetiringCount) + "'"),
+            @Html.Raw("'" + @Html.DisplayNameFor(model => model.StatusHeader.RetiredCount) + "'")
         ]
 
         // data の値を取得して定数に入れる
         const statusData = [
-            @Model.StatusCount.WorkingCount,
-            @Model.StatusCount.ReserveCount,
+            @Model.StatusCount.ActiveCount,
+            @Model.StatusCount.SpareCount,
             @Model.StatusCount.BrokenCount,
-            @Model.StatusCount.ScheduledForDisposalCount,
-            @Model.StatusCount.DisposedCount,
+            @Model.StatusCount.RetiringCount,
+            @Model.StatusCount.RetiredCount,
         ]
         const ctx = document.getElementById('statusChart').getContext('2d');
         const statusChart = new Chart(ctx, {
