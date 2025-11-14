@@ -21,14 +21,30 @@ public class DeviceController : Controller
         _deviceService = deviceService;
     }
 
+    // GET: Device/Index
     [HttpGet]
     public async Task<IActionResult> Index(DeviceListViewModel model)
     {
         // 検索メソッド実行、結果を取得
-        var result = await _deviceService.SearchDevicesAsync(model);
+        var vm = await _deviceService.SearchDevicesAsync(model);
 
         // ビューに渡す
-        return View(result);
+        return View(vm);
+    }
+
+    // GET: Device/GetSortedList
+    [HttpGet]
+    public async Task<IActionResult> GetSortedList(SortKeyColums sortKey, SortOrder sortOrder, DeviceListViewModel model)
+    {
+        // SortKey と SortOrderをモデルに反映させる
+        model.SortKeyValue = sortKey;
+        model.SortOrderValue = sortOrder;
+
+        // 結果を取得
+        var vm = await _deviceService.SearchDevicesAsync(model);
+
+        // 部分ビューに渡す
+        return PartialView("_DeviceListPartial", vm);
     }
 
     [HttpGet]

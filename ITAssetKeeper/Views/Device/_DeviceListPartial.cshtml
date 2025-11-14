@@ -1,0 +1,36 @@
+﻿@model ITAssetKeeper.Models.ViewModels.Device.DeviceListViewModel
+
+<!-- テーブル表示 -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.ManagementId)</th>
+            <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.Category)</th>
+            <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.Purpose)</th>
+            <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.ModelNumber)</th>
+            <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.SerialNumber)</th>
+            <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.HostName)</th>
+            <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.Location)</th>
+            <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.UserName)</th>
+            <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.Status)</th>
+            <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.PurchaseDate)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Devices)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.ManagementId)</td>
+                <td>@Html.DisplayFor(modelItem => item.Category)</td>
+                <td>@Html.DisplayFor(modelItem => item.Purpose)</td>
+                <td>@Html.DisplayFor(modelItem => item.ModelNumber)</td>
+                <td>@Html.DisplayFor(modelItem => item.SerialNumber)</td>
+                <td>@Html.DisplayFor(modelItem => item.HostName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Location)</td>
+                <td>@Html.DisplayFor(modelItem => item.UserName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                <td>@Html.DisplayFor(modelItem => item.PurchaseDate)</td>
+            </tr>
+        }
+    </tbody>
+</table>

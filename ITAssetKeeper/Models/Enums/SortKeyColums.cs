@@ -5,32 +5,32 @@ namespace ITAssetKeeper.Models.Enums;
 public enum SortKeyColums
 {
     [Display(Name = "機器管理ID")]
-    ManagementId = 1,
+    ManagementId,
 
     [Display(Name = "種別")]
-    Category = 2,
+    Category,
 
     [Display(Name = "用途")]
-    Purpose = 3,
+    Purpose,
 
     [Display(Name = "型番(モデル)")]
-    ModelNumber = 4,
+    ModelNumber,
 
     [Display(Name = "製造番号(シリアル)")]
-    SerialNumber = 5,
+    SerialNumber,
 
     [Display(Name = "ホスト名")]
-    HostName = 6,
+    HostName,
 
     [Display(Name = "設置場所")]
-    Location = 7,
+    Location,
 
     [Display(Name = "使用者")]
-    UserName = 8,
+    UserName,
 
     [Display(Name = "状態")]
-    Status = 9,
+    Status,
 
     [Display(Name = "購入日")]
-    PurchaseDate = 10
+    PurchaseDate
 }

@@ -1,4 +1,5 @@
 ﻿using ITAssetKeeper.Models.Enums;
+using ITAssetKeeper.Models.ViewModels.Dashboard;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
@@ -7,6 +8,9 @@ namespace ITAssetKeeper.Models.ViewModels.Device;
 // Index(機器一覧)のビューモデル
 public class DeviceListViewModel
 {
+    // メタデータにアクセスする踏み台
+    public DeviceDto DeviceDtoHeader { get; } = new();
+
     // ---ドロップダウン選択用 ---
     public string? SelectedCategory { get; set; }
     public string? SelectedPurpose { get; set; }

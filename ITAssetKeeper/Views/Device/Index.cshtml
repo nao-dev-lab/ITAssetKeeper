@@ -10,7 +10,7 @@
 <!-- 検索フォーム -->
 <div class="row">
     <div class="col-md-4">
-        <form asp-controller="Device" asp-action="Index" method="get">
+        <form id="searchForm" asp-controller="Device" asp-action="Index" method="get">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="ManagementId" class="control-label"></label>
@@ -57,50 +57,33 @@
                 <input asp-for="PurchaseDateTo" class="form-control" type="date" />
             </div>
             <div class="form-group">
-                <label asp-for="SortKeyList" class="control-label"></label>
-                @Html.DropDownListFor(model => model.SortKeyValue, Model.SortKeyList, null, new { @class = "form-control" })
-            </div>
-            <div class="form-group">
-                <label asp-for="SortOrderList" class="control-label"></label>
-                @Html.DropDownListFor(model => model.SortOrderValue, Model.SortOrderList, null, new { @class = "form-control" })
-            </div>
-            <div class="form-group">
                 <input type="submit" value="検索" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
+<!-- 並び替え選択 -->
+<div id="sortArea">
+    <div class="form-group">
+        <label asp-for="SortKeyList" class="control-label"></label>
+        @Html.DropDownListFor(model => model.SortKeyValue, Model.SortKeyList,
+            new { @class = "form-control", id = "SortKeyValue" })
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SortOrderList" class="control-label"></label>
+        @Html.DropDownListFor(model => model.SortOrderValue, Model.SortOrderList,
+            new { @class = "form-control", id = "SortOrderValue" })
+    </div>
+</div>
+
 <!-- テーブル表示 -->
-<table class="table">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.ManagementId)</th>
-            <th>@Html.DisplayNameFor(model => model.Category)</th>
-            <th>@Html.DisplayNameFor(model => model.Purpose)</th>
-            <th>@Html.DisplayNameFor(model => model.ModelNumber)</th>
-            <th>@Html.DisplayNameFor(model => model.SerialNumber)</th>
-            <th>@Html.DisplayNameFor(model => model.HostName)</th>
-            <th>@Html.DisplayNameFor(model => model.Location)</th>
-            <th>@Html.DisplayNameFor(model => model.UserName)</th>
-            <th>@Html.DisplayNameFor(model => model.Status)</th>
-            <th>@Html.DisplayNameFor(model => model.PurchaseDate)</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Devices){
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.ManagementId)</td>
-                <td>@Html.DisplayFor(modelItem => item.Category)</td>
-                <td>@Html.DisplayFor(modelItem => item.Purpose)</td>
-                <td>@Html.DisplayFor(modelItem => item.ModelNumber)</td>
-                <td>@Html.DisplayFor(modelItem => item.SerialNumber)</td>
-                <td>@Html.DisplayFor(modelItem => item.HostName)</td>
-                <td>@Html.DisplayFor(modelItem => item.Location)</td>
-                <td>@Html.DisplayFor(modelItem => item.UserName)</td>
-                <td>@Html.DisplayFor(modelItem => item.Status)</td>
-                <td>@Html.DisplayFor(modelItem => item.PurchaseDate)</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div id="deviceTableArea">
+    @await Html.PartialAsync("_DeviceListPartial", Model)
+</div>
+
+@section Scripts {
+<!-- jsファイルを読み込む -->
+<script src="~/js/device-index.js"></script>
+}
