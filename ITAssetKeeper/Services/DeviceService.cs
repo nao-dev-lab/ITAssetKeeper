@@ -6,12 +6,14 @@ using ITAssetKeeper.Models.ViewModels.Device;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using ITAssetKeeper.Constants;
 
 namespace ITAssetKeeper.Services;
 
@@ -24,11 +26,11 @@ public class DeviceService : IDeviceService
         _context = context;
     }
 
-    // 検索 & 一覧表示
-    public async Task<DeviceListViewModel> SearchDevicesAsync(DeviceListViewModel condition)
+    // フィルタリング (条件に応じて IQueryable<Device> を返す)
+    public IQueryable<Device> FilterDevices(IQueryable<Device> query, DeviceListViewModel condition)
     {
         // Deviceテーブルから全てのデータを取得する
-        IQueryable<Device> query = _context.Devices;
+        query = _context.Devices;
 
         // 部分一致
         if (!string.IsNullOrWhiteSpace(condition.ManagementId))
@@ -88,7 +90,7 @@ public class DeviceService : IDeviceService
         else if (condition.PurchaseDateFrom == null && condition.PurchaseDateTo != null)
         {
             // PurchaseDateTo 以前のものすべて
-            query = query.Where(x => x.PurchaseDate < condition.PurchaseDateTo);
+            query = query.Where(x => x.PurchaseDate <= condition.PurchaseDateTo);
         }
         else if (condition.PurchaseDateFrom != null && condition.PurchaseDateTo != null)
         {
@@ -100,58 +102,51 @@ public class DeviceService : IDeviceService
             else
             {
                 // PurchaseDateFrom ～ PurchaseDateToの範囲
-                query = query.Where(x => x.PurchaseDate > condition.PurchaseDateFrom && x.PurchaseDate < condition.PurchaseDateTo);
+                query = query.Where(x => x.PurchaseDate >= condition.PurchaseDateFrom && x.PurchaseDate <= condition.PurchaseDateTo);
             }
         }
 
-        // 並び替え
-        // 各カラムに対応するラムダ式のdintionaryを定義
-        // Expression で メソッドを IQueryable にバインドする
-        var dictSortKeys = new Dictionary<SortKeyColums, Expression<Func<Device, object>>>
-        {
-            { SortKeyColums.ManagementId, d => d.ManagementId },
-            { SortKeyColums.Category, d => d.Category },
-            { SortKeyColums.Purpose, d => d.Purpose },
-            { SortKeyColums.ModelNumber, d => d.ModelNumber },
-            { SortKeyColums.SerialNumber, d => d.SerialNumber },
-            { SortKeyColums.HostName, d => d.HostName },
-            { SortKeyColums.Location, d => d.Location },
-            { SortKeyColums.UserName, d => d.UserName },
-            { SortKeyColums.Status, d => d.Status },
-            { SortKeyColums.PurchaseDate, d => d.PurchaseDate }
-        };
+        return query;
+    }
 
+    // ソート (フィルタ済み IQueryable を昇順 / 降順に並べ替える)
+    public IQueryable<Device> SortDevices(IQueryable<Device> query, SortKeyColums sortKey, SortOrder sortOrder)
+    {
         // 指定されたSortKeyを基準に、
         // 指定されたSortOrderに応じて、昇順 or 降順でソートする
-        if (condition.SortOrderValue == SortOrder.Asc)
+        if (sortOrder == SortOrder.Asc)
         {
-            query = query.OrderBy(dictSortKeys[condition.SortKeyValue]);
+            query = query.OrderBy(DeviceConstants.SORT_KEY_SELECTORS[sortKey]);
         }
         else
         {
-            query = query.OrderByDescending(dictSortKeys[condition.SortKeyValue]);
+            query = query.OrderByDescending(DeviceConstants.SORT_KEY_SELECTORS[sortKey]);
         }
 
-        // ページング
-        query = query.Skip((condition.PageNumber - 1) * condition.PageSize);
-        query = query.Take(condition.PageSize);
+        return query;
+    }
 
-        // SQLを実行
-        var result = await query.ToListAsync();
+    // ページング (Skip/Take の適用)
+    public IQueryable<Device> PagingDevices(IQueryable<Device> query, int pageNumber, int pageSize)
+    {
+        query = query.Skip((pageNumber - 1) * pageSize);
+        query = query.Take(pageSize);
 
-        // 機器一覧用のViewModelのインスタンス生成
-        var listVm = new DeviceListViewModel();
+        return query;
+    }
 
-        // プルダウン用のデータを定数から取得し、
-        // DTO型でデータを詰める
-        listVm.Category = EnumHelper.ToSelectList<DeviceCategory>();
-        listVm.Purpose = EnumHelper.ToSelectList<DevicePurpose>();
-        listVm.Status = EnumHelper.ToSelectList<DeviceStatus>();
-        listVm.SortOrderList = EnumHelper.ToSelectList<SortOrder>();
-        listVm.SortKeyList = EnumHelper.ToSelectList<SortKeyColums>();
+    // ViewModel 変換(結果を DeviceListViewModel に詰める)
+    public DeviceListViewModel ToViewModel(DeviceListViewModel condition, List<Device> devices)
+    {
+        // プルダウン用のデータを定数から取得
+        condition.Category = EnumHelper.ToSelectList<DeviceCategory>();
+        condition.Purpose = EnumHelper.ToSelectList<DevicePurpose>();
+        condition.Status = EnumHelper.ToSelectList<DeviceStatus>();
+        condition.SortOrderList = EnumHelper.ToSelectList<SortOrder>();
+        condition.SortKeyList = EnumHelper.ToSelectList<SortKeyColums>();
 
         // 検索結果の一覧表示のデータをDTO型で詰める
-        listVm.Devices = result
+        condition.Devices = devices
             .Select(x => new DeviceDto
             {
                 ManagementId = x.ManagementId,
@@ -167,6 +162,28 @@ public class DeviceService : IDeviceService
             })
             .ToList();
 
-        return listVm;
+        return condition;
+    }
+
+    // 検索 & 一覧表示
+    public async Task<DeviceListViewModel> SearchDevicesAsync(DeviceListViewModel condition)
+    {
+        // Deviceテーブルから全てのデータを取得する
+        IQueryable<Device> query = _context.Devices;
+
+        // フィルタリング実施
+        query = FilterDevices(query, condition);
+
+        // 並び替え
+        query = SortDevices(query, condition.SortKeyValue, condition.SortOrderValue);
+
+        // ページング
+        query = PagingDevices(query, condition.PageNumber, condition.PageSize);
+
+        // SQLを実行
+        var devices = await query.ToListAsync();
+
+        // ビューモデルに詰めて、呼び出し元に返す
+        return ToViewModel(condition, devices);
     }
 }
