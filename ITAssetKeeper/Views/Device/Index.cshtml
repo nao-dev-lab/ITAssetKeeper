@@ -7,7 +7,7 @@
 
 <h1>機器情報一覧</h1>
 
-<!-- 検索用のフォーム -->
+<!-- 検索フォーム -->
 <div class="row">
     <div class="col-md-4">
         <form asp-controller="Device" asp-action="Index" method="get">
@@ -18,16 +18,10 @@
             </div>
             <div class="form-group">
                 <label asp-for="Category" class="control-label"></label>
-                @* <select asp-for="SelectedCategory" asp-items="Model.Category">
-                    <option value="">全て</option>
-                </select> *@
                 @Html.DropDownListFor(model => model.SelectedCategory, Model.Category, "全て", new { @class = "form-control" })
             </div>
             <div class="form-group">
                 <label asp-for="Purpose" class="control-label"></label>
-                @* <select asp-for="SelectedPurpose" asp-items="Model.Purpose">
-                    <option value="">全て</option>
-                </select> *@
                 @Html.DropDownListFor(model => model.SelectedPurpose, Model.Purpose, "全て", new { @class = "form-control" })
             </div>
             <div class="form-group">
@@ -52,9 +46,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
-                <select asp-for="SelectedStatus" asp-items="Model.Status">
-                    <option value="">全て</option>
-                </select>
+                @Html.DropDownListFor(model => model.SelectedStatus, Model.Status, "全て", new { @class = "form-control" })
             </div>
             <div class="form-group">
                 <label asp-for="PurchaseDateFrom" class="control-label"></label>
@@ -65,12 +57,12 @@
                 <input asp-for="PurchaseDateTo" class="form-control" type="date" />
             </div>
             <div class="form-group">
-                <label asp-for="SortKey" class="control-label"></label>
-                @Html.DropDownListFor(model => model.SelectedSortKey, Model.SortKey, null, new { @class = "form-control" })
+                <label asp-for="SortKeyList" class="control-label"></label>
+                @Html.DropDownListFor(model => model.SortKeyValue, Model.SortKeyList, null, new { @class = "form-control" })
             </div>
             <div class="form-group">
-                <label asp-for="SortOrder" class="control-label"></label>
-                @Html.DropDownListFor(model => model.SelectedSortOrder, Model.SortOrder, null, new { @class = "form-control" })
+                <label asp-for="SortOrderList" class="control-label"></label>
+                @Html.DropDownListFor(model => model.SortOrderValue, Model.SortOrderList, null, new { @class = "form-control" })
             </div>
             <div class="form-group">
                 <input type="submit" value="検索" class="btn btn-primary" />
@@ -79,22 +71,20 @@
     </div>
 </div>
 
-
-    
-
-
-
+<!-- テーブル表示 -->
 <table class="table">
     <thead>
         <tr>
             <th>@Html.DisplayNameFor(model => model.ManagementId)</th>
             <th>@Html.DisplayNameFor(model => model.Category)</th>
+            <th>@Html.DisplayNameFor(model => model.Purpose)</th>
             <th>@Html.DisplayNameFor(model => model.ModelNumber)</th>
             <th>@Html.DisplayNameFor(model => model.SerialNumber)</th>
             <th>@Html.DisplayNameFor(model => model.HostName)</th>
             <th>@Html.DisplayNameFor(model => model.Location)</th>
             <th>@Html.DisplayNameFor(model => model.UserName)</th>
             <th>@Html.DisplayNameFor(model => model.Status)</th>
+            <th>@Html.DisplayNameFor(model => model.PurchaseDate)</th>
         </tr>
     </thead>
     <tbody>
@@ -102,12 +92,14 @@
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.ManagementId)</td>
                 <td>@Html.DisplayFor(modelItem => item.Category)</td>
+                <td>@Html.DisplayFor(modelItem => item.Purpose)</td>
                 <td>@Html.DisplayFor(modelItem => item.ModelNumber)</td>
                 <td>@Html.DisplayFor(modelItem => item.SerialNumber)</td>
                 <td>@Html.DisplayFor(modelItem => item.HostName)</td>
                 <td>@Html.DisplayFor(modelItem => item.Location)</td>
                 <td>@Html.DisplayFor(modelItem => item.UserName)</td>
                 <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                <td>@Html.DisplayFor(modelItem => item.PurchaseDate)</td>
             </tr>
         }
     </tbody>

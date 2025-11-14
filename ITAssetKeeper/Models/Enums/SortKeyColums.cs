@@ -10,21 +10,27 @@ public enum SortKeyColums
     [Display(Name = "種別")]
     Category = 2,
 
+    [Display(Name = "用途")]
+    Purpose = 3,
+
     [Display(Name = "型番(モデル)")]
-    ModelNumber = 3,
+    ModelNumber = 4,
 
     [Display(Name = "製造番号(シリアル)")]
-    SerialNumber = 4,
+    SerialNumber = 5,
 
     [Display(Name = "ホスト名")]
-    HostName = 5,
+    HostName = 6,
 
     [Display(Name = "設置場所")]
-    Location = 6,
+    Location = 7,
 
     [Display(Name = "使用者")]
-    UserName = 7,
+    UserName = 8,
 
     [Display(Name = "状態")]
-    Status = 8
+    Status = 9,
+
+    [Display(Name = "購入日")]
+    PurchaseDate = 10
 }

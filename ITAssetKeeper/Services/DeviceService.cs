@@ -1,13 +1,16 @@
 ﻿using ITAssetKeeper.Data;
+using ITAssetKeeper.Helpers;
 using ITAssetKeeper.Models.Entities;
 using ITAssetKeeper.Models.Enums;
 using ITAssetKeeper.Models.ViewModels.Device;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ITAssetKeeper.Services;
@@ -45,7 +48,8 @@ public class DeviceService : IDeviceService
 
         if (!string.IsNullOrWhiteSpace(condition.HostName))
         {
-            query = query.Where(x => x.HostName!.Contains(condition.HostName));
+            // 実データ側のnullチェックをいれる
+            query = query.Where(x => x.HostName != null && x.HostName.Contains(condition.HostName));
         }
 
         if (!string.IsNullOrWhiteSpace(condition.Location))
@@ -55,7 +59,8 @@ public class DeviceService : IDeviceService
 
         if (!string.IsNullOrWhiteSpace(condition.UserName))
         {
-            query = query.Where(x => x.UserName!.Contains(condition.UserName));
+            // 実データ側のnullチェックをいれる
+            query = query.Where(x => x.UserName != null && x.UserName.Contains(condition.UserName));
         }
 
         // 完全一致
@@ -102,27 +107,29 @@ public class DeviceService : IDeviceService
         // 並び替え
         // 各カラムに対応するラムダ式のdintionaryを定義
         // Expression で メソッドを IQueryable にバインドする
-        var dictSortKeys = new Dictionary<SortKeyColums, Expression<Func<Device, string>>>
+        var dictSortKeys = new Dictionary<SortKeyColums, Expression<Func<Device, object>>>
         {
             { SortKeyColums.ManagementId, d => d.ManagementId },
             { SortKeyColums.Category, d => d.Category },
+            { SortKeyColums.Purpose, d => d.Purpose },
             { SortKeyColums.ModelNumber, d => d.ModelNumber },
             { SortKeyColums.SerialNumber, d => d.SerialNumber },
             { SortKeyColums.HostName, d => d.HostName },
             { SortKeyColums.Location, d => d.Location },
             { SortKeyColums.UserName, d => d.UserName },
-            { SortKeyColums.Status, d => d.Status }
+            { SortKeyColums.Status, d => d.Status },
+            { SortKeyColums.PurchaseDate, d => d.PurchaseDate }
         };
 
         // 指定されたSortKeyを基準に、
         // 指定されたSortOrderに応じて、昇順 or 降順でソートする
-        if (condition.SelectedSortOrder == SortOrder.Asc)
+        if (condition.SortOrderValue == SortOrder.Asc)
         {
-            query = query.OrderBy(dictSortKeys[condition.SelectedSortKey]);
+            query = query.OrderBy(dictSortKeys[condition.SortKeyValue]);
         }
         else
         {
-            query = query.OrderByDescending(dictSortKeys[condition.SelectedSortKey]);
+            query = query.OrderByDescending(dictSortKeys[condition.SortKeyValue]);
         }
 
         // ページング
@@ -137,11 +144,11 @@ public class DeviceService : IDeviceService
 
         // プルダウン用のデータを定数から取得し、
         // DTO型でデータを詰める
-        listVm.Category = new SelectList(Enum.GetNames<DeviceCategory>());
-        listVm.Purpose = new SelectList(Enum.GetNames<DevicePurpose>());
-        listVm.Status = new SelectList(Enum.GetNames<DeviceStatus>());
-        listVm.SortOrder = new SelectList(Enum.GetNames<SortOrder>());
-        listVm.SortKey = new SelectList(Enum.GetNames<SortKeyColums>());
+        listVm.Category = EnumHelper.ToSelectList<DeviceCategory>();
+        listVm.Purpose = EnumHelper.ToSelectList<DevicePurpose>();
+        listVm.Status = EnumHelper.ToSelectList<DeviceStatus>();
+        listVm.SortOrderList = EnumHelper.ToSelectList<SortOrder>();
+        listVm.SortKeyList = EnumHelper.ToSelectList<SortKeyColums>();
 
         // 検索結果の一覧表示のデータをDTO型で詰める
         listVm.Devices = result
@@ -149,12 +156,14 @@ public class DeviceService : IDeviceService
             {
                 ManagementId = x.ManagementId,
                 Category = x.Category,
+                Purpose = x.Purpose,
                 ModelNumber = x.ModelNumber,
                 SerialNumber = x.SerialNumber,
                 HostName = x.HostName,
                 Location = x.Location,
                 UserName = x.UserName,
-                Status = x.Status
+                Status = x.Status,
+                PurchaseDate = x.PurchaseDate.ToString("yyyy/MM/dd")
             })
             .ToList();
 

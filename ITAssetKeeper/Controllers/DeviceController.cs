@@ -14,12 +14,10 @@ namespace ITAssetKeeper.Controllers;
 
 public class DeviceController : Controller
 {
-    private readonly ITAssetKeeperDbContext _context;
     private readonly IDeviceService _deviceService;
 
     public DeviceController(ITAssetKeeperDbContext context, IDeviceService deviceService)
     {
-        _context = context;
         _deviceService = deviceService;
     }
 

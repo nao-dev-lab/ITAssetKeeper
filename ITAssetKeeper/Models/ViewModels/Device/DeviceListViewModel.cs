@@ -11,8 +11,8 @@ public class DeviceListViewModel
     public string? SelectedCategory { get; set; }
     public string? SelectedPurpose { get; set; }
     public string? SelectedStatus { get; set; }
-    public SortKeyColums SelectedSortKey { get; set; } = SortKeyColums.ManagementId;
-    public SortOrder SelectedSortOrder { get; set; } = Enums.SortOrder.Asc;
+    public SortKeyColums SortKeyValue { get; set; } = SortKeyColums.ManagementId;
+    public SortOrder SortOrderValue { get; set; } = Enums.SortOrder.Asc;
 
     // --- 検索条件 ---
     [Display(Name = "機器管理ID")]
@@ -48,12 +48,15 @@ public class DeviceListViewModel
     [Display(Name = "購入日 (終了)")]
     public DateTime? PurchaseDateTo { get; set; }
 
+    [Display(Name = "購入日")]
+    public DateTime? PurchaseDate { get; set; }
+
     // --- 並び替え・ページング ---
     [Display(Name = "並び替え基準")]
-    public SelectList? SortKey { get; set; }
+    public SelectList? SortKeyList { get; set; }
 
     [Display(Name = "並び替え")]
-    public SelectList? SortOrder { get; set; }
+    public SelectList? SortOrderList { get; set; }
     
     public int PageNumber { get; set; } = 1;
     public int PageSize { get; set; } = 10;

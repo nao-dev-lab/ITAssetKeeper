@@ -37,7 +37,7 @@ public class DeviceDto
     public string Memo { get; set; }
 
     [Display(Name = "購入日")]
-    public DateTime PurchaseDate { get; set; }
+    public string PurchaseDate { get; set; }
 
     [Display(Name = "登録日")]
     public DateTime CreatedAt { get; set; }
