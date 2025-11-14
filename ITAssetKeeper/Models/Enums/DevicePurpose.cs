@@ -1,9 +1,13 @@
-﻿namespace ITAssetKeeper.Models.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ITAssetKeeper.Models.Enums;
 
 // 機器用途用Enum
 public enum DevicePurpose
 {
-    Business = 1,        // 業務用
-    Verification = 2,    // 検証用
-    Other = 99
+    [Display(Name = "業務用")]
+    Business = 1,
+
+    [Display(Name = "検証用")]
+    Verification = 2
 }

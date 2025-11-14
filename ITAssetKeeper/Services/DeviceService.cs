@@ -5,7 +5,9 @@ using ITAssetKeeper.Models.ViewModels.Device;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ITAssetKeeper.Services;
@@ -98,109 +100,29 @@ public class DeviceService : IDeviceService
         }
 
         // 並び替え
-        if (condition.SelectedSortOrder != null && condition.SelectedSortKey == null)
+        // 各カラムに対応するラムダ式のdintionaryを定義
+        // Expression で メソッドを IQueryable にバインドする
+        var dictSortKeys = new Dictionary<SortKeyColums, Expression<Func<Device, string>>>
         {
-            if (condition.SelectedSortOrder == SortOrder.Asc)
-            {
-                query = query.OrderBy(d => d.ManagementId);
-            }
-            else
-            {
-                query = query.OrderByDescending(d => d.ManagementId);
-            }
+            { SortKeyColums.ManagementId, d => d.ManagementId },
+            { SortKeyColums.Category, d => d.Category },
+            { SortKeyColums.ModelNumber, d => d.ModelNumber },
+            { SortKeyColums.SerialNumber, d => d.SerialNumber },
+            { SortKeyColums.HostName, d => d.HostName },
+            { SortKeyColums.Location, d => d.Location },
+            { SortKeyColums.UserName, d => d.UserName },
+            { SortKeyColums.Status, d => d.Status }
+        };
+
+        // 指定されたSortKeyを基準に、
+        // 指定されたSortOrderに応じて、昇順 or 降順でソートする
+        if (condition.SelectedSortOrder == SortOrder.Asc)
+        {
+            query = query.OrderBy(dictSortKeys[condition.SelectedSortKey]);
         }
-        else if (condition.SelectedSortOrder == null && condition.SelectedSortKey != null)
+        else
         {
-            switch (condition.SelectedSortKey)
-            {
-                case SortKeyColums.ManagementId:
-                    query = query.OrderBy(d => d.ManagementId);
-                    break;
-                case SortKeyColums.Category:
-                    query = query.OrderBy(d => d.Category);
-                    break;
-                case SortKeyColums.ModelNumber:
-                    query = query.OrderBy(d => d.ModelNumber);
-                    break;
-                case SortKeyColums.SerialNumber:
-                    query = query.OrderBy(d => d.SerialNumber);
-                    break;
-                case SortKeyColums.HostName:
-                    query = query.OrderBy(d => d.HostName);
-                    break;
-                case SortKeyColums.Location:
-                    query = query.OrderBy(d => d.Location);
-                    break;
-                case SortKeyColums.UserName:
-                    query = query.OrderBy(d => d.UserName);
-                    break;
-                case SortKeyColums.Status:
-                    query = query.OrderBy(d => d.Status);
-                    break;
-            }
-        }
-        else if (condition.SelectedSortOrder != null && condition.SelectedSortKey != null)
-        {
-            if (condition.SelectedSortOrder == SortOrder.Asc)
-            {
-                switch (condition.SelectedSortKey)
-                {
-                    case SortKeyColums.ManagementId:
-                        query = query.OrderBy(d => d.ManagementId);
-                        break;
-                    case SortKeyColums.Category:
-                        query = query.OrderBy(d => d.Category);
-                        break;
-                    case SortKeyColums.ModelNumber:
-                        query = query.OrderBy(d => d.ModelNumber);
-                        break;
-                    case SortKeyColums.SerialNumber:
-                        query = query.OrderBy(d => d.SerialNumber);
-                        break;
-                    case SortKeyColums.HostName:
-                        query = query.OrderBy(d => d.HostName);
-                        break;
-                    case SortKeyColums.Location:
-                        query = query.OrderBy(d => d.Location);
-                        break;
-                    case SortKeyColums.UserName:
-                        query = query.OrderBy(d => d.UserName);
-                        break;
-                    case SortKeyColums.Status:
-                        query = query.OrderBy(d => d.Status);
-                        break;
-                }
-            }
-            else
-            {
-                switch (condition.SelectedSortKey)
-                {
-                    case SortKeyColums.ManagementId:
-                        query = query.OrderByDescending(d => d.ManagementId);
-                        break;
-                    case SortKeyColums.Category:
-                        query = query.OrderByDescending(d => d.Category);
-                        break;
-                    case SortKeyColums.ModelNumber:
-                        query = query.OrderByDescending(d => d.ModelNumber);
-                        break;
-                    case SortKeyColums.SerialNumber:
-                        query = query.OrderByDescending(d => d.SerialNumber);
-                        break;
-                    case SortKeyColums.HostName:
-                        query = query.OrderByDescending(d => d.HostName);
-                        break;
-                    case SortKeyColums.Location:
-                        query = query.OrderByDescending(d => d.Location);
-                        break;
-                    case SortKeyColums.UserName:
-                        query = query.OrderByDescending(d => d.UserName);
-                        break;
-                    case SortKeyColums.Status:
-                        query = query.OrderByDescending(d => d.Status);
-                        break;
-                }
-            }
+            query = query.OrderByDescending(dictSortKeys[condition.SelectedSortKey]);
         }
 
         // ページング

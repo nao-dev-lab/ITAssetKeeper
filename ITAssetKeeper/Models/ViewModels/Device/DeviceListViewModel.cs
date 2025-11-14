@@ -11,8 +11,8 @@ public class DeviceListViewModel
     public string? SelectedCategory { get; set; }
     public string? SelectedPurpose { get; set; }
     public string? SelectedStatus { get; set; }
-    public SortKeyColums? SelectedSortKey { get; set; }
-    public SortOrder? SelectedSortOrder { get; set; }
+    public SortKeyColums SelectedSortKey { get; set; } = SortKeyColums.ManagementId;
+    public SortOrder SelectedSortOrder { get; set; } = Enums.SortOrder.Asc;
 
     // --- 検索条件 ---
     [Display(Name = "機器管理ID")]
