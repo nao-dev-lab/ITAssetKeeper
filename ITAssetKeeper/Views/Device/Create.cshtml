@@ -7,7 +7,7 @@
 <h1>機器登録</h1>
 
 <div>
-    <a asp-controller="Device" asp-action="Create">キャンセル</a>
+    <a asp-controller="Device" asp-action="Index">キャンセル</a>
 </div>
 
 <!-- 機器登録フォーム -->
@@ -21,11 +21,11 @@
             </div>
             <div class="form-group">
                 <label asp-for="Category" class="control-label"></label>
-                @Html.DropDownListFor(model => model.SelectedCategory, Model.Category, "全て", new { @class = "form-control" })
+                @Html.DropDownListFor(model => model.SelectedCategory, Model.Category, "選択してください", new { @class = "form-control" })
             </div>
             <div class="form-group">
                 <label asp-for="Purpose" class="control-label"></label>
-                @Html.DropDownListFor(model => model.SelectedPurpose, Model.Purpose, "全て", new { @class = "form-control" })
+                @Html.DropDownListFor(model => model.SelectedPurpose, Model.Purpose, "選択してください", new { @class = "form-control" })
             </div>
             <div class="form-group">
                 <label asp-for="ModelNumber" class="control-label"></label>
@@ -49,7 +49,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
-                @Html.DropDownListFor(model => model.SelectedStatus, Model.Status, "全て", new { @class = "form-control" })
+                @Html.DropDownListFor(model => model.SelectedStatus, Model.Status, "選択してください", new { @class = "form-control" })
             </div>
             <div class="form-group">
                 <label asp-for="PurchaseDate" class="control-label"></label>
@@ -57,7 +57,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Memo" class="control-label"></label>
-                <input asp-for="Memo" class="form-control"/>
+                <textarea asp-for="Memo" class="form-control"></textarea>
             </div>
             <div class="form-group">
                 <input type="submit" value="登録" class="btn btn-primary" />

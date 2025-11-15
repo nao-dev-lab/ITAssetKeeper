@@ -70,7 +70,9 @@ public class DeviceController : Controller
     [Authorize(Roles = "Admin")]
     public IActionResult Create()
     {
+        // ドロップダウン用の項目を詰めて、ビューに渡す
         var vm = new DeviceManageViewModel();
+        _deviceService.InitializeDeviceManage(vm, ViewMode.Create);
         return View(vm);
     }
 

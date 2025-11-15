@@ -19,4 +19,10 @@ public interface IDeviceService
 
     // ViewModel 変換(結果を DeviceListViewModel に詰める)
     DeviceListViewModel ToViewModel(DeviceListViewModel condition, List<Device> devices);
+
+    // Create,Edit,Details のビューモデルに、ドロップダウン用のSelectListをセット
+    void SetSelectList(DeviceManageViewModel vm);
+
+    // Create,Edit,Details画面のinitialize
+    DeviceManageViewModel InitializeDeviceManage(DeviceManageViewModel model, ViewMode viewMode);
 }

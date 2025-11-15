@@ -191,4 +191,25 @@ public class DeviceService : IDeviceService
 
         return condition;
     }
+
+    // Create,Edit,Details画面のinitialize
+    public DeviceManageViewModel InitializeDeviceManage(DeviceManageViewModel model, ViewMode viewMode)
+    {
+        if (viewMode == ViewMode.Create)
+        {
+            // ビューモデルに、ドロップダウン用のSelectListをセット
+            SetSelectList(model);
+            model.PurchaseDate = DateTime.Now;
+        }
+        return model;
+    }
+
+    // Create,Edit,Details のビューモデルに、ドロップダウン用のSelectListをセット
+    public void SetSelectList(DeviceManageViewModel vm)
+    {
+        // プルダウン用のデータを定数から取得
+        SelectListHelper.SetEnumSelectList<DeviceCategory>(vm, selectList => vm.Category = selectList);
+        SelectListHelper.SetEnumSelectList<DevicePurpose>(vm, selectList => vm.Purpose = selectList);
+        SelectListHelper.SetEnumSelectList<DeviceStatus>(vm, selectList => vm.Status = selectList);
+    }
 }
