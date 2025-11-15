@@ -93,7 +93,7 @@
     border-radius: 8px;
 }
 
-/* ===== 入力系の最大幅をスクショに合わせる ===== */
+/* ===== 入力系 ===== */
 .auth-form-wrapper {
     max-width: 380px; /* ← textbox / button の最大幅 */
     margin: 0 auto; /* ← auth-card の中央に揃える */
@@ -108,6 +108,24 @@
 .auth-btn {
     width: 100%;
 }
+
+/* チェックボックスとラベルを横に揃える */
+.remember-row {
+    display: flex;
+    align-items: center; /*  縦の中心で揃える */
+    gap: 6px; /* チェックボックスと文字の隙間 */
+}
+
+/* ラベルの位置調整 */
+.remember-row .form-check-label {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.text-purple {
+    color: #520DC2 !important;
+}
+
 
 /* ===== リンク ===== */
 .forgot-link {
