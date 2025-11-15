@@ -47,6 +47,17 @@ public class DeviceController : Controller
         return PartialView("_DeviceListPartial", vm);
     }
 
+    // GET: Device/GetPagedList
+    [HttpGet]
+    public async Task<IActionResult> GetPagedList(DeviceListViewModel model)
+    {
+        // 結果を取得
+        var vm = await _deviceService.SearchDevicesAsync(model);
+
+        // 部分ビューに渡す
+        return PartialView("_DeviceListPartial", vm);
+    }
+
     [HttpGet]
     public async Task<IActionResult> Details()
     {

@@ -26,6 +26,31 @@ public class DeviceService : IDeviceService
         _context = context;
     }
 
+    // 検索 & 一覧表示
+    public async Task<DeviceListViewModel> SearchDevicesAsync(DeviceListViewModel condition)
+    {
+        // Deviceテーブルから全てのデータを取得する
+        IQueryable<Device> query = _context.Devices;
+
+        // フィルタリング実施
+        query = FilterDevices(query, condition);
+
+        // 並び替え
+        query = SortDevices(query, condition.SortKeyValue, condition.SortOrderValue);
+
+        // ページング前の全件数を取得
+        condition.TotalCount = query.Count();
+
+        // ページング
+        query = PagingDevices(query, condition.PageNumber, condition.PageSize);
+
+        // SQLを実行
+        var devices = await query.ToListAsync();
+
+        // ビューモデルに詰めて、呼び出し元に返す
+        return ToViewModel(condition, devices);
+    }
+
     // フィルタリング (条件に応じて IQueryable<Device> を返す)
     public IQueryable<Device> FilterDevices(IQueryable<Device> query, DeviceListViewModel condition)
     {
@@ -129,6 +154,7 @@ public class DeviceService : IDeviceService
     // ページング (Skip/Take の適用)
     public IQueryable<Device> PagingDevices(IQueryable<Device> query, int pageNumber, int pageSize)
     {
+        // ページングを適用
         query = query.Skip((pageNumber - 1) * pageSize);
         query = query.Take(pageSize);
 
@@ -158,32 +184,10 @@ public class DeviceService : IDeviceService
                 Location = x.Location,
                 UserName = x.UserName,
                 Status = x.Status,
-                PurchaseDate = x.PurchaseDate.ToString("yyyy/MM/dd")
+                PurchaseDate = x.PurchaseDate.ToString("yyyy/MM/dd"),
             })
             .ToList();
 
         return condition;
-    }
-
-    // 検索 & 一覧表示
-    public async Task<DeviceListViewModel> SearchDevicesAsync(DeviceListViewModel condition)
-    {
-        // Deviceテーブルから全てのデータを取得する
-        IQueryable<Device> query = _context.Devices;
-
-        // フィルタリング実施
-        query = FilterDevices(query, condition);
-
-        // 並び替え
-        query = SortDevices(query, condition.SortKeyValue, condition.SortOrderValue);
-
-        // ページング
-        query = PagingDevices(query, condition.PageNumber, condition.PageSize);
-
-        // SQLを実行
-        var devices = await query.ToListAsync();
-
-        // ビューモデルに詰めて、呼び出し元に返す
-        return ToViewModel(condition, devices);
     }
 }

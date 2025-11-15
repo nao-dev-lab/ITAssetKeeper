@@ -34,3 +34,37 @@
         }
     </tbody>
 </table>
+
+<!-- ページング表示 -->
+<nav aria-label="Page navigation" class="mt-3">
+    <ul class="pagination">
+
+        @if (Model.HasPreviousPage)
+        {
+            <li class="page-item">
+                <a class="page-link paging-link" data-page="1">« 最初</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link paging-link" data-page="@(Model.PageNumber - 1)">‹ 前へ</a>
+            </li>
+        }
+
+        @foreach (var num in Model.PageRange)
+        {
+            <li class="page-item @(num == Model.PageNumber ? "active" : "")">
+                <a class="page-link paging-link" data-page="@num">@num</a>
+            </li>
+        }
+
+        @if (Model.HasNextPage)
+        {
+            <li class="page-item">
+                <a class="page-link paging-link" data-page="@(Model.PageNumber + 1)">次へ ›</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link paging-link" data-page="@Model.TotalPages">最後 »</a>
+            </li>
+        }
+
+    </ul>
+</nav>
