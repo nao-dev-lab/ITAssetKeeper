@@ -13,7 +13,7 @@
 
 .auth-card {
     background-color: #EDE7F9;
-    padding: 60px 140px; /* ← 横長に見えるよう左右の余白を増やす */
+    padding: 60px 40px; /* ← 横長に見えるよう左右の余白を増やす */
     border-radius: 10px;
     width: 900px; /* ← 横幅を広げる */
     max-width: 95%; /* ← 画面が小さい時のレスポンシブ対策 */
@@ -24,6 +24,7 @@
 .logo-box {
     text-align: center;
     margin-bottom: 16px;
+    padding-bottom: 10px;
 }
 
 /* ロゴ背景（紫） */
@@ -53,6 +54,8 @@
 .auth-title {
     color: #520DC2;
     font-weight: bold;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
 }
 
 .title-icon {
@@ -62,7 +65,6 @@
     position: relative;
     top: -3px; /* 微調整：上に 3px 動かす */
 }
-
 
 /* ===== テキストボックス ===== */
 .auth-input {
@@ -74,15 +76,12 @@
     cursor: pointer;
 }
 
-
 /* ===== パスワードのマスクon/off ===== */
 .eye-icon {
     width: 20px;
     height: 20px;
     cursor: pointer;
 }
-
-
 
 /* ===== ボタン ===== */
 .auth-btn {
@@ -126,7 +125,6 @@
     color: #520DC2 !important;
 }
 
-
 /* ===== リンク ===== */
 .forgot-link {
     color: #520DC2;
@@ -144,5 +142,58 @@
     font-size: 14px;
 }
 
+/* ===== アラート表示用 ===== */
+.alert-wrapper {
+    width: 100%; /* auth-card の幅を基準にする */
+    margin-bottom: 5px;
+    text-align: left !important;
+}
+
+/* ===== アラート枠（黄色） ===== */
+.alert-wrapper {
+    display: inline-block; /* 中央揃え */
+    width: auto;  /* 内容に合わせる */
+    max-width: 700px; /* 長文の場合は折り返し */
+    padding: 14px 20px;
+    border-radius: 8px;
+    text-align: left !important;
+}
+
+/* アラート内の ValidationSummary の余白を均等にする */
+.alert {
+    padding-top: 12px !important;   /* Bootstrap デフォルトと同じ値に揃える */
+    padding-bottom: 12px !important;
+}
+
+.alert ul {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-left: 0 !important;
+    list-style: none !important;
+}
+
+.alert li {
+    margin: 0 !important; /* li の最後に余白が付かないように完全リセット */
+    list-style-type: none !important;
+}
+
+/* ValidationSummary の黒丸を消す */
+.validation-summary-valid,
+.validation-summary-errors ul {
+    list-style: none !important;
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+}
+
+.validation-summary-errors li {
+    list-style-type: none !important;
+}
+
+/* ===== アイコン ===== */
+.alert-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 12px;
+}
 
 
