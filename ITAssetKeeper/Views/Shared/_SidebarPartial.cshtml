@@ -1,0 +1,98 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using ITAssetKeeper.Models.Entities
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    var user = await UserManager.GetUserAsync(User);
+    var roles = user != null ? await UserManager.GetRolesAsync(user) : new List<string>();
+    bool isAdmin = roles.Contains("Admin");
+    bool isEditor = roles.Contains("Editor");
+    bool isViewer = roles.Contains("Viewer");
+}
+
+<div class="sidebar">
+    <div class="sidebar-header">
+        <span class="sidebar-logo">IT Asset Keeper</span>
+    </div>
+
+    <ul class="sidebar-menu">
+
+        <!-- DashBoard（Adminのみ）-->
+        @if (isAdmin)
+        {
+            <li>
+                <a asp-controller="Dashboard" asp-action="Admin"
+                   class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "active" : "")">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+            </li>
+        }
+
+        <!-- Device（全ロール）-->
+        <li>
+            <a asp-controller="Device" asp-action="Index"
+               class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Device" ? "active" : "")">
+                <i class="bi bi-laptop"></i> 機器一覧
+            </a>
+        </li>
+
+        <!-- 機器登録（Adminのみ）-->
+        @if (isAdmin)
+        {
+            <li>
+                <a asp-controller="Device" asp-action="Create">
+                    <i class="bi bi-speedometer2"></i> 機器登録
+                </a>
+            </li>
+        }
+
+        <!-- 履歴（全ロール）-->
+        <li>
+            <a asp-controller="DeviceHistory" asp-action="Index">
+                <i class="bi bi-clock-history"></i> 更新履歴
+            </a>
+        </li>
+
+        <!-- ユーザー管理（Admin / Editor）-->
+        @if (isAdmin || isEditor)
+        {
+            <li>
+                <a asp-controller="User" asp-action="Index">
+                    <i class="bi bi-people"></i> ユーザー一覧
+                </a>
+            </li>
+        }
+
+        <!-- ユーザー管理（Adminのみ）-->
+        @if (isAdmin)
+        {
+            <li>
+                <a asp-controller="Role" asp-action="Index">
+                    <i class="bi bi-shield-lock"></i> ユーザー管理
+                </a>
+            </li>
+        }
+
+    </ul>
+
+    <!-- ログアウト -->
+    <ul class="sidebar-footer">
+        <li>
+        <form asp-controller="Account" asp-action="Info" method="post">
+                <a asp-controller="Account" asp-action="Info" class="sidebar-footer-link">アカウント</a>
+        </form>
+        </li>
+        <li>
+        <form asp-controller="Account" asp-action="Logout" method="post">
+                <a asp-controller="Account" asp-action="Logout" class="sidebar-footer-link">ログアウト</a>
+        </form>
+        </li>
+    </ul>
+
+    <!-- サイドバーフッター -->
+    <div class="sidebar-footer-logo">
+        © 2025 - IT Asset Keeper
+    </div>
+</div>
+

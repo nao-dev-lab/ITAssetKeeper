@@ -1,4 +1,56 @@
-html {
+/* サイドバー全体 */
+.sidebar {
+    width: 220px;
+    background: #EFE8FF;
+    min-height: 100vh;
+    padding: 20px 10px;
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+/* タイトル */
+.sidebar-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #6A32E5;
+    display: block;
+    margin-bottom: 30px;
+}
+
+
+/* 2カラムレイアウト */
+.layout-wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* コンテンツ側 */
+/*.layout-content {
+    margin-left: 240px;*/ /* サイドバー幅 + 余白 */
+    /*padding: 20px;
+}*/
+.layout-content {
+    flex-grow: 1;
+    padding: 20px;
+    margin-left: 0;
+}
+
+/* サイドバー側 */
+.layout-sidebar {
+    width: 230px;
+    background-color: #EFE8FF;
+}
+
+/* フッター */
+.sidebar-footer {
+    color: #666;
+    font-size: 12px;
+    margin-top: 40px;
+}
+
+
+/*html {
   font-size: 14px;
 }
 
@@ -19,4 +71,4 @@ html {
 
 body {
   margin-bottom: 60px;
-}
+}*/

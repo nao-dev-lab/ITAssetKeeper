@@ -1,0 +1,137 @@
+﻿/* ================================
+   Sidebar 全体
+   ================================ */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 230px;
+    height: 100vh;
+    background-color: #F1EDFF;
+    border-right: 1px solid #e6e6e6;
+    padding: 20px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ================================
+   タイトル（ロゴ部分）
+   ================================ */
+.sidebar-header {
+    margin-bottom: 30px;
+}
+
+.sidebar-logo {
+    font-size: 20px;
+    font-weight: bold;
+    color: #6A32E5; /* Figma の濃い紫 */
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* ================================
+   メニュー（UL）
+   ================================ */
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    /*    flex-grow: 1;*/
+}
+
+/* LI 自体も中央そろえの箱として扱う */
+.sidebar-menu li {
+    /*margin-bottom: 8px;*/
+    list-style: none;
+    display: flex;
+    justify-content: center;    /* ← ボタンを左右中央に寄せる */
+    margin: 16px 0;
+}
+
+
+/* ================================
+メニューのボタン（Aタグ）
+================================ */
+
+/* --- 通常のメニューボタン --- */
+.sidebar-menu a {
+    display: block;
+    background-color: #8744CE;
+    color: #FFFFFF;
+    padding: 14px 16px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    box-shadow: 0 4px 8px rgba(135, 68, 206, 0.35);
+    margin-bottom: 20px;
+    transition: all 0.15s ease;
+    width: 85%;
+    text-align: center;
+}
+
+/* Hover */
+.sidebar-menu a:hover {
+    background-color: #9459d6;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px rgba(135, 68, 206, 0.45);
+    color: #FFFFFF;
+}
+
+.sidebar-menu a:hover i {
+    color: #FFFFFF;
+}
+
+/* --- Active時 --- */
+.sidebar-menu a.active {
+    background-color: #4C41A8;
+    box-shadow: 0 6px 14px #8C88B2, inset 0 0 6px rgba(255,255,255,0.25);
+    color: #FFFFFF;
+}
+
+.sidebar-menu a.active i {
+    color: #FFFFFF;
+}
+
+/* ================================
+   サイドバー下部のリンク（ログアウトなど）
+   ================================ */
+.sidebar-footer {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    /*flex-grow: 1;*/
+}
+
+/* LI 自体も中央そろえの箱として扱う */
+.sidebar-footer li {
+    list-style: none;
+    display: flex;
+    justify-content: center; /* ← ボタンを左右中央に寄せる */
+    margin: 8px 0;
+}
+
+/* フッターリンク (アカウント,ログアウト)*/
+.sidebar-footer-link {
+    display: block;
+    color: #6A32E5;
+    text-decoration: none;
+    font-weight: 600;
+    margin: 12px 0;
+    font-size: 16px;
+}
+
+.sidebar-footer-link:hover {
+    color: #8744CE;
+    text-decoration: underline;
+}
+
+/* フッター文字 */
+.sidebar-footer-logo {
+    padding: 25px 16px;
+    color: #520DC2;
+    font-size: 14px;
+}
