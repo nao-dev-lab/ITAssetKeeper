@@ -1,4 +1,72 @@
-﻿@using ITAssetKeeper.Models.Enums
+﻿@using ITAssetKeeper.Models.ViewModels.Account
+@using ITAssetKeeper.Models.Enums
+@model LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+    Layout = "_AuthLayout";
+}
+
+<!-- ロゴ表示 -->
+<div class="logo-box">
+    <div class="logo-container">
+        <img src="~/img/logo.png" class="logo-image" alt="logo" />
+        <span class="logo-title-text">IT Asset Keeper</span>
+    </div>
+</div>
+
+<!-- タイトル表示 -->
+<h2 class="auth-title text-center mt-4">
+    <img src="~/img/login_icon.png" class="title-icon" alt="" />
+    ログイン
+</h2>
+
+<form asp-action="Login" method="post" class="mt-3">
+    @Html.AntiForgeryToken()
+
+    <!-- アラートメッセージがあればここに表示 -->
+    @if (ViewData.ModelState.ErrorCount > 0)
+    {
+        <div class="alert alert-warning mt-3" role="alert">
+            @Html.ValidationSummary(true, "", new { @class = "mb-0" })
+        </div>
+    }
+
+    <!-- パスワード変更からリダイレクトされた場合、ここにメッセージ表示 -->
+    @if (TempData[@ChangePWTemp.PasswordChangeMessage.ToString()] != null)
+    {
+        <div class="alert alert-warning">@TempData[@ChangePWTemp.PasswordChangeMessage.ToString()]</div>
+    }
+
+    <!-- ログインフォーム -->
+    <div class="auth-form-wrapper">
+        <div class="mb-3">
+            <input asp-for="UserName" class="form-control auth-input" placeholder="ユーザーID" />
+        </div>
+
+        <div class="mb-3 input-group auth-password-wrapper">
+            <input asp-for="Password" type="password" class="form-control auth-input" placeholder="パスワード" />
+
+            <span class="input-group-text password-toggle">
+                <img src="~/img/eye_off.png" class="eye-icon" alt="toggle" />
+            </span>
+        </div>
+
+        <div class="form-check mt-2">
+            <input asp-for="RememberMe" class="form-check-input" />
+            <label asp-for="RememberMe" class="form-check-label text-purple"></label>
+        </div>
+
+        <button type="submit" class="btn auth-btn w-100 mt-4">ログイン</button>
+
+        <div class="text-center mt-3">
+            <a asp-action="ForgotPassword" class="forgot-link">パスワードを忘れた方はこちら ></a>
+        </div>
+    </div>
+</form>
+
+
+@* @using ITAssetKeeper.Models.Enums
 @using ITAssetKeeper.Models.ViewModels.Account
 @model LoginViewModel
 
@@ -46,4 +114,4 @@
             <input type="submit" value="ログイン" class="btn btn-primary" />
         </div>
     </form>
-</div>
+</div> *@

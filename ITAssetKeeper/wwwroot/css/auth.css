@@ -1,0 +1,130 @@
+﻿/* ===== 全体背景 ===== */
+.auth-body {
+    background-color: #ffffff;
+}
+
+/* ===== 中央の背景ボックス ===== */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.auth-card {
+    background-color: #EDE7F9;
+    padding: 60px 140px; /* ← 横長に見えるよう左右の余白を増やす */
+    border-radius: 10px;
+    width: 900px; /* ← 横幅を広げる */
+    max-width: 95%; /* ← 画面が小さい時のレスポンシブ対策 */
+    text-align: center;
+}
+
+/* ===== タイトルロゴ ===== */
+.logo-box {
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+/* ロゴ背景（紫） */
+.logo-container {
+    background-color: #7749F8;
+    padding: 8px 22px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* アイコン画像 */
+.logo-image {
+    height: 36px; /* 適宜調整 */
+    margin-right: 10px;
+}
+
+/* 文字 */
+.logo-title-text {
+    color: #FFFFFF;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+
+/* ===== タイトル文字 ===== */
+.auth-title {
+    color: #520DC2;
+    font-weight: bold;
+}
+
+.title-icon {
+    height: 28px; /* アイコン高さを h2 に合わせる */
+    vertical-align: middle; /* 行の中央に揃える */
+    margin-right: 6px; /* 文字との間隔 */
+    position: relative;
+    top: -3px; /* 微調整：上に 3px 動かす */
+}
+
+
+/* ===== テキストボックス ===== */
+.auth-input {
+    height: 42px;
+    border-radius: 8px;
+}
+
+.auth-password-wrapper .eye-icon {
+    cursor: pointer;
+}
+
+
+/* ===== パスワードのマスクon/off ===== */
+.eye-icon {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+
+
+/* ===== ボタン ===== */
+.auth-btn {
+    background-color: #7749F8;
+    color: #FFFFFF;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+/* ===== 入力系の最大幅をスクショに合わせる ===== */
+.auth-form-wrapper {
+    max-width: 380px; /* ← textbox / button の最大幅 */
+    margin: 0 auto; /* ← auth-card の中央に揃える */
+}
+
+/* テキストボックス */
+.auth-input {
+    width: 100%;
+}
+
+/* ボタン */
+.auth-btn {
+    width: 100%;
+}
+
+/* ===== リンク ===== */
+.forgot-link {
+    color: #520DC2;
+    text-decoration: none;
+}
+
+    .forgot-link:hover {
+        text-decoration: underline;
+    }
+
+/* ===== フッタ ===== */
+.auth-footer {
+    margin-top: 40px;
+    color: #520DC2;
+    font-size: 14px;
+}
+
+
+
