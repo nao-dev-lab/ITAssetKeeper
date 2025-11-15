@@ -32,7 +32,9 @@
         <!-- Device（全ロール）-->
         <li>
             <a asp-controller="Device" asp-action="Index"
-               class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Device" ? "active" : "")">
+               class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Device"
+                        && ViewContext.RouteData.Values["action"]?.ToString() == "Index"
+                        ? "active" : "")">
                 <i class="bi bi-laptop"></i> 機器一覧
             </a>
         </li>
@@ -41,7 +43,10 @@
         @if (isAdmin)
         {
             <li>
-                <a asp-controller="Device" asp-action="Create">
+                <a asp-controller="Device" asp-action="Create"
+                    class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Device"
+                        && ViewContext.RouteData.Values["action"]?.ToString() == "Create"
+                        ? "active" : "")">
                     <i class="bi bi-speedometer2"></i> 機器登録
                 </a>
             </li>

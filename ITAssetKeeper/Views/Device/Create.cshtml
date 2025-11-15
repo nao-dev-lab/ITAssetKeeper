@@ -1,5 +1,67 @@
-﻿@{
+﻿@model ITAssetKeeper.Models.ViewModels.Device.DeviceManageViewModel
+
+@{
     ViewData["Title"] = "Create";
 }
 
 <h1>機器登録</h1>
+
+<div>
+    <a asp-controller="Device" asp-action="Create">キャンセル</a>
+</div>
+
+<!-- 機器登録フォーム -->
+<div class="row">
+    <div class="col-md-4">
+        <form id="CreateForm" asp-controller="Device" asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ManagementId" class="control-label"></label>
+                <p>※登録後に自動で採番されます</p>
+            </div>
+            <div class="form-group">
+                <label asp-for="Category" class="control-label"></label>
+                @Html.DropDownListFor(model => model.SelectedCategory, Model.Category, "全て", new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <label asp-for="Purpose" class="control-label"></label>
+                @Html.DropDownListFor(model => model.SelectedPurpose, Model.Purpose, "全て", new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <label asp-for="ModelNumber" class="control-label"></label>
+                <input asp-for="ModelNumber" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="SerialNumber" class="control-label"></label>
+                <input asp-for="SerialNumber" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="HostName" class="control-label"></label>
+                <input asp-for="HostName" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Location" class="control-label"></label>
+                <input asp-for="Location" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                @Html.DropDownListFor(model => model.SelectedStatus, Model.Status, "全て", new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <label asp-for="PurchaseDate" class="control-label"></label>
+                <input asp-for="PurchaseDate" class="form-control" type="date" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Memo" class="control-label"></label>
+                <input asp-for="Memo" class="form-control"/>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="登録" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>

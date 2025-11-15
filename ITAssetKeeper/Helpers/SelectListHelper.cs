@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ITAssetKeeper.Helpers;
 
-public class EnumHelper
+public class SelectListHelper
 {
     // Enum → (内部名, 表示名) の Dictionary を生成
     public static Dictionary<string, string> ToDictionary<TEnum>()
@@ -44,5 +44,16 @@ public class EnumHelper
     {
         var dict = ToDictionary<TEnum>();
         return new SelectList(dict, "Key", "Value");
+    }
+
+    // SelectListを指定のビューモデルにセットする
+    public static void SetEnumSelectList<TEnum>(
+        object viewModel,
+        Action<SelectList> setter
+    )
+        where TEnum : struct, Enum
+    {
+        var selectList = ToSelectList<TEnum>();
+        setter(selectList);
     }
 }

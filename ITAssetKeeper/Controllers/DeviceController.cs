@@ -59,17 +59,19 @@ public class DeviceController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Details()
+    public IActionResult Cancel(string returnUrl)
     {
+        // キャンセルボタンが押された時の処理
+        // まだ作成していない
         return View();
     }
 
-    
     [HttpGet]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Create()
+    public IActionResult Create()
     {
-        return View();
+        var vm = new DeviceManageViewModel();
+        return View(vm);
     }
 
     [HttpPost]
@@ -79,6 +81,13 @@ public class DeviceController : Controller
     //{
     //    return View();
     //}
+
+
+    [HttpGet]
+    public async Task<IActionResult> Details()
+    {
+        return View();
+    }
 
 
     [HttpGet]

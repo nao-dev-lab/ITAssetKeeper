@@ -1,4 +1,5 @@
-﻿using ITAssetKeeper.Data;
+﻿using ITAssetKeeper.Constants;
+using ITAssetKeeper.Data;
 using ITAssetKeeper.Helpers;
 using ITAssetKeeper.Models.Entities;
 using ITAssetKeeper.Models.Enums;
@@ -6,6 +7,7 @@ using ITAssetKeeper.Models.ViewModels.Device;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
@@ -13,7 +15,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using ITAssetKeeper.Constants;
 
 namespace ITAssetKeeper.Services;
 
@@ -165,11 +166,11 @@ public class DeviceService : IDeviceService
     public DeviceListViewModel ToViewModel(DeviceListViewModel condition, List<Device> devices)
     {
         // プルダウン用のデータを定数から取得
-        condition.Category = EnumHelper.ToSelectList<DeviceCategory>();
-        condition.Purpose = EnumHelper.ToSelectList<DevicePurpose>();
-        condition.Status = EnumHelper.ToSelectList<DeviceStatus>();
-        condition.SortOrderList = EnumHelper.ToSelectList<SortOrder>();
-        condition.SortKeyList = EnumHelper.ToSelectList<SortKeyColums>();
+        SelectListHelper.SetEnumSelectList<DeviceCategory>(condition, selectList => condition.Category = selectList);
+        SelectListHelper.SetEnumSelectList<DevicePurpose>(condition, selectList => condition.Purpose = selectList);
+        SelectListHelper.SetEnumSelectList<DeviceStatus>(condition, selectList => condition.Status = selectList);
+        SelectListHelper.SetEnumSelectList<SortOrder>(condition, selectList => condition.SortOrderList = selectList);
+        SelectListHelper.SetEnumSelectList<SortKeyColums>(condition, selectList => condition.SortKeyList = selectList);
 
         // 検索結果の一覧表示のデータをDTO型で詰める
         condition.Devices = devices

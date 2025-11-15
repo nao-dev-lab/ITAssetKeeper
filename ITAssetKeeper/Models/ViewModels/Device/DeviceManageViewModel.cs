@@ -56,4 +56,7 @@ public class DeviceManageViewModel
     [Required]
     [Display(Name = "購入日")]
     public DateTime PurchaseDate { get; set; }
+
+    // --- DTO本体 ---
+    public DeviceDto Device { get; set; } = new DeviceDto();
 }
