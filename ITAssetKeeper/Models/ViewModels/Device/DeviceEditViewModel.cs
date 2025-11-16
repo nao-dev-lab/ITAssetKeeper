@@ -1,12 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
-using ITAssetKeeper.Models.Enums;
 
 namespace ITAssetKeeper.Models.ViewModels.Device;
 
-// Create(機器登録)・Edit(機器情報編集)・Details(機器情報)共通のビューモデル
-public class DeviceManageViewModel
+// Edit(機器情報編集)のビューモデル
+public class DeviceEditViewModel
 {
+    // --- 編集対象識別用 ---
+    public int Id { get; set; }
+
+    // -- Role制御用 ---
+    public bool IsReadOnlyCategory { get; set; } = true;
+    public bool IsReadOnlyPurpose { get; set; } = true;
+    public bool IsReadOnlyStatus { get; set; } = true;
+    public bool IsReadOnlyModelNumber { get; set; } = true;
+    public bool IsReadOnlySerialNumber { get; set; } = true;
+    public bool IsReadOnlyHostName { get; set; } = true;
+    public bool IsReadOnlyLocation { get; set; } = true;
+    public bool IsReadOnlyUserName { get; set; } = true;
+    public bool IsReadOnlyMemo { get; set; } = true;
+    public bool IsReadOnlyPurchaseDate { get; set; } = true;
+
     // ---ドロップダウン選択用 ---
     [Required(ErrorMessage = "項目の選択が必要です")]
     public string SelectedCategory { get; set; }
@@ -16,10 +30,6 @@ public class DeviceManageViewModel
 
     [Required(ErrorMessage = "項目の選択が必要です")]
     public string SelectedStatus { get; set; }
-
-    // --- Create / Edit / Details の判定 ---
-    // 保険で明示的にセットしておく
-    public ViewMode Mode { get; set; } = ViewMode.Details;
 
     // --- 入力(表示)項目 ---
     [Display(Name = "機器管理ID")]
@@ -61,7 +71,4 @@ public class DeviceManageViewModel
     [Required(ErrorMessage = "日付の選択が必要です")]
     [Display(Name = "購入日")]
     public DateTime PurchaseDate { get; set; }
-
-    // --- DTO本体 ---
-    public DeviceDto Device { get; set; } = new DeviceDto();
 }

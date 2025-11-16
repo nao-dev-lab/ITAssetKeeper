@@ -37,6 +37,8 @@ public interface IDeviceService
 
 
     //////////////////////////////////////////
-    // --- Details ---
+    // --- Details, Edit ---
+
+    // 機器情報を ID から取得
     Task<DeviceDto?> GetDeviceByIdAsync(int id);
 }

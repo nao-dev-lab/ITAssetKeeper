@@ -257,7 +257,7 @@ public class DeviceService : IDeviceService
 
 
     //////////////////////////////////////////
-    // --- Details ---
+    // --- Details, Edit ---
 
     // Devices の Id を取得
     public async Task<DeviceDto?> GetDeviceByIdAsync(int id)
