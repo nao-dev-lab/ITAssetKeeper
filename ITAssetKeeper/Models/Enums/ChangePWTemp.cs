@@ -3,5 +3,6 @@
 public enum ChangePWTemp
 {
     PasswordExpiredMessage,
-    PasswordChangeMessage
+    PWChangeFailMessage,
+    PWChangeSuccessMessage
 }

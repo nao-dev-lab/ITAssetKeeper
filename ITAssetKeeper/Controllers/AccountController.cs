@@ -153,8 +153,8 @@ public class AccountController : Controller
         if (!User.Identity.IsAuthenticated || string.IsNullOrWhiteSpace(User.Identity.Name))
         {
             await _signInManager.SignOutAsync();
-            TempData[ChangePWTemp.PasswordChangeMessage.ToString()] = "ユーザーの検証に失敗しました。ログインからやり直してください。";
-            return RedirectToAction("Login", "Account");
+            TempData[ChangePWTemp.PWChangeFailMessage.ToString()] = "ユーザーの検証に失敗しました。ログインからやり直してください。";
+            return RedirectToAction("Login", nameof(AccountController));
         }
 
         // ログイン中のユーザー名からユーザー情報を取得
@@ -165,8 +165,8 @@ public class AccountController : Controller
         if (user == null)
         {
             await _signInManager.SignOutAsync();
-            TempData[ChangePWTemp.PasswordChangeMessage.ToString()] = "ユーザーの検証に失敗しました。ログインからやり直してください。";
-            return RedirectToAction("Login", "Account");
+            TempData[ChangePWTemp.PWChangeFailMessage.ToString()] = "ユーザーの検証に失敗しました。ログインからやり直してください。";
+            return RedirectToAction("Login", nameof(AccountController));
         }
 
         // 新旧パスワードが同一なら弾く
@@ -212,7 +212,7 @@ public class AccountController : Controller
 
         // ログアウト + ログイン画面にリダイレクトする
         await _signInManager.SignOutAsync();
-        TempData[ChangePWTemp.PasswordChangeMessage.ToString()] = "パスワード変更に成功しました。ログインしてください。";
+        TempData[ChangePWTemp.PWChangeSuccessMessage.ToString()] = "パスワード変更に成功しました。ログインしてください。";
         return RedirectToAction("Login", "Account");
     }
 }

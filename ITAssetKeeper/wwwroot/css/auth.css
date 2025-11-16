@@ -70,6 +70,7 @@
 .auth-input {
     height: 42px;
     border-radius: 8px;
+    width: 100%;
 }
 
 .auth-password-wrapper .eye-icon {
@@ -90,22 +91,23 @@
     font-weight: bold;
     padding: 10px;
     border-radius: 8px;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(114, 100, 156, 0.35);
 }
+
+/* Hover */
+.auth-btn:hover {
+    background-color: #8A5CFF;
+    color: #FFFFFF;
+    box-shadow: 0 6px 10px rgba(114, 100, 156, 0.45); 
+    transition: 0.15s ease-in-out;
+}
+
 
 /* ===== 入力系 ===== */
 .auth-form-wrapper {
     max-width: 380px; /* ← textbox / button の最大幅 */
     margin: 0 auto; /* ← auth-card の中央に揃える */
-}
-
-/* テキストボックス */
-.auth-input {
-    width: 100%;
-}
-
-/* ボタン */
-.auth-btn {
-    width: 100%;
 }
 
 /* チェックボックスとラベルを横に揃える */

@@ -35,11 +35,20 @@
 }
 
 <!-- パスワード変更からリダイレクトされた場合、ここにメッセージ表示 -->
-@if (TempData[@ChangePWTemp.PasswordChangeMessage.ToString()] != null)
+@if (TempData[@ChangePWTemp.PWChangeFailMessage.ToString()] != null)
 {
     <div class="alert-wrapper">
         <div class="alert alert-warning mt-3">
-            @TempData[@ChangePWTemp.PasswordChangeMessage.ToString()]
+            @TempData[@ChangePWTemp.PWChangeFailMessage.ToString()]
+        </div>
+    </div>
+}
+
+@if (TempData[@ChangePWTemp.PWChangeFailMessage.ToString()] != null)
+{
+    <div class="alert-wrapper">
+        <div class="alert alert-success mt-3">
+            @TempData[@ChangePWTemp.PWChangeSuccessMessage.ToString()]
         </div>
     </div>
 }

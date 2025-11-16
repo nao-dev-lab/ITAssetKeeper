@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.IO;
 using ITAssetKeeper.Services;
+using AspNetCoreGeneratedDocument;
 
 namespace ITAssetKeeper.Controllers;
 
@@ -71,18 +72,38 @@ public class DeviceController : Controller
     public IActionResult Create()
     {
         // ドロップダウン用の項目を詰めて、ビューに渡す
-        var vm = new DeviceManageViewModel();
-        _deviceService.InitializeDeviceManage(vm, ViewMode.Create);
-        return View(vm);
+        var model = new DeviceCreateViewModel();
+        _deviceService.InitializeCreateView(model);
+        return View(model);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "Admin")]
-    //public async Task<IActionResult> Create()
-    //{
-    //    return View();
-    //}
+    public async Task<IActionResult> Create(DeviceCreateViewModel model)
+    {
+        // 入力エラーがあった場合はビューに戻す
+        if (!ModelState.IsValid)
+        {
+            model = _deviceService.InitializeCreateView(model);
+            return View(model);
+        }
+
+        // クエリ実行結果の状態のエントリ数を取得
+        var result = await _deviceService.RegisterNewDevice(model);
+
+        if (result > 0)
+        {
+            TempData["SuccessMessage"] = "登録が完了しました。";
+        }
+        else
+        {
+            TempData["ErrorMessage"] = "登録に失敗しました。もう一度お試しください。";
+        }
+
+        // 機器登録画面に戻す
+        return RedirectToAction(nameof(Create));
+    }
 
 
     [HttpGet]

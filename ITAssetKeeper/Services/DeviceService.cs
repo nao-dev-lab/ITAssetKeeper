@@ -14,6 +14,7 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Transactions;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ITAssetKeeper.Services;
@@ -27,6 +28,8 @@ public class DeviceService : IDeviceService
         _context = context;
     }
 
+    ///////////////////////////////////////////////////
+    // -- Index --
     // 検索 & 一覧表示
     public async Task<DeviceListViewModel> SearchDevicesAsync(DeviceListViewModel condition)
     {
@@ -192,24 +195,72 @@ public class DeviceService : IDeviceService
         return condition;
     }
 
-    // Create,Edit,Details画面のinitialize
-    public DeviceManageViewModel InitializeDeviceManage(DeviceManageViewModel model, ViewMode viewMode)
+
+    ///////////////////////////////////////////////////
+    // -- Create --
+
+    // Create画面のinitialize
+    public DeviceCreateViewModel InitializeCreateView(DeviceCreateViewModel model)
     {
-        if (viewMode == ViewMode.Create)
-        {
-            // ビューモデルに、ドロップダウン用のSelectListをセット
-            SetSelectList(model);
-            model.PurchaseDate = DateTime.Now;
-        }
+        // ビューモデルに、ドロップダウン用のSelectListをセット
+        SelectListHelper.SetEnumSelectList<DeviceCategory>(model, selectList => model.CategoryItems = selectList);
+        SelectListHelper.SetEnumSelectList<DevicePurpose>(model, selectList => model.PurposeItems = selectList);
+        SelectListHelper.SetEnumSelectList<DeviceStatus>(model, selectList => model.StatusItems = selectList);
+        
+        // 購入日に今日の日付をセット
+        model.PurchaseDate = DateTime.Now;
+
         return model;
     }
 
-    // Create,Edit,Details のビューモデルに、ドロップダウン用のSelectListをセット
-    public void SetSelectList(DeviceManageViewModel vm)
+    // 機器情報の新規登録処理
+    public async Task<int> RegisterNewDevice(DeviceCreateViewModel model)
     {
-        // プルダウン用のデータを定数から取得
-        SelectListHelper.SetEnumSelectList<DeviceCategory>(vm, selectList => vm.Category = selectList);
-        SelectListHelper.SetEnumSelectList<DevicePurpose>(vm, selectList => vm.Purpose = selectList);
-        SelectListHelper.SetEnumSelectList<DeviceStatus>(vm, selectList => vm.Status = selectList);
+        // トランザクション処理
+        using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+        {
+            // ManagementIDを自動採番する為に、DBに存在するManagementIdを取得
+            var idList = await _context.Devices
+                .Select(x => x.ManagementId)
+                .ToListAsync();
+
+            // プレフィックスを除いた数字部分をint型で取得しなおす
+            // 一番大きい数字を取得し、新しいManagementId用に +1 する
+            var maxNum = idList
+            .Select(id => int.Parse(id.Substring(id.IndexOf(DeviceConstants.DEVICE_ID_PREFIX) + DeviceConstants.DEVICE_ID_PREFIX.Length, DeviceConstants.DEVICE_ID_NUM_DIGIT_COUNT)))
+            .DefaultIfEmpty(0)
+            .Max() + 1;
+
+            // 新しい ManagementId を生成
+            // プレフィックスを付けて、数字部分が規定の桁数になるように先行0埋めする
+            string newMid = DeviceConstants.DEVICE_ID_PREFIX + maxNum.ToString($"D{DeviceConstants.DEVICE_ID_NUM_DIGIT_COUNT}");
+
+            // 受け取ったビューモデルからEntity 作成
+            var entity = new Device
+            {
+                ManagementId = newMid,
+                Category = model.SelectedCategory,
+                Purpose = model.SelectedPurpose,
+                ModelNumber = model.ModelNumber,
+                SerialNumber = model.SerialNumber,
+                HostName = model.HostName,
+                Location = model.Location,
+                UserName = model.UserName,
+                Status = model.SelectedStatus,
+                Memo = model.Memo,
+                PurchaseDate = model.PurchaseDate
+            };
+
+            _context.Devices.Add(entity);
+
+            // DBへの登録処理を実施、状態エントリの数を受け取る
+            var result =  await _context.SaveChangesAsync();
+
+            // Commitする
+            scope.Complete();
+
+            // 結果の状態エントリの数を返す
+            return result;
+        }
     }
 }

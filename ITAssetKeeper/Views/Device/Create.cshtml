@@ -1,4 +1,4 @@
-﻿@model ITAssetKeeper.Models.ViewModels.Device.DeviceManageViewModel
+﻿@model ITAssetKeeper.Models.ViewModels.Device.DeviceCreateViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -6,8 +6,24 @@
 
 <h1>機器登録</h1>
 
+<!-- 登録結果メッセージがあればここに表示 -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 <div>
-    <a asp-controller="Device" asp-action="Index">キャンセル</a>
+    <!-- キャンセルを押したら内容を破棄してリロード -->
+    <a asp-controller="Device" asp-action="Create">キャンセル</a>
 </div>
 
 <!-- 機器登録フォーム -->
@@ -20,20 +36,24 @@
                 <p>※登録後に自動で採番されます</p>
             </div>
             <div class="form-group">
-                <label asp-for="Category" class="control-label"></label>
-                @Html.DropDownListFor(model => model.SelectedCategory, Model.Category, "選択してください", new { @class = "form-control" })
+                <label asp-for="CategoryItems" class="control-label"></label>
+                @Html.DropDownListFor(model => model.SelectedCategory, Model.CategoryItems, "-- 未選択 --", new { @class = "form-control" })
+                <span asp-validation-for="SelectedCategory" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Purpose" class="control-label"></label>
-                @Html.DropDownListFor(model => model.SelectedPurpose, Model.Purpose, "選択してください", new { @class = "form-control" })
+                <label asp-for="PurposeItems" class="control-label"></label>
+                @Html.DropDownListFor(model => model.SelectedPurpose, Model.PurposeItems, "-- 未選択 --", new { @class = "form-control" })
+                <span asp-validation-for="SelectedPurpose" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ModelNumber" class="control-label"></label>
                 <input asp-for="ModelNumber" class="form-control" />
+                <span asp-validation-for="ModelNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="SerialNumber" class="control-label"></label>
                 <input asp-for="SerialNumber" class="form-control" />
+                <span asp-validation-for="SerialNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="HostName" class="control-label"></label>
@@ -42,18 +62,21 @@
             <div class="form-group">
                 <label asp-for="Location" class="control-label"></label>
                 <input asp-for="Location" class="form-control" />
+                <span asp-validation-for="Location" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="UserName" class="control-label"></label>
                 <input asp-for="UserName" class="form-control" />
             </div>
             <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                @Html.DropDownListFor(model => model.SelectedStatus, Model.Status, "選択してください", new { @class = "form-control" })
+                <label asp-for="StatusItems" class="control-label"></label>
+                @Html.DropDownListFor(model => model.SelectedStatus, Model.StatusItems, "-- 未選択 --", new { @class = "form-control" })
+                <span asp-validation-for="SelectedStatus" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="PurchaseDate" class="control-label"></label>
                 <input asp-for="PurchaseDate" class="form-control" type="date" />
+                <span asp-validation-for="PurchaseDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Memo" class="control-label"></label>
