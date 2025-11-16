@@ -100,7 +100,7 @@ public class AccountController : Controller
         }
         else
         {
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Device");
         }
     }
 

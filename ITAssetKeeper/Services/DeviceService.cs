@@ -257,9 +257,9 @@ public class DeviceService : IDeviceService
 
 
     //////////////////////////////////////////
-    // --- Details, Edit ---
+    // --- Details ---
 
-    // Devices の Id を取得
+    // Devices の Id を取得し、該当の機器情報をDTO型で返す
     public async Task<DeviceDto?> GetDeviceByIdAsync(int id)
     {
         // Devicesテーブルから指定のIdのデータを取得する
@@ -289,5 +289,88 @@ public class DeviceService : IDeviceService
 
         // DTO型を返す
         return dto;
+    }
+
+
+    //////////////////////////////////////////
+    // --- Edit ---
+
+    // Edit画面のinitialize
+    public async Task<DeviceEditViewModel?> InitializeEditView(int id, Roles role)
+    {
+        // Edit画面に表示する為の Device情報を取得
+        // Role別の編集可否項目も設定されたビューモデルを受け取る
+        var model = await GetDeviceEditViewAsync(id, role);
+
+        // 取得できなければ null を返す
+        if (model == null)
+        {
+            return null;
+        }
+
+        // ビューモデルに、ドロップダウン用のSelectListをセット
+        SelectListHelper.SetEnumSelectList<DeviceCategory>(model, selectList => model.CategoryItems = selectList);
+        SelectListHelper.SetEnumSelectList<DevicePurpose>(model, selectList => model.PurposeItems = selectList);
+        SelectListHelper.SetEnumSelectList<DeviceStatus>(model, selectList => model.StatusItems = selectList);
+
+        // ビューモデルを返す
+        return model;
+    }
+
+    // Edit画面に表示する為の Device情報を取得し、ビューモデルを返す
+    // Role別の編集可否項目もここで設定する
+    public async Task<DeviceEditViewModel?> GetDeviceEditViewAsync(int id, Roles role)
+    {
+        // Devicesテーブルから指定のIdのデータを取得する
+        var device = await _context.Devices.FindAsync(id);
+
+        // 見つからなかった場合は null を返す
+        if (device == null)
+        {
+            return null;
+        }
+
+        // 取得したデータをDeviceEditViewModelに詰める
+        var model = new DeviceEditViewModel
+        {
+            Id = device.Id,
+            ManagementId = device.ManagementId,
+            SelectedCategory = device.Category,
+            SelectedPurpose = device.Purpose,
+            ModelNumber = device.ModelNumber,
+            SerialNumber = device.SerialNumber,
+            HostName = device.HostName,
+            Location = device.Location,
+            UserName = device.UserName,
+            SelectedStatus = device.Status,
+            PurchaseDate = device.PurchaseDate,
+            Memo = device.Memo
+        };
+
+        // Admin
+        if (role == Roles.Admin)
+        {
+            // すべてReadOnlyとしない(すべて編集可)
+            model.IsReadOnlyCategory = false;
+            model.IsReadOnlyPurpose = false;
+            model.IsReadOnlyStatus = false;
+            model.IsReadOnlyModelNumber = false;
+            model.IsReadOnlySerialNumber = false;
+            model.IsReadOnlyHostName = false;
+            model.IsReadOnlyLocation = false;
+            model.IsReadOnlyUserName = false;
+            model.IsReadOnlyMemo = false;
+            model.IsReadOnlyPurchaseDate = false;
+        }
+        // それ以外(Editor)
+        else
+        {
+            // 編集可とする項目のみfalseを指定
+            model.IsReadOnlyLocation = false;
+            model.IsReadOnlyUserName = false;
+        }
+
+        // モデルを返す
+        return model;
     }
 }

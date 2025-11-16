@@ -1,15 +1,16 @@
-﻿using ITAssetKeeper.Data;
+﻿using AspNetCoreGeneratedDocument;
+using ITAssetKeeper.Data;
 using ITAssetKeeper.Models.Enums;
 using ITAssetKeeper.Models.ViewModels.Dashboard;
 using ITAssetKeeper.Models.ViewModels.Device;
+using ITAssetKeeper.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.IO;
-using ITAssetKeeper.Services;
-using AspNetCoreGeneratedDocument;
+using System.Security.Claims;
 
 namespace ITAssetKeeper.Controllers;
 
@@ -129,9 +130,31 @@ public class DeviceController : Controller
 
     [HttpGet]
     [Authorize(Roles = "Admin, Editor")]
-    public async Task<IActionResult> Edit()
+    public async Task<IActionResult> Edit(int id)
     {
-        return View();
+        // ユーザーのRole情報を取得
+        Roles role;
+        if (User.IsInRole("Admin"))
+        {
+            role = Roles.Admin;
+        }
+        else
+        {
+            role = Roles.Editor;
+        }
+
+        // 対象の機器データをビューモデルで取得
+        var model = await _deviceService.InitializeEditView(id, role);
+
+        // 取得できなければ一覧に戻す
+        if (model == null)
+        {
+            TempData["ErrorMessage"] = "対象の機器が存在しません。";
+            return RedirectToAction(nameof(Index));
+        }
+
+        // ビューにDTOを渡す
+        return View(model);
     }
 
     [HttpPost]

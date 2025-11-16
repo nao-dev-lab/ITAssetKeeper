@@ -37,8 +37,19 @@ public interface IDeviceService
 
 
     //////////////////////////////////////////
-    // --- Details, Edit ---
+    // --- Details ---
 
     // 機器情報を ID から取得
     Task<DeviceDto?> GetDeviceByIdAsync(int id);
+
+
+    //////////////////////////////////////////
+    // --- Edit ---
+
+    // Edit画面のinitialize
+    Task<DeviceEditViewModel?> InitializeEditView(int id, Roles role);
+
+    // Edit画面に表示する為の Device情報を取得し、ビューモデルを返す
+    // Role別の編集可否項目もここで設定する
+    Task<DeviceEditViewModel?> GetDeviceEditViewAsync(int id, Roles role);
 }

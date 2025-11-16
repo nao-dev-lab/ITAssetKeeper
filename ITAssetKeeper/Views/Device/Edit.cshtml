@@ -1,5 +1,100 @@
-﻿@{
+﻿@* debug *@
+<p>Debug: Role → @(Model.IsReadOnlyCategory) @(Model.IsReadOnlyPurpose) @(Model.IsReadOnlyUserName)</p>
+
+@model ITAssetKeeper.Models.ViewModels.Device.DeviceEditViewModel
+
+@{
     ViewData["Title"] = "Edit";
 }
 
 <h1>機器情報編集</h1>
+
+<div>
+    <!-- キャンセルを押したら内容を破棄してリロード -->
+    <a asp-controller="Device" asp-action="Edit">キャンセル</a>
+</div>
+
+<!-- 機器情報編集フォーム -->
+<div class="row">
+    <div class="col-md-4">
+        <form id="EditForm" asp-controller="Device" asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ManagementId" class="control-label"></label>
+                <p>@Model.ManagementId</p>
+            </div>
+            <div class="form-group">
+                <label asp-for="CategoryItems" class="control-label"></label>
+                @Html.DropDownListFor(m => m.SelectedCategory, Model.CategoryItems,"-- 未選択 --",
+                    new { @class = "form-control disable-target", data_disable = Model.IsReadOnlyCategory })
+                <span asp-validation-for="SelectedCategory" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PurposeItems" class="control-label"></label>
+                @Html.DropDownListFor(m => m.SelectedPurpose, Model.PurposeItems,"-- 未選択 --",
+                    new { @class = "form-control disable-target", data_disable = Model.IsReadOnlyPurpose })
+                <span asp-validation-for="SelectedPurpose" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ModelNumber" class="control-label"></label>
+                @Html.TextBoxFor(m => m.ModelNumber,
+                    new { @class = "form-control disable-target", data_disable = Model.IsReadOnlyModelNumber })
+                <span asp-validation-for="ModelNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SerialNumber" class="control-label"></label>
+                @Html.TextBoxFor(m => m.SerialNumber,
+                    new { @class = "form-control disable-target", data_disable = Model.IsReadOnlySerialNumber })
+                <span asp-validation-for="SerialNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HostName" class="control-label"></label>
+                @Html.TextBoxFor(m => m.HostName,
+                    new { @class = "form-control disable-target", data_disable = Model.IsReadOnlyHostName })
+            </div>
+            <div class="form-group">
+                <label asp-for="Location" class="control-label"></label>
+                @Html.TextBoxFor(m => m.Location,
+                    new { @class = "form-control disable-target", data_disable = Model.IsReadOnlyLocation })
+                <span asp-validation-for="Location" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                @Html.TextBoxFor(m => m.UserName,
+                    new { @class = "form-control disable-target", data_disable = Model.IsReadOnlyUserName })
+            </div>
+            <div class="form-group">
+                <label asp-for="StatusItems" class="control-label"></label>
+                @Html.DropDownListFor(m => m.SelectedStatus, Model.StatusItems,"-- 未選択 --",
+                    new { @class = "form-control disable-target", data_disable = Model.IsReadOnlyStatus })
+                <span asp-validation-for="SelectedStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PurchaseDate" class="control-label"></label>
+                @Html.TextBoxFor(m => m.PurchaseDate,
+                    "{0:yyyy-MM-dd}",
+                    new { @class = "form-control disable-target", type = "date", data_disable = Model.IsReadOnlyPurchaseDate })
+                <span asp-validation-for="PurchaseDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Memo" class="control-label"></label>
+                @Html.TextAreaFor(m => m.Memo,
+                    new { @class = "form-control disable-target", data_disable = Model.IsReadOnlyMemo })
+            </div>
+            <div class="form-group">
+                <input type="hidden" asp-for="Id" />
+                <input type="submit" value="更新" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 戻る -->
+<div class="mt-4">    
+    <a asp-action="Index" class="btn btn-secondary me-2">一覧へ戻る</a>
+</div>
+
+@section Scripts {
+    <!-- jsファイルを読み込む -->
+    <script src="~/js/device-edit.js"></script>
+}
