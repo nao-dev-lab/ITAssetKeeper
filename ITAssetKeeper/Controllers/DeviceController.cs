@@ -35,6 +35,7 @@ public class DeviceController : Controller
 
     // GET: Device/GetSortedList
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetSortedList(SortKeyColums sortKey, SortOrder sortOrder, DeviceListViewModel model)
     {
         // SortKey と SortOrderをモデルに反映させる
@@ -50,6 +51,7 @@ public class DeviceController : Controller
 
     // GET: Device/GetPagedList
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetPagedList(DeviceListViewModel model)
     {
         // 結果を取得
@@ -90,7 +92,7 @@ public class DeviceController : Controller
         }
 
         // クエリ実行結果の状態のエントリ数を取得
-        var result = await _deviceService.RegisterNewDevice(model);
+        var result = await _deviceService.RegisterNewDeviceAsync(model);
 
         if (result > 0)
         {
@@ -107,9 +109,21 @@ public class DeviceController : Controller
 
 
     [HttpGet]
-    public async Task<IActionResult> Details()
+    [Authorize]
+    public async Task<IActionResult> Details(int id)
     {
-        return View();
+        // 対象の機器データを取得
+        var dto = await _deviceService.GetDeviceByIdAsync(id);
+
+        // 取得できなければ一覧に戻す
+        if (dto == null)
+        {
+            TempData["ErrorMessage"] = "対象の機器が存在しません。";
+            return RedirectToAction(nameof(Index));
+        }
+
+        // ビューにDTOを渡す
+        return View(dto);
     }
 
 

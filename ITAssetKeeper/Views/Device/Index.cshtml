@@ -63,6 +63,14 @@
     </div>
 </div>
 
+<!-- エラーメッセージがあればここに表示 -->
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 <!-- 並び替え選択 -->
 <div id="sortArea">
     <div class="form-group">

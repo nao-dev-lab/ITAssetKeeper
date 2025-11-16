@@ -26,12 +26,17 @@ public interface IDeviceService
 
 
     //////////////////////////////////////////
-    // --- Create,Edit,Details ---
+    // --- Create ---
 
     // Create,画面のinitialize
     DeviceCreateViewModel InitializeCreateView(DeviceCreateViewModel model);
 
     // --- Create ---
     // 機器登録処理
-    Task<int> RegisterNewDevice(DeviceCreateViewModel model);
+    Task<int> RegisterNewDeviceAsync(DeviceCreateViewModel model);
+
+
+    //////////////////////////////////////////
+    // --- Details ---
+    Task<DeviceDto?> GetDeviceByIdAsync(int id);
 }

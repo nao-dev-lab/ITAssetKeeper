@@ -4,18 +4,8 @@ using ITAssetKeeper.Helpers;
 using ITAssetKeeper.Models.Entities;
 using ITAssetKeeper.Models.Enums;
 using ITAssetKeeper.Models.ViewModels.Device;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Globalization;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 using System.Transactions;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ITAssetKeeper.Services;
 
@@ -179,6 +169,7 @@ public class DeviceService : IDeviceService
         condition.Devices = devices
             .Select(x => new DeviceDto
             {
+                Id = x.Id,
                 ManagementId = x.ManagementId,
                 Category = x.Category,
                 Purpose = x.Purpose,
@@ -214,7 +205,7 @@ public class DeviceService : IDeviceService
     }
 
     // 機器情報の新規登録処理
-    public async Task<int> RegisterNewDevice(DeviceCreateViewModel model)
+    public async Task<int> RegisterNewDeviceAsync(DeviceCreateViewModel model)
     {
         // トランザクション処理
         using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
@@ -262,5 +253,41 @@ public class DeviceService : IDeviceService
             // 結果の状態エントリの数を返す
             return result;
         }
+    }
+
+
+    //////////////////////////////////////////
+    // --- Details ---
+
+    // Devices の Id を取得
+    public async Task<DeviceDto?> GetDeviceByIdAsync(int id)
+    {
+        // Devicesテーブルから指定のIdのデータを取得する
+        var device = await _context.Devices.FindAsync(id);
+
+        // 見つからなかった場合は null を返す
+        if (device == null)
+        {
+            return null;
+        }
+
+        // 取得したデータをDTOの項目に詰める
+        var dto = new DeviceDto
+        {
+            Id = device.Id,
+            ManagementId = device.ManagementId,
+            Category = device.Category,
+            Purpose = device.Purpose,
+            ModelNumber = device.ModelNumber,
+            SerialNumber = device.SerialNumber,
+            HostName = device.HostName,
+            Location = device.Location,
+            UserName = device.UserName,
+            PurchaseDate = device.PurchaseDate.ToString("yyyy/MM/dd"),
+            Memo = device.Memo
+        };
+
+        // DTO型を返す
+        return dto;
     }
 }

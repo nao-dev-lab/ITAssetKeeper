@@ -1,5 +1,85 @@
-﻿@{
+﻿@model ITAssetKeeper.Models.ViewModels.Device.DeviceDto
+
+@{
     ViewData["Title"] = "Details";
 }
 
-<h1>機器情報</h1>
+<h2>機器情報</h2>
+
+<div class="row">
+    <div class="col-md-6">
+
+        <div class="form-group mb-2">
+            <label class="fw-bold">@Html.DisplayNameFor(m => m.ManagementId)</label>
+            <div>@Model.ManagementId</div>
+        </div>
+
+        <div class="form-group mb-2">
+            <label class="fw-bold">@Html.DisplayNameFor(m => m.Category)</label>
+            <div>@Model.Category</div>
+        </div>
+
+        <div class="form-group mb-2">
+            <label class="fw-bold">@Html.DisplayNameFor(m => m.Purpose)</label>
+            <div>@Model.Purpose</div>
+        </div>
+
+        <div class="form-group mb-2">
+            <label class="fw-bold">@Html.DisplayNameFor(m => m.ModelNumber)</label>
+            <div>@Model.ModelNumber</div>
+        </div>
+
+        <div class="form-group mb-2">
+            <label class="fw-bold">@Html.DisplayNameFor(m => m.SerialNumber)</label>
+            <div>@Model.SerialNumber</div>
+        </div>
+
+        <div class="form-group mb-2">
+            <label class="fw-bold">@Html.DisplayNameFor(m => m.HostName)</label>
+            <div>@Model.HostName</div>
+        </div>
+
+        <div class="form-group mb-2">
+            <label class="fw-bold">@Html.DisplayNameFor(m => m.Location)</label>
+            <div>@Model.Location</div>
+        </div>
+
+        <div class="form-group mb-2">
+            <label class="fw-bold">@Html.DisplayNameFor(m => m.UserName)</label>
+            <div>@Model.UserName</div>
+        </div>
+
+        <div class="form-group mb-2">
+            <label class="fw-bold">@Html.DisplayNameFor(m => m.Status)</label>
+            <div>@Model.Status</div>
+        </div>
+
+        <div class="form-group mb-2">
+            <label class="fw-bold">@Html.DisplayNameFor(m => m.PurchaseDate)</label>
+            <div>@Model.PurchaseDate</div>
+        </div>
+
+        <div class="form-group mb-2">
+            <label class="fw-bold">@Html.DisplayNameFor(m => m.Memo)</label>
+            <div>@Model.Memo</div>
+        </div>
+
+        <div class="mt-4">
+
+            <!-- 戻る -->
+            <a asp-action="Index" class="btn btn-secondary me-2">一覧へ戻る</a>
+
+            <!-- ロール判定で編集や削除を制限 -->
+            @if (User.IsInRole("Admin") || User.IsInRole("Editor"))
+            {
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary me-2">編集</a>
+            }
+
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">削除</a>
+            }
+        </div>
+    </div>
+</div>
+
