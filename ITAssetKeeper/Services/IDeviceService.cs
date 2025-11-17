@@ -39,8 +39,8 @@ public interface IDeviceService
     //////////////////////////////////////////
     // --- Details ---
 
-    // 機器情報を ID から取得
-    Task<DeviceDto?> GetDeviceByIdAsync(int id);
+    // 機器情報を ID から取得し、DTO型で返す
+    Task<DeviceDto?> GetDeviceDetailsByIdAsync(int id);
 
 
     //////////////////////////////////////////
@@ -57,5 +57,15 @@ public interface IDeviceService
     Task RestoreEditViewSettingsAsync(DeviceEditViewModel model, Roles role);
 
     // 機器情報の更新処理
-    public Task<int> UpdateDeviceAsync(DeviceEditViewModel model, Roles role);
+    Task<int> UpdateDeviceAsync(DeviceEditViewModel model, Roles role);
+
+
+    //////////////////////////////////////////
+    // --- Delete ---
+
+    // 機器情報を ID から取得し、DeviceDeleteViewModelで返す
+    Task<DeviceDeleteViewModel?> GetDeleteDeviceByIdAsync(int id);
+
+    // 対象の機器情報をソフトデリートする
+    Task<int> DeleteDeviceAsync(int id, string deletedBy);
 }

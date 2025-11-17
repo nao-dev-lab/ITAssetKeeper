@@ -7,6 +7,28 @@
 
 <h1>機器情報一覧</h1>
 
+<!-- メッセージ表示 -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success mt-3">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-warning mt-3">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (TempData["FailureMessage"] != null)
+{
+    <div class="alert alert-danger mt-3">
+        @TempData["FailureMessage"]
+    </div>
+}
+
 <!-- 検索フォーム -->
 <div class="row">
     <div class="col-md-4">
@@ -128,14 +150,6 @@
         </form>
     </div>
 </div>
-
-<!-- メッセージ表示 -->
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger">
-        @TempData["ErrorMessage"]
-    </div>
-}
 
 @* <!-- 並び替え選択 -->
 <div id="sortArea">

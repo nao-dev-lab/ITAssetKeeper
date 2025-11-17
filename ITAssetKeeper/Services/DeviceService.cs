@@ -5,6 +5,7 @@ using ITAssetKeeper.Models.Entities;
 using ITAssetKeeper.Models.Enums;
 using ITAssetKeeper.Models.ViewModels.Device;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Transactions;
 
 namespace ITAssetKeeper.Services;
@@ -296,7 +297,7 @@ public class DeviceService : IDeviceService
     // --- Details ---
 
     // Devices の Id を取得し、該当の機器情報をDTO型で返す
-    public async Task<DeviceDto?> GetDeviceByIdAsync(int id)
+    public async Task<DeviceDto?> GetDeviceDetailsByIdAsync(int id)
     {
         // Devicesテーブルから指定のIdのデータを取得する
         var device = await _context.Devices.FindAsync(id);
@@ -482,6 +483,66 @@ public class DeviceService : IDeviceService
             }
 
             // DBへの登録処理を実施、状態エントリの数を受け取る
+            var result = await _context.SaveChangesAsync();
+
+            // Commitする
+            scope.Complete();
+
+            // 結果の状態エントリの数を返す
+            return result;
+        }
+    }
+
+
+    //////////////////////////////////////////
+    // --- Delete ---
+
+    // Devices の Id を取得し、該当の機器情報をDeviceDeleteViewModelで返す
+    public async Task<DeviceDeleteViewModel?> GetDeleteDeviceByIdAsync(int id)
+    {
+        // Devicesテーブルから指定のIdのデータを取得する
+        var device = await _context.Devices.FindAsync(id);
+
+        // 見つからない or 削除フラグがすでに true の場合は、null を返す
+        if (device == null || device.IsDeleted)
+        {
+            return null;
+        }
+
+        // 取得したデータをビューモデルに詰める
+        var model = new DeviceDeleteViewModel
+        {
+            HiddenId = device.Id,
+            ManagementId = device.ManagementId,
+            Category = device.Category,
+            Status = device.Status,
+            UserName = device.UserName,
+        };
+
+        // ビューモデルを返す
+        return model;
+    }
+
+    // 対象の機器情報を論理削除(ソフトデリート)する
+    public async Task<int> DeleteDeviceAsync(int id, string deletedBy)
+    {
+        // Devicesテーブルから指定のIdのデータを取得する
+        var entity = await _context.Devices.FindAsync(id);
+
+        // 見つからない or 削除フラグがすでに true の場合は、-1 を返す
+        if (entity == null || entity.IsDeleted)
+        {
+            return -1;
+        }
+
+        // トランザクション処理
+        using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+        {
+            // 削除フラグ と 削除実施者を更新する
+            entity.IsDeleted = true;
+            entity.DeletedBy = deletedBy;
+
+            // DBへの更新処理を実施、状態エントリの数を受け取る
             var result = await _context.SaveChangesAsync();
 
             // Commitする

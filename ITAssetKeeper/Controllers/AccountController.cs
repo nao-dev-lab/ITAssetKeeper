@@ -87,7 +87,7 @@ public class AccountController : Controller
         if (user.PasswordExpirationDate < DateTime.Now)
         {
             // 超過している場合はパスワード変更画面にリダイレクト
-            TempData[ChangePWTemp.PasswordExpiredMessage.ToString()]
+            TempData["ErrorMessage"]
                 = "パスワードの有効期限が切れています。新しいパスワードを設定してください。";
             return RedirectToAction("ChangePassword", "Account");
         }
@@ -153,7 +153,7 @@ public class AccountController : Controller
         if (!User.Identity.IsAuthenticated || string.IsNullOrWhiteSpace(User.Identity.Name))
         {
             await _signInManager.SignOutAsync();
-            TempData[ChangePWTemp.PWChangeFailMessage.ToString()] = "ユーザーの検証に失敗しました。ログインからやり直してください。";
+            TempData["FailureMessage"] = "ユーザーの検証に失敗しました。ログインからやり直してください。";
             return RedirectToAction("Login", nameof(AccountController));
         }
 
@@ -165,7 +165,7 @@ public class AccountController : Controller
         if (user == null)
         {
             await _signInManager.SignOutAsync();
-            TempData[ChangePWTemp.PWChangeFailMessage.ToString()] = "ユーザーの検証に失敗しました。ログインからやり直してください。";
+            TempData["FailureMessage"] = "ユーザーの検証に失敗しました。ログインからやり直してください。";
             return RedirectToAction("Login", nameof(AccountController));
         }
 
@@ -212,7 +212,7 @@ public class AccountController : Controller
 
         // ログアウト + ログイン画面にリダイレクトする
         await _signInManager.SignOutAsync();
-        TempData[ChangePWTemp.PWChangeSuccessMessage.ToString()] = "パスワード変更に成功しました。ログインしてください。";
+        TempData["SuccessMessage"] = "パスワード変更に成功しました。ログインしてください。";
         return RedirectToAction("Login", "Account");
     }
 }

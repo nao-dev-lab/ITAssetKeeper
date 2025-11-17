@@ -5,6 +5,7 @@ using ITAssetKeeper.Models.ViewModels.Dashboard;
 using ITAssetKeeper.Models.ViewModels.Device;
 using ITAssetKeeper.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
@@ -105,7 +106,7 @@ public class DeviceController : Controller
         }
         else
         {
-            TempData["ErrorMessage"] = "登録に失敗しました。もう一度お試しください。";
+            TempData["FailureMessage"] = "登録に失敗しました。もう一度お試しください。";
         }
 
         // 機器登録画面に戻す
@@ -118,12 +119,12 @@ public class DeviceController : Controller
     public async Task<IActionResult> Details(int id)
     {
         // 対象の機器データを取得
-        var dto = await _deviceService.GetDeviceByIdAsync(id);
+        var dto = await _deviceService.GetDeviceDetailsByIdAsync(id);
 
         // 取得できなければ一覧に戻す
         if (dto == null)
         {
-            TempData["ErrorMessage"] = "対象の機器が存在しません。";
+            TempData["ErrorMessage"] = "対象の機器が見つかりません。";
             return RedirectToAction(nameof(Index));
         }
 
@@ -153,7 +154,7 @@ public class DeviceController : Controller
         // 取得できなければ一覧に戻す
         if (model == null)
         {
-            TempData["ErrorMessage"] = "対象の機器が存在しません。";
+            TempData["ErrorMessage"] = "対象の機器が見つかりません。";
             return RedirectToAction(nameof(Index));
         }
 
@@ -199,7 +200,7 @@ public class DeviceController : Controller
         }
         else
         {
-            TempData["ErrorMessage"] = "更新に失敗しました。もう一度お試しください。";
+            TempData["FailureMessage"] = "更新に失敗しました。もう一度お試しください。";
         }
 
         // 該当の機器情報画面に戻す
@@ -209,17 +210,74 @@ public class DeviceController : Controller
 
     [HttpGet]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Delete()
+    public async Task<IActionResult> Delete(int id)
     {
-        return View();
+        // 対象の機器データを取得
+        var model = await _deviceService.GetDeleteDeviceByIdAsync(id);
+
+        // 取得できなければ一覧に戻す
+        if (model == null)
+        {
+            TempData["ErrorMessage"] = "対象の機器が見つかりません。";
+            return RedirectToAction(nameof(Index));
+        }
+
+        // ビューにモデルを渡す
+        return View(model);
     }
 
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> DeleteConfirmed()
+    public async Task<IActionResult> DeleteConfirmed(DeviceDeleteViewModel model)
     {
-        return View();
+        // エラーがあった場合は、ビューに戻す
+        if (!ModelState.IsValid)
+        {
+            model = await _deviceService.GetDeleteDeviceByIdAsync(model.HiddenId);
+
+            // モデルが取得できなければ一覧に戻す
+            if (model == null)
+            {
+                TempData["ErrorMessage"] = "対象の機器が見つかりません。";
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(model);
+        }
+
+        // ログインユーザー名を取得
+        string deleteByuserName = User.Identity.Name;
+
+        // ユーザー情報が取得できなかった場合は機器情報画面に戻す
+        if (deleteByuserName == null)
+        {
+            TempData["FailureMessage"] = "認証情報が取得できませんでした。もう一度お試しください。";
+            return RedirectToAction(nameof(Details), new { id = model.HiddenId });
+        }
+
+        // 論理削除処理を実施
+        // クエリ実行結果の状態のエントリ数を取得
+        var result = await _deviceService.DeleteDeviceAsync(model.HiddenId, deleteByuserName);
+
+        // 失敗していたら該当の機器情報画面に戻す
+        if (result <= 0)
+        {
+            if (result == -1)
+            {
+                TempData["ErrorMessage"] = "対象の機器が見つかりませんでした。もう一度お試しください。";
+            }
+            else
+            {
+                TempData["FailureMessage"] = "削除に失敗しました。もう一度お試しください。";
+            }
+
+            return RedirectToAction(nameof(Details), new { id = model.HiddenId });
+        }
+
+        // 成功したら機器一覧に戻す
+        TempData["SuccessMessage"] = "削除が完了しました。";
+        return RedirectToAction(nameof(Index));
     }
 }

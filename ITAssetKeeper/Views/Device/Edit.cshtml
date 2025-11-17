@@ -8,6 +8,28 @@
 
 <h1>機器情報編集</h1>
 
+<!-- メッセージ表示 -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success mt-3">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-warning mt-3">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (TempData["FailureMessage"] != null)
+{
+    <div class="alert alert-danger mt-3">
+        @TempData["FailureMessage"]
+    </div>
+}
+
 <!-- 機器情報画面に戻る -->
 <div class="mt-4">
     <a asp-action="Details" asp-route-id="@Model.HiddenId" class="btn btn-secondary me-2">キャンセル</a>
