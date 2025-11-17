@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace ITAssetKeeper.Data
 {
@@ -41,16 +43,35 @@ namespace ITAssetKeeper.Data
         }
 
         ///////////////////////////////////////////
-        // DBへの新規登録時に Device の CreatedAt に自動で現在日時を設定する
+        // Devicesへの新規登録・更新・削除(フラグ更新)時、
+        // DeviceHistories の更新時に、自動で現在日時を設定する
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            // Deviceテーブルの新規登録となる対象のデータを取得
-            var entries = ChangeTracker.Entries().Where(e => e.State == EntityState.Added && e.Entity is Device);
+            // 現在日時を取得
+            var now = DateTime.Now;
 
-            // CreatedAt に 現在日時を入れていく
-            foreach (var entry in entries)
+            // DeviceテーブルのEntryを取得
+            var deviceEntries = ChangeTracker.Entries<Device>();
+
+            foreach (var entry in deviceEntries)
             {
-                ((Device)entry.Entity).CreatedAt = DateTime.Now;
+                // 新規登録なら、登録日と更新日を現在日時で設定
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.CreatedAt = now;
+                    entry.Entity.UpdatedAt = now;
+                }
+                // 変更であれば、更新日を現在日時で設定
+                // ソフトデリートの場合は、削除日も現在日時で設定
+                else if (entry.State == EntityState.Modified)
+                {
+                    entry.Entity.UpdatedAt = now;
+
+                    if (entry.Entity.IsDeleted == true && entry.Property(nameof(Device.IsDeleted)).IsModified)
+                    {
+                        entry.Entity.DeletedAt = now;
+                    }
+                }
             }
 
             return base.SaveChangesAsync(cancellationToken);

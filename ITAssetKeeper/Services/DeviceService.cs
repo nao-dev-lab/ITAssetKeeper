@@ -218,9 +218,10 @@ public class DeviceService : IDeviceService
             // プレフィックスを除いた数字部分をint型で取得しなおす
             // 一番大きい数字を取得し、新しいManagementId用に +1 する
             var maxNum = idList
-            .Select(id => int.Parse(id.Substring(id.IndexOf(DeviceConstants.DEVICE_ID_PREFIX) + DeviceConstants.DEVICE_ID_PREFIX.Length, DeviceConstants.DEVICE_ID_NUM_DIGIT_COUNT)))
+            .Select(id => ExtractNumericId(id))
             .DefaultIfEmpty(0)
             .Max() + 1;
+
 
             // 新しい ManagementId を生成
             // プレフィックスを付けて、数字部分が規定の桁数になるように先行0埋めする
@@ -253,6 +254,14 @@ public class DeviceService : IDeviceService
             // 結果の状態エントリの数を返す
             return result;
         }
+    }
+
+    // ManagementIDから数字部分を取り出す
+    private int ExtractNumericId(string managementId)
+    {
+        return int.Parse(managementId.Substring(
+            DeviceConstants.DEVICE_ID_PREFIX.Length,
+            DeviceConstants.DEVICE_ID_NUM_DIGIT_COUNT));
     }
 
 
@@ -373,4 +382,56 @@ public class DeviceService : IDeviceService
         // モデルを返す
         return model;
     }
+
+    // 機器情報の更新処理
+    //public Task<int> UpdateDeviceAsync(DeviceEditViewModel model)
+    //{
+    //    // トランザクション処理
+    //    using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+    //    {
+    //        // ManagementIDを自動採番する為に、DBに存在するManagementIdを取得
+    //        var idList = await _context.Devices
+    //            .Select(x => x.ManagementId)
+    //            .ToListAsync();
+
+    //        // プレフィックスを除いた数字部分をint型で取得しなおす
+    //        // 一番大きい数字を取得し、新しいManagementId用に +1 する
+    //        var maxNum = idList
+    //        .Select(id => ExtractNumericId(id))
+    //        .DefaultIfEmpty(0)
+    //        .Max() + 1;
+
+
+    //        // 新しい ManagementId を生成
+    //        // プレフィックスを付けて、数字部分が規定の桁数になるように先行0埋めする
+    //        string newMid = DeviceConstants.DEVICE_ID_PREFIX + maxNum.ToString($"D{DeviceConstants.DEVICE_ID_NUM_DIGIT_COUNT}");
+
+    //        // 受け取ったビューモデルからEntity 作成
+    //        var entity = new Device
+    //        {
+    //            ManagementId = newMid,
+    //            Category = model.SelectedCategory,
+    //            Purpose = model.SelectedPurpose,
+    //            ModelNumber = model.ModelNumber,
+    //            SerialNumber = model.SerialNumber,
+    //            HostName = model.HostName,
+    //            Location = model.Location,
+    //            UserName = model.UserName,
+    //            Status = model.SelectedStatus,
+    //            Memo = model.Memo,
+    //            PurchaseDate = model.PurchaseDate
+    //        };
+
+    //        _context.Devices.Add(entity);
+
+    //        // DBへの登録処理を実施、状態エントリの数を受け取る
+    //        var result = await _context.SaveChangesAsync();
+
+    //        // Commitする
+    //        scope.Complete();
+
+    //        // 結果の状態エントリの数を返す
+    //        return result;
+    //    }
+    //}
 }

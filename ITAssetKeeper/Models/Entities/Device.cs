@@ -62,6 +62,9 @@ public class Device
     [Display(Name = "登録日")]
     public DateTime CreatedAt { get; set; }
 
+    [Display(Name = "更新日")]
+    public DateTime? UpdatedAt { get; set; }
+
     [Required]
     [Display(Name = "削除フラグ")]
     // 規定値を 0 とするので false を初期値としておく

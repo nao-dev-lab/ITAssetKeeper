@@ -52,4 +52,7 @@ public interface IDeviceService
     // Edit画面に表示する為の Device情報を取得し、ビューモデルを返す
     // Role別の編集可否項目もここで設定する
     Task<DeviceEditViewModel?> GetDeviceEditViewAsync(int id, Roles role);
+
+    // 機器情報の更新処理
+    //public Task<int> UpdateDeviceAsync(DeviceEditViewModel model);
 }
