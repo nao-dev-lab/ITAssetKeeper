@@ -7,8 +7,10 @@ using ITAssetKeeper.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Security.Claims;
 
@@ -35,9 +37,10 @@ public class DeviceController : Controller
     }
 
     // GET: Device/GetSortedList
+    // JSから呼び出す
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> GetSortedList(SortKeyColums sortKey, SortOrder sortOrder, DeviceListViewModel model)
+    public async Task<IActionResult> GetSortedList(SortKeys sortKey, SortOrders sortOrder, DeviceListViewModel model)
     {
         // SortKey と SortOrderをモデルに反映させる
         model.SortKeyValue = sortKey;
@@ -51,6 +54,7 @@ public class DeviceController : Controller
     }
 
     // GET: Device/GetPagedList
+    // JSから呼び出す
     [HttpGet]
     [Authorize]
     public async Task<IActionResult> GetPagedList(DeviceListViewModel model)
@@ -160,9 +164,46 @@ public class DeviceController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "Admin, Editor")]
-    public async Task<IActionResult> Edit()
+    public async Task<IActionResult> Edit(DeviceEditViewModel model)
     {
-        return View();
+        // ユーザーのRole情報を取得
+        Roles role;
+        if (User.IsInRole("Admin"))
+        {
+            role = Roles.Admin;
+        }
+        else
+        {
+            role = Roles.Editor;
+        }
+
+        // 入力エラーがあった場合は、
+        // SelectList ＆ ReadOnly 制御だけ再設定し、ビューに戻す
+        if (!ModelState.IsValid)
+        {
+            await _deviceService.RestoreEditViewSettingsAsync(model, role);
+
+            return View(model);
+        }
+
+        // クエリ実行結果の状態のエントリ数を取得
+        var result = await _deviceService.UpdateDeviceAsync(model, role);
+
+        if (result == -1)
+        {
+            TempData["ErrorMessage"] = "対象の機器が見つかりませんでした。もう一度お試しください。";
+        }
+        else if (result > 0)
+        {
+            TempData["SuccessMessage"] = "更新が完了しました。";
+        }
+        else
+        {
+            TempData["ErrorMessage"] = "更新に失敗しました。もう一度お試しください。";
+        }
+
+        // 該当の機器情報画面に戻す
+        return RedirectToAction(nameof(Details), new { id = model.HiddenId });
     }
 
 

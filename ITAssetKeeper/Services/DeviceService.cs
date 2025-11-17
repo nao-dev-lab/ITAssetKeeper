@@ -27,7 +27,7 @@ public class DeviceService : IDeviceService
         IQueryable<Device> query = _context.Devices;
 
         // フィルタリング実施
-        query = FilterDevices(query, condition);
+        query = FilterDevices(query, condition); 
 
         // 並び替え
         query = SortDevices(query, condition.SortKeyValue, condition.SortOrderValue);
@@ -100,7 +100,7 @@ public class DeviceService : IDeviceService
             query = query.Where(x => x.Status == condition.SelectedStatus);
         }
 
-        // 範囲
+        // 日付範囲：購入日
         if (condition.PurchaseDateFrom != null && condition.PurchaseDateTo == null)
         {
             // PurchaseDateFrom ～ 今日まで
@@ -125,15 +125,40 @@ public class DeviceService : IDeviceService
             }
         }
 
+        // 日付範囲：更新日
+        if (condition.UpdatedDateFrom != null && condition.UpdatedDateTo == null)
+        {
+            // UpdatedDateFrom ～ 今日まで
+            query = query.Where(x => x.UpdatedAt >= condition.UpdatedDateFrom && x.UpdatedAt <= DateTime.Now);
+        }
+        else if (condition.UpdatedDateFrom == null && condition.UpdatedDateTo != null)
+        {
+            // UpdatedDateTo 以前のものすべて
+            query = query.Where(x => x.UpdatedAt <= condition.UpdatedDateTo);
+        }
+        else if (condition.UpdatedDateFrom != null && condition.UpdatedDateTo != null)
+        {
+            if (condition.UpdatedDateFrom == condition.UpdatedDateTo)
+            {
+                // 同一の日付が入力されている場合は、UpdatedDateFromで指定された日付
+                query = query.Where(x => x.UpdatedAt == condition.UpdatedDateFrom);
+            }
+            else
+            {
+                // UpdatedDateFrom ～ UpdatedDateToの範囲
+                query = query.Where(x => x.UpdatedAt >= condition.UpdatedDateFrom && x.UpdatedAt <= condition.UpdatedDateTo);
+            }
+        }
+
         return query;
     }
 
     // ソート (フィルタ済み IQueryable を昇順 / 降順に並べ替える)
-    public IQueryable<Device> SortDevices(IQueryable<Device> query, SortKeyColums sortKey, SortOrder sortOrder)
+    public IQueryable<Device> SortDevices(IQueryable<Device> query, SortKeys sortKey, SortOrders sortOrder)
     {
         // 指定されたSortKeyを基準に、
         // 指定されたSortOrderに応じて、昇順 or 降順でソートする
-        if (sortOrder == SortOrder.Asc)
+        if (sortOrder == SortOrders.Asc)
         {
             query = query.OrderBy(DeviceConstants.SORT_KEY_SELECTORS[sortKey]);
         }
@@ -162,8 +187,8 @@ public class DeviceService : IDeviceService
         SelectListHelper.SetEnumSelectList<DeviceCategory>(condition, selectList => condition.Category = selectList);
         SelectListHelper.SetEnumSelectList<DevicePurpose>(condition, selectList => condition.Purpose = selectList);
         SelectListHelper.SetEnumSelectList<DeviceStatus>(condition, selectList => condition.Status = selectList);
-        SelectListHelper.SetEnumSelectList<SortOrder>(condition, selectList => condition.SortOrderList = selectList);
-        SelectListHelper.SetEnumSelectList<SortKeyColums>(condition, selectList => condition.SortKeyList = selectList);
+        SelectListHelper.SetEnumSelectList<SortOrders>(condition, selectList => condition.SortOrderList = selectList);
+        SelectListHelper.SetEnumSelectList<SortKeys>(condition, selectList => condition.SortKeyList = selectList);
 
         // 検索結果の一覧表示のデータをDTO型で詰める
         condition.Devices = devices
@@ -180,6 +205,7 @@ public class DeviceService : IDeviceService
                 UserName = x.UserName,
                 Status = x.Status,
                 PurchaseDate = x.PurchaseDate.ToString("yyyy/MM/dd"),
+                UpdatedAt = x.UpdatedAt.ToString("yyyy/MM/dd")
             })
             .ToList();
 
@@ -293,6 +319,7 @@ public class DeviceService : IDeviceService
             Location = device.Location,
             UserName = device.UserName,
             PurchaseDate = device.PurchaseDate.ToString("yyyy/MM/dd"),
+            UpdatedAt = device.UpdatedAt.ToString("yyyy/MM/dd"),
             Memo = device.Memo
         };
 
@@ -342,7 +369,7 @@ public class DeviceService : IDeviceService
         // 取得したデータをDeviceEditViewModelに詰める
         var model = new DeviceEditViewModel
         {
-            Id = device.Id,
+            HiddenId = device.Id,
             ManagementId = device.ManagementId,
             SelectedCategory = device.Category,
             SelectedPurpose = device.Purpose,
@@ -383,55 +410,83 @@ public class DeviceService : IDeviceService
         return model;
     }
 
+    // 入力エラー時、SelectList ＆ ReadOnly 制御だけ再設定する
+    public async Task RestoreEditViewSettingsAsync(DeviceEditViewModel model, Roles role)
+    {
+        // ビューモデルに、ドロップダウン用のSelectListをセット
+        SelectListHelper.SetEnumSelectList<DeviceCategory>(model, selectList => model.CategoryItems = selectList);
+        SelectListHelper.SetEnumSelectList<DevicePurpose>(model, selectList => model.PurposeItems = selectList);
+        SelectListHelper.SetEnumSelectList<DeviceStatus>(model, selectList => model.StatusItems = selectList);
+
+        // ReadOnly制御再設定
+        // Admin
+        if (role == Roles.Admin)
+        {
+            // すべてReadOnlyとしない(すべて編集可)
+            model.IsReadOnlyCategory = false;
+            model.IsReadOnlyPurpose = false;
+            model.IsReadOnlyStatus = false;
+            model.IsReadOnlyModelNumber = false;
+            model.IsReadOnlySerialNumber = false;
+            model.IsReadOnlyHostName = false;
+            model.IsReadOnlyLocation = false;
+            model.IsReadOnlyUserName = false;
+            model.IsReadOnlyMemo = false;
+            model.IsReadOnlyPurchaseDate = false;
+        }
+        // それ以外(Editor)
+        else
+        {
+            // 編集可とする項目のみfalseを指定
+            model.IsReadOnlyLocation = false;
+            model.IsReadOnlyUserName = false;
+        }
+    }
+
     // 機器情報の更新処理
-    //public Task<int> UpdateDeviceAsync(DeviceEditViewModel model)
-    //{
-    //    // トランザクション処理
-    //    using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
-    //    {
-    //        // ManagementIDを自動採番する為に、DBに存在するManagementIdを取得
-    //        var idList = await _context.Devices
-    //            .Select(x => x.ManagementId)
-    //            .ToListAsync();
+    public async Task<int> UpdateDeviceAsync(DeviceEditViewModel model, Roles role)
+    {
+        // Devicesテーブルから指定のIdのデータを取得する
+        var entity = await _context.Devices.FindAsync(model.HiddenId);
 
-    //        // プレフィックスを除いた数字部分をint型で取得しなおす
-    //        // 一番大きい数字を取得し、新しいManagementId用に +1 する
-    //        var maxNum = idList
-    //        .Select(id => ExtractNumericId(id))
-    //        .DefaultIfEmpty(0)
-    //        .Max() + 1;
+        // 見つからなかった場合は -1 を返す
+        if (entity == null)
+        {
+            return -1;
+        }
 
+        // トランザクション処理
+        using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+        {
+            // Role判定
+            // Role が Editor であれば Location と UserName のみ更新
+            if (role == Roles.Admin)
+            {
+                entity.Category = model.SelectedCategory;
+                entity.Purpose = model.SelectedPurpose;
+                entity.ModelNumber = model.ModelNumber;
+                entity.SerialNumber = model.SerialNumber;
+                entity.HostName = model.HostName;
+                entity.Location = model.Location;
+                entity.UserName = model.UserName;
+                entity.Status = model.SelectedStatus;
+                entity.Memo = model.Memo;
+                entity.PurchaseDate = model.PurchaseDate.Value;
+            }
+            else
+            {
+                entity.Location = model.Location;
+                entity.UserName = model.UserName;
+            }
 
-    //        // 新しい ManagementId を生成
-    //        // プレフィックスを付けて、数字部分が規定の桁数になるように先行0埋めする
-    //        string newMid = DeviceConstants.DEVICE_ID_PREFIX + maxNum.ToString($"D{DeviceConstants.DEVICE_ID_NUM_DIGIT_COUNT}");
+            // DBへの登録処理を実施、状態エントリの数を受け取る
+            var result = await _context.SaveChangesAsync();
 
-    //        // 受け取ったビューモデルからEntity 作成
-    //        var entity = new Device
-    //        {
-    //            ManagementId = newMid,
-    //            Category = model.SelectedCategory,
-    //            Purpose = model.SelectedPurpose,
-    //            ModelNumber = model.ModelNumber,
-    //            SerialNumber = model.SerialNumber,
-    //            HostName = model.HostName,
-    //            Location = model.Location,
-    //            UserName = model.UserName,
-    //            Status = model.SelectedStatus,
-    //            Memo = model.Memo,
-    //            PurchaseDate = model.PurchaseDate
-    //        };
+            // Commitする
+            scope.Complete();
 
-    //        _context.Devices.Add(entity);
-
-    //        // DBへの登録処理を実施、状態エントリの数を受け取る
-    //        var result = await _context.SaveChangesAsync();
-
-    //        // Commitする
-    //        scope.Complete();
-
-    //        // 結果の状態エントリの数を返す
-    //        return result;
-    //    }
-    //}
+            // 結果の状態エントリの数を返す
+            return result;
+        }
+    }
 }

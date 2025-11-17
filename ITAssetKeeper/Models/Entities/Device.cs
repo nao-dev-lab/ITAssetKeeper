@@ -63,7 +63,7 @@ public class Device
     public DateTime CreatedAt { get; set; }
 
     [Display(Name = "更新日")]
-    public DateTime? UpdatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
 
     [Required]
     [Display(Name = "削除フラグ")]

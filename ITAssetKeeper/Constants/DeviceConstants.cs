@@ -13,18 +13,19 @@ public class DeviceConstants
 
     // 各カラムに対応するdintionary
     // Expression で メソッドを IQueryable にバインドする
-    public static readonly Dictionary<SortKeyColums, Expression<Func<Device, object>>> SORT_KEY_SELECTORS =
+    public static readonly Dictionary<SortKeys, Expression<Func<Device, object>>> SORT_KEY_SELECTORS =
     new()
     {
-        { SortKeyColums.ManagementId, d => d.ManagementId },
-        { SortKeyColums.Category, d => d.Category },
-        { SortKeyColums.Purpose, d => d.Purpose },
-        { SortKeyColums.ModelNumber, d => d.ModelNumber },
-        { SortKeyColums.SerialNumber, d => d.SerialNumber },
-        { SortKeyColums.HostName, d => d.HostName },
-        { SortKeyColums.Location, d => d.Location },
-        { SortKeyColums.UserName, d => d.UserName },
-        { SortKeyColums.Status, d => d.Status },
-        { SortKeyColums.PurchaseDate, d => d.PurchaseDate }
+        { SortKeys.ManagementId, d => d.ManagementId },
+        { SortKeys.Category, d => d.Category },
+        { SortKeys.Purpose, d => d.Purpose },
+        { SortKeys.ModelNumber, d => d.ModelNumber },
+        { SortKeys.SerialNumber, d => d.SerialNumber },
+        { SortKeys.HostName, d => d.HostName },
+        { SortKeys.Location, d => d.Location },
+        { SortKeys.UserName, d => d.UserName },
+        { SortKeys.Status, d => d.Status },
+        { SortKeys.PurchaseDate, d => d.PurchaseDate },
+        { SortKeys.UpdatedAt, d => d.UpdatedAt }
     };
 }

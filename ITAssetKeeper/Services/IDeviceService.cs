@@ -16,7 +16,7 @@ public interface IDeviceService
     IQueryable<Device> FilterDevices(IQueryable<Device> query, DeviceListViewModel condition);
 
     // ソート (フィルタ済み IQueryable を昇順 / 降順に並べ替える)
-    IQueryable<Device> SortDevices(IQueryable<Device> query, SortKeyColums sortKey, SortOrder sortOrder);
+    IQueryable<Device> SortDevices(IQueryable<Device> query, SortKeys sortKey, SortOrders sortOrder);
 
     // ページング (Skip/Take の適用)
     IQueryable<Device> PagingDevices(IQueryable<Device> query, int pageNumber, int pageSize);
@@ -53,6 +53,9 @@ public interface IDeviceService
     // Role別の編集可否項目もここで設定する
     Task<DeviceEditViewModel?> GetDeviceEditViewAsync(int id, Roles role);
 
+    // 入力エラー時用：SelectList ＆ ReadOnly 制御だけ再設定する
+    Task RestoreEditViewSettingsAsync(DeviceEditViewModel model, Roles role);
+
     // 機器情報の更新処理
-    //public Task<int> UpdateDeviceAsync(DeviceEditViewModel model);
+    public Task<int> UpdateDeviceAsync(DeviceEditViewModel model, Roles role);
 }

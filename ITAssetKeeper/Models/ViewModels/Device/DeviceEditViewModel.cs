@@ -6,8 +6,8 @@ namespace ITAssetKeeper.Models.ViewModels.Device;
 // Edit(機器情報編集)のビューモデル
 public class DeviceEditViewModel
 {
-    // --- 編集対象識別用 ---
-    public int Id { get; set; }
+    // --- 編集対象識別用(hidden) ---
+    public int HiddenId { get; set; }
 
     // -- Role制御用 ---
     public bool IsReadOnlyCategory { get; set; } = true;
@@ -33,7 +33,7 @@ public class DeviceEditViewModel
 
     // --- 入力(表示)項目 ---
     [Display(Name = "機器管理ID")]
-    public string? ManagementId { get; set; }
+    public string ManagementId { get; set; }
 
     [Display(Name = "種別")]
     public SelectList? CategoryItems { get; set; }
@@ -43,23 +43,28 @@ public class DeviceEditViewModel
 
     [Required(ErrorMessage = "入力が必要です")]
     [StringLength(100, MinimumLength = 1, ErrorMessage = "{0} は{2}から{1}文字の範囲で入力してください")]
+    [RegularExpression(@"^[a-zA-Z0-9\-._/]+$", ErrorMessage = "半角英数字と - . _ / のみ使用できます")]
     [Display(Name = "型番(モデル)")]
     public string ModelNumber { get; set; }
 
     [Required(ErrorMessage = "入力が必要です")]
     [StringLength(100, MinimumLength = 1, ErrorMessage = "{0} は{2}から{1}文字の範囲で入力してください")]
+    [RegularExpression(@"^[a-zA-Z0-9\-._/]+$", ErrorMessage = "半角英数字と - . _ / のみ使用できます")]
     [Display(Name = "製造番号(シリアル)")]
     public string SerialNumber { get; set; }
 
     [Display(Name = "ホスト名")]
+    [RegularExpression(@"^[a-zA-Z0-9\-._]+$", ErrorMessage = "半角英数字と - . _ のみ使用できます")]
     public string? HostName { get; set; }
 
     [Required(ErrorMessage = "入力が必要です")]
     [StringLength(200, MinimumLength = 1, ErrorMessage = "{0} は{2}から{1}文字の範囲で入力してください")]
+    [RegularExpression(@"^[a-zA-Z0-9\-]+$", ErrorMessage = "半角英数字と - のみ使用できます")]
     [Display(Name = "設置場所")]
     public string Location { get; set; }
 
     [Display(Name = "使用者")]
+    [RegularExpression(@"^[a-zA-Z0-9\-._]+$", ErrorMessage = "半角英数字と - . _ のみ使用できます")]
     public string? UserName { get; set; }
 
     [Display(Name = "状態")]
@@ -71,5 +76,5 @@ public class DeviceEditViewModel
     [Required(ErrorMessage = "日付の選択が必要です")]
     [DataType(DataType.Date)]
     [Display(Name = "購入日")]
-    public DateTime PurchaseDate { get; set; }
+    public DateTime? PurchaseDate { get; set; }
 }

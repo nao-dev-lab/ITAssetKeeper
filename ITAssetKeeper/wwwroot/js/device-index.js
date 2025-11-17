@@ -5,13 +5,13 @@
     $('#SortKeyValue, #SortOrderValue').on('change', function () {
 
         var form = $('#searchForm');
-        var sortKey = $('#SortKeyValue').val();
-        var sortOrder = $('#SortOrderValue').val();
+        //var sortKey = $('#SortKeyValue').val();
+        //var sortOrder = $('#SortOrderValue').val();
 
         // ソートに変更があったら、最初のページに戻す
         var data = form.serialize()
-            + '&sortKey=' + sortKey
-            + '&sortOrder=' + sortOrder
+            //+ '&sortKey=' + sortKey
+            //+ '&sortOrder=' + sortOrder
             + '&PageNumber=1';
 
         $.ajax({

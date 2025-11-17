@@ -42,6 +42,9 @@ public class DeviceDto
     [Display(Name = "登録日")]
     public DateTime CreatedAt { get; set; }
 
+    [Display(Name = "更新日")]
+    public string UpdatedAt { get; set; }
+
     [Display(Name = "削除フラグ")]
     public bool IsDeleted { get; set; }
 

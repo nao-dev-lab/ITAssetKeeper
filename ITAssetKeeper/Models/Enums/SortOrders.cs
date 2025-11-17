@@ -2,7 +2,7 @@
 
 namespace ITAssetKeeper.Models.Enums;
 
-public enum SortOrder
+public enum SortOrders
 {
     [Display(Name = "昇順")]
     Asc,

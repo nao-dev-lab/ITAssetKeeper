@@ -2,7 +2,7 @@
 
 namespace ITAssetKeeper.Models.Enums;
 
-public enum SortKeyColums
+public enum SortKeys
 {
     [Display(Name = "機器管理ID")]
     ManagementId,
@@ -32,5 +32,8 @@ public enum SortKeyColums
     Status,
 
     [Display(Name = "購入日")]
-    PurchaseDate
+    PurchaseDate,
+
+    [Display(Name = "更新日")]
+    UpdatedAt
 }

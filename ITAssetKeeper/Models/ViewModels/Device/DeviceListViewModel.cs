@@ -15,8 +15,8 @@ public class DeviceListViewModel
     public string? SelectedCategory { get; set; }
     public string? SelectedPurpose { get; set; }
     public string? SelectedStatus { get; set; }
-    public SortKeyColums SortKeyValue { get; set; } = SortKeyColums.ManagementId;
-    public SortOrder SortOrderValue { get; set; } = Enums.SortOrder.Asc;
+    public SortKeys SortKeyValue { get; set; } = SortKeys.ManagementId;
+    public SortOrders SortOrderValue { get; set; } = Enums.SortOrders.Asc;
 
     // --- 検索結果 ---
     public List<DeviceDto> Devices { get; set; } = new();
@@ -50,13 +50,26 @@ public class DeviceListViewModel
     public SelectList? Status { get; set; }
 
     [Display(Name = "購入日 (開始)")]
+    [DataType(DataType.Date)]
     public DateTime? PurchaseDateFrom { get; set; }
 
     [Display(Name = "購入日 (終了)")]
+    [DataType(DataType.Date)]
     public DateTime? PurchaseDateTo { get; set; }
 
     [Display(Name = "購入日")]
     public DateTime? PurchaseDate { get; set; }
+
+    [Display(Name = "更新日 (開始)")]
+    [DataType(DataType.Date)]
+    public DateTime? UpdatedDateFrom { get; set; }
+
+    [Display(Name = "更新日 (終了)")]
+    [DataType(DataType.Date)]
+    public DateTime? UpdatedDateTo { get; set; }
+
+    [Display(Name = "更新日")]
+    public DateTime? UpdatedAt { get; set; }
 
     // --- 並び替え ---
     [Display(Name = "並び替え基準")]

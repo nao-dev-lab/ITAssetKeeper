@@ -57,8 +57,35 @@
                 <input asp-for="PurchaseDateTo" class="form-control" type="date" />
             </div>
             <div class="form-group">
+                <label asp-for="UpdatedDateFrom" class="control-label"></label>
+                <input asp-for="UpdatedDateFrom" class="form-control" type="date" />
+            </div>
+            <div class="form-group">
+                <label asp-for="UpdatedDateTo" class="control-label"></label>
+                <input asp-for="UpdatedDateTo" class="form-control" type="date" />
+            </div>
+            <!-- フォーム内容送信 -->
+            <div class="form-group">
                 <input type="submit" value="検索" class="btn btn-primary" />
             </div>
+
+            @* ↓ここを追加 *@
+            <!-- 並び替え選択 -->
+            <div id="sortArea">
+                <div class="form-group">
+                    <label asp-for="SortKeyList" class="control-label"></label>
+                    @Html.DropDownListFor(model => model.SortKeyValue, Model.SortKeyList,
+                    new { @class = "form-control", id = "SortKeyValue" })
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="SortOrderList" class="control-label"></label>
+                    @Html.DropDownListFor(model => model.SortOrderValue, Model.SortOrderList,
+                                        new { @class = "form-control", id = "SortOrderValue" })
+                </div>
+            </div>
+            @* ↑ここまで追加 *@
+
         </form>
     </div>
 </div>
@@ -71,7 +98,7 @@
     </div>
 }
 
-<!-- 並び替え選択 -->
+@* <!-- 並び替え選択 -->
 <div id="sortArea">
     <div class="form-group">
         <label asp-for="SortKeyList" class="control-label"></label>
@@ -84,7 +111,7 @@
         @Html.DropDownListFor(model => model.SortOrderValue, Model.SortOrderList,
             new { @class = "form-control", id = "SortOrderValue" })
     </div>
-</div>
+</div> *@
 
 <!-- テーブル表示 -->
 <div id="deviceTableArea">
