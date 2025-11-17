@@ -1,0 +1,13 @@
+﻿/* device-delete.css */
+
+#resultToast.success {
+    background-color: #6c3af0 !important; /* 紫 */
+}
+
+#resultToast.error {
+    background-color: #d9534f !important; /* 赤 */
+}
+
+#deleteConfirmModal .modal-header {
+    background-color: #6c3af0 !important;
+}

@@ -122,9 +122,67 @@
 
             @if (User.IsInRole("Admin"))
             {
-                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">削除</a>
+                @* <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">削除</a> *@
+                @* 削除ボタンはページ遷移せずモーダル起動 *@
+                <button type="button"
+                        class="btn btn-danger"
+                        id="btnOpenDeleteModal"
+                        data-device-id="@Model.Id"
+                        data-device-mgmtid="@Model.ManagementId"
+                        data-device-category="@Model.Category"
+                        data-device-status="@Model.Status">
+                    削除
+                </button>
             }
         </div>
     </div>
 </div>
+
+
+@* 削除確認モーダル *@
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header text-white" style="background:#6c3af0;">
+                <h5 class="modal-title">🗑 削除確認</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <p>対象の機器情報を削除します。よろしいですか？</p>
+                <ul class="small">
+                    <li>機器管理ID：<span id="delMgmtId"></span></li>
+                    <li>種別：<span id="delCategory"></span></li>
+                    <li>状態：<span id="delStatus"></span></li>
+                </ul>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                <button type="button" id="btnDeleteExec" class="btn btn-danger">削除</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- Toast -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="resultToast" class="toast align-items-center text-white border-0"
+         role="alert" aria-live="assertive" aria-atomic="true"
+         data-bs-delay="5000">
+        <div class="d-flex">
+            <div class="toast-body" id="toastMessage"></div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                    data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
+
+@* 外部JS読み込み *@
+@section Scripts {
+    <script src="~/js/device-delete.js"></script>
+}
 

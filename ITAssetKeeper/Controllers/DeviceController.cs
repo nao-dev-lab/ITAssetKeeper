@@ -226,50 +226,90 @@ public class DeviceController : Controller
         return View(model);
     }
 
-
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> DeleteConfirmed(DeviceDeleteViewModel model)
+    public async Task<IActionResult> DeleteAjax(int id)
     {
         // Id が不正なら中断
-        if (model.IdHidden <= 0)
+        if (id <= 0)
         {
-            TempData["ErrorMessage"] = "削除対象のIDが不正です。最初からやり直してください。";
-            return RedirectToAction(nameof(Index));
+            return Json(new { success = false, message = "削除対象のIDが不正です。" });
         }
 
         // ログインユーザー名を取得
         string deleteByuserName = User.Identity.Name;
 
-        // ユーザー情報が取得できなかった場合は機器情報画面に戻す
-        if (deleteByuserName == null)
+        // ユーザー情報が取得できなかった場合
+        if (string.IsNullOrEmpty(deleteByuserName))
         {
-            TempData["FailureMessage"] = "認証情報が取得できませんでした。もう一度お試しください。";
-            return RedirectToAction(nameof(Details), new { id = model.IdHidden });
+            return Json(new { success = false, message = "認証情報が取得できませんでした。" });
         }
 
         // 論理削除処理を実施
-        // クエリ実行結果の状態のエントリ数を取得
-        var result = await _deviceService.DeleteDeviceAsync(model.IdHidden, deleteByuserName);
+        var result = await _deviceService.DeleteDeviceAsync(id, deleteByuserName);
 
-        // 失敗していたら該当の機器情報画面に戻す
+        // 失敗判定
         if (result <= 0)
         {
             if (result == -1)
             {
-                TempData["ErrorMessage"] = "対象の機器が見つかりませんでした。もう一度お試しください。";
+                return Json(new { success = false, message = "対象の機器が見つかりませんでした。" });
             }
             else
             {
-                TempData["FailureMessage"] = "削除に失敗しました。もう一度お試しください。";
+                return Json(new { success = false, message = "削除に失敗しました。" });
             }
-
-            return RedirectToAction(nameof(Details), new { id = model.IdHidden });
         }
 
-        // 成功したら機器一覧に戻す
-        TempData["SuccessMessage"] = "削除が完了しました。";
-        return RedirectToAction(nameof(Index));
+        // 成功
+        return Json(new { success = true, message = "削除が完了しました。" });
     }
+
+
+    // ※廃止※
+    //[HttpPost]
+    //[ValidateAntiForgeryToken]
+    //[Authorize(Roles = "Admin")]
+    //public async Task<IActionResult> DeleteConfirmed(DeviceDeleteViewModel model)
+    //{
+    //    // Id が不正なら中断
+    //    if (model.IdHidden <= 0)
+    //    {
+    //        TempData["ErrorMessage"] = "削除対象のIDが不正です。最初からやり直してください。";
+    //        return RedirectToAction(nameof(Index));
+    //    }
+
+    //    // ログインユーザー名を取得
+    //    string deleteByuserName = User.Identity.Name;
+
+    //    // ユーザー情報が取得できなかった場合は機器情報画面に戻す
+    //    if (deleteByuserName == null)
+    //    {
+    //        TempData["FailureMessage"] = "認証情報が取得できませんでした。もう一度お試しください。";
+    //        return RedirectToAction(nameof(Details), new { id = model.IdHidden });
+    //    }
+
+    //    // 論理削除処理を実施
+    //    // クエリ実行結果の状態のエントリ数を取得
+    //    var result = await _deviceService.DeleteDeviceAsync(model.IdHidden, deleteByuserName);
+
+    //    // 失敗していたら該当の機器情報画面に戻す
+    //    if (result <= 0)
+    //    {
+    //        if (result == -1)
+    //        {
+    //            TempData["ErrorMessage"] = "対象の機器が見つかりませんでした。もう一度お試しください。";
+    //        }
+    //        else
+    //        {
+    //            TempData["FailureMessage"] = "削除に失敗しました。もう一度お試しください。";
+    //        }
+
+    //        return RedirectToAction(nameof(Details), new { id = model.IdHidden });
+    //    }
+
+    //    // 成功したら機器一覧に戻す
+    //    TempData["SuccessMessage"] = "削除が完了しました。";
+    //    return RedirectToAction(nameof(Index));
+    //}
 }
