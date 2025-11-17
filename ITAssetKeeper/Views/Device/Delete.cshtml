@@ -36,10 +36,10 @@
 
         @* フォーム *@
         <form id="DeleteForm" asp-controller="Device" asp-action="DeleteConfirmed" method="post" class="mt-4">
-            <input type="hidden" asp-for="HiddenId" />
+            <input type="hidden" asp-for="IdHidden" />
 
             @* hidden で 対象の Id を送る *@
-            <a asp-action="Details" asp-route-id="@Model.HiddenId" class="btn btn-secondary me-2">キャンセル</a>
+            <a asp-action="Details" asp-route-id="@Model.IdHidden" class="btn btn-secondary me-2">キャンセル</a>
             <input type="submit" value="削除" class="btn btn-danger" />
         </form>
 

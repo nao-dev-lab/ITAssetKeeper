@@ -125,46 +125,35 @@
                 <input asp-for="UpdatedDateTo" class="form-control" type="date" />
             </div>
 
+            @* a *@
+            <input type="hidden" id="SortKeyValueHidden" name="SortKeyValue" value="@Model.SortKeyValue" />
+            <input type="hidden" id="SortOrderValueHidden" name="SortOrderValue" value="@Model.SortOrderValue" />
+
             @* フォーム内容送信 *@
             <div class="form-group">
                 <input type="submit" value="検索" class="btn btn-primary" />
             </div>
-
-            @* ↓ここを追加 *@
-            <!-- 並び替え選択 -->
-            <div id="sortArea">
-                <div class="form-group">
-                    <label asp-for="SortKeyList" class="control-label"></label>
-                    @Html.DropDownListFor(model => model.SortKeyValue, Model.SortKeyList,
-                    new { @class = "form-control", id = "SortKeyValue" })
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="SortOrderList" class="control-label"></label>
-                    @Html.DropDownListFor(model => model.SortOrderValue, Model.SortOrderList,
-                                        new { @class = "form-control", id = "SortOrderValue" })
-                </div>
-            </div>
-            @* ↑ここまで追加 *@
-
         </form>
     </div>
 </div>
 
-@* <!-- 並び替え選択 -->
-<div id="sortArea">
-    <div class="form-group">
-        <label asp-for="SortKeyList" class="control-label"></label>
-        @Html.DropDownListFor(model => model.SortKeyValue, Model.SortKeyList,
-            new { @class = "form-control", id = "SortKeyValue" })
-    </div>
 
-    <div class="form-group">
-        <label asp-for="SortOrderList" class="control-label"></label>
-        @Html.DropDownListFor(model => model.SortOrderValue, Model.SortOrderList,
-            new { @class = "form-control", id = "SortOrderValue" })
+<!-- 並び替え選択 -->
+<form id="sortForm">
+    <div id="sortArea">
+        <div class="form-group">
+            <label asp-for="SortKeyList" class="control-label"></label>
+            @Html.DropDownListFor(model => model.SortKeyValue, Model.SortKeyList,
+                new { @class = "form-control", id = "SortKeyValue" })
+        </div>
+
+        <div class="form-group">
+            <label asp-for="SortOrderList" class="control-label"></label>
+            @Html.DropDownListFor(model => model.SortOrderValue, Model.SortOrderList,
+                new { @class = "form-control", id = "SortOrderValue" })
+        </div>
     </div>
-</div> *@
+</form>
 
 <!-- テーブル表示 -->
 <div id="deviceTableArea">

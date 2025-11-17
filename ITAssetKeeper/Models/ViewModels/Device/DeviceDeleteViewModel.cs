@@ -6,7 +6,7 @@ namespace ITAssetKeeper.Models.ViewModels.Device;
 public class DeviceDeleteViewModel
 {
     // --- 削除対象識別用 ---
-    public int HiddenId { get; set; }
+    public int IdHidden { get; set; }
 
     // --- 確認表示用 ---
     [Display(Name = "機器管理ID")]

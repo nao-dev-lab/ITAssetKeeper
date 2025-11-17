@@ -204,7 +204,7 @@ public class DeviceController : Controller
         }
 
         // 該当の機器情報画面に戻す
-        return RedirectToAction(nameof(Details), new { id = model.HiddenId });
+        return RedirectToAction(nameof(Details), new { id = model.IdHidden });
     }
 
 
@@ -232,19 +232,11 @@ public class DeviceController : Controller
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteConfirmed(DeviceDeleteViewModel model)
     {
-        // エラーがあった場合は、ビューに戻す
+        // エラーがあった場合は、Indexに戻す
         if (!ModelState.IsValid)
         {
-            model = await _deviceService.GetDeleteDeviceByIdAsync(model.HiddenId);
-
-            // モデルが取得できなければ一覧に戻す
-            if (model == null)
-            {
-                TempData["ErrorMessage"] = "対象の機器が見つかりません。";
-                return RedirectToAction(nameof(Index));
-            }
-
-            return View(model);
+            TempData["ErrorMessage"] = "対象の機器が見つかりません。";
+            return RedirectToAction(nameof(Index));
         }
 
         // ログインユーザー名を取得
@@ -254,12 +246,12 @@ public class DeviceController : Controller
         if (deleteByuserName == null)
         {
             TempData["FailureMessage"] = "認証情報が取得できませんでした。もう一度お試しください。";
-            return RedirectToAction(nameof(Details), new { id = model.HiddenId });
+            return RedirectToAction(nameof(Details), new { id = model.IdHidden });
         }
 
         // 論理削除処理を実施
         // クエリ実行結果の状態のエントリ数を取得
-        var result = await _deviceService.DeleteDeviceAsync(model.HiddenId, deleteByuserName);
+        var result = await _deviceService.DeleteDeviceAsync(model.IdHidden, deleteByuserName);
 
         // 失敗していたら該当の機器情報画面に戻す
         if (result <= 0)
@@ -273,7 +265,7 @@ public class DeviceController : Controller
                 TempData["FailureMessage"] = "削除に失敗しました。もう一度お試しください。";
             }
 
-            return RedirectToAction(nameof(Details), new { id = model.HiddenId });
+            return RedirectToAction(nameof(Details), new { id = model.IdHidden });
         }
 
         // 成功したら機器一覧に戻す

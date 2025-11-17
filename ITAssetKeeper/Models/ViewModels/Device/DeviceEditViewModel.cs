@@ -7,7 +7,7 @@ namespace ITAssetKeeper.Models.ViewModels.Device;
 public class DeviceEditViewModel
 {
     // --- 編集対象識別用(hidden) ---
-    public int HiddenId { get; set; }
+    public int IdHidden { get; set; }
 
     // -- Role制御用 ---
     public bool IsReadOnlyCategory { get; set; } = true;

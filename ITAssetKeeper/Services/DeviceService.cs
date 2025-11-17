@@ -372,7 +372,7 @@ public class DeviceService : IDeviceService
         // 取得したデータをDeviceEditViewModelに詰める
         var model = new DeviceEditViewModel
         {
-            HiddenId = device.Id,
+            IdHidden = device.Id,
             ManagementId = device.ManagementId,
             SelectedCategory = device.Category,
             SelectedPurpose = device.Purpose,
@@ -450,7 +450,7 @@ public class DeviceService : IDeviceService
     public async Task<int> UpdateDeviceAsync(DeviceEditViewModel model, Roles role)
     {
         // Devicesテーブルから指定のIdのデータを取得する
-        var entity = await _context.Devices.FindAsync(model.HiddenId);
+        var entity = await _context.Devices.FindAsync(model.IdHidden);
 
         // 見つからなかった場合は -1 を返す
         if (entity == null)
@@ -512,7 +512,7 @@ public class DeviceService : IDeviceService
         // 取得したデータをビューモデルに詰める
         var model = new DeviceDeleteViewModel
         {
-            HiddenId = device.Id,
+            IdHidden = device.Id,
             ManagementId = device.ManagementId,
             Category = device.Category,
             Status = device.Status,
