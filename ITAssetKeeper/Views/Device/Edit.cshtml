@@ -8,9 +8,9 @@
 
 <h1>機器情報編集</h1>
 
-<div>
-    @* キャンセルを押したら内容を破棄してリロード *@
-    <a asp-controller="Device" asp-action="Edit">キャンセル</a>
+<!-- 機器情報画面に戻る -->
+<div class="mt-4">
+    <a asp-action="Details" asp-route-id="@Model.HiddenId" class="btn btn-secondary me-2">キャンセル</a>
 </div>
 
 <!-- 機器情報編集フォーム -->
@@ -105,16 +105,11 @@
             </div>
 
             <div class="form-group">
-                <input type="hidden" asp-for="HiddenId" value="@Model.HiddenId" />
+                <input type="hidden" asp-for="HiddenId" />
                 <input type="submit" value="更新" class="btn btn-primary" />
             </div>
         </form>
     </div>
-</div>
-
-<!-- 機器情報画面に戻る -->
-<div class="mt-4">    
-    <a asp-action="Details" asp-route-id="@Model.HiddenId" class="btn btn-secondary me-2">機器情報へ戻る</a>
 </div>
 
 @section Scripts {

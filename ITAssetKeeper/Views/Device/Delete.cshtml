@@ -1,5 +1,47 @@
-﻿@{
+﻿@model ITAssetKeeper.Models.ViewModels.Device.DeviceDeleteViewModel
+
+@{
     ViewData["Title"] = "Delete";
 }
 
 <h1>機器削除</h1>
+<p class="text-danger">この機器情報を削除します。よろしいですか？</p>
+
+<div class="row">
+    <div class="col-md-6">
+
+        @* 機器管理ID(ManagementId) *@
+        <div class="form-group mb-2">
+            <label class="fw-bold">@Html.DisplayNameFor(m => m.ManagementId)</label>
+            <div>@Model.ManagementId</div>
+        </div>
+
+        @* 種別(Category) *@
+        <div class="form-group mb-2">
+            <label class="fw-bold">@Html.DisplayNameFor(m => m.Category)</label>
+            <div>@Model.Category</div>
+        </div>
+
+        @* ホスト名(HostName) *@
+        <div class="form-group mb-2">
+            <label class="fw-bold">@Html.DisplayNameFor(m => m.UserName)</label>
+            <div>@Model.UserName</div>
+        </div>
+
+        @* 状態(Status) *@
+        <div class="form-group mb-2">
+            <label class="fw-bold">@Html.DisplayNameFor(m => m.Status)</label>
+            <div>@Model.Status</div>
+        </div>
+
+        @* フォーム *@
+        <form id="DeleteForm" asp-controller="Device" asp-action="DeleteConfirmed" method="post" class="mt-4">
+            <input type="hidden" asp-for="HiddenId" />
+
+            @* hidden で 対象の Id を送る *@
+            <a asp-action="Details" asp-route-id="@Model.HiddenId" class="btn btn-secondary me-2">キャンセル</a>
+            <input type="submit" value="削除" class="btn btn-danger" />
+        </form>
+
+    </div>
+</div>
