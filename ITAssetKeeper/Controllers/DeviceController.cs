@@ -232,10 +232,10 @@ public class DeviceController : Controller
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteConfirmed(DeviceDeleteViewModel model)
     {
-        // エラーがあった場合は、Indexに戻す
-        if (!ModelState.IsValid)
+        // Id が不正なら中断
+        if (model.IdHidden <= 0)
         {
-            TempData["ErrorMessage"] = "対象の機器が見つかりません。";
+            TempData["ErrorMessage"] = "削除対象のIDが不正です。最初からやり直してください。";
             return RedirectToAction(nameof(Index));
         }
 
