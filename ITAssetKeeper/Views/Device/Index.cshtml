@@ -12,59 +12,98 @@
     <div class="col-md-4">
         <form id="searchForm" asp-controller="Device" asp-action="Index" method="get">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            @* 機器管理ID(ManagementId) *@
             <div class="form-group">
                 <label asp-for="ManagementId" class="control-label"></label>
                 <input asp-for="ManagementId" class="form-control" />
             </div>
+
+            @* 種別(Category) *@
             <div class="form-group">
                 <label asp-for="Category" class="control-label"></label>
                 @Html.DropDownListFor(model => model.SelectedCategory, Model.Category, "全て", new { @class = "form-control" })
             </div>
+
+            @* 用途(Purpose) *@
             <div class="form-group">
                 <label asp-for="Purpose" class="control-label"></label>
                 @Html.DropDownListFor(model => model.SelectedPurpose, Model.Purpose, "全て", new { @class = "form-control" })
             </div>
+
+            @* 型番(ModelNumber) *@
             <div class="form-group">
                 <label asp-for="ModelNumber" class="control-label"></label>
                 <input asp-for="ModelNumber" class="form-control" />
             </div>
+
+            @* 製造番号(SerialNumber) *@
             <div class="form-group">
                 <label asp-for="SerialNumber" class="control-label"></label>
                 <input asp-for="SerialNumber" class="form-control" />
             </div>
+
+            @* ホスト名(HostName) *@
             <div class="form-group">
                 <label asp-for="HostName" class="control-label"></label>
                 <input asp-for="HostName" class="form-control" />
             </div>
+
+            @* 設置場所(Location) *@
             <div class="form-group">
                 <label asp-for="Location" class="control-label"></label>
                 <input asp-for="Location" class="form-control" />
             </div>
+
+            @* 使用者(UserName) *@
             <div class="form-group">
                 <label asp-for="UserName" class="control-label"></label>
                 <input asp-for="UserName" class="form-control" />
             </div>
+
+            @* 状態(Status) *@
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
                 @Html.DropDownListFor(model => model.SelectedStatus, Model.Status, "全て", new { @class = "form-control" })
             </div>
+
+            @* 購入日:開始(PurchaseDateFrom) *@
             <div class="form-group">
                 <label asp-for="PurchaseDateFrom" class="control-label"></label>
                 <input asp-for="PurchaseDateFrom" class="form-control" type="date" />
             </div>
+
+            @* 購入日:終了(PurchaseDateTo) *@
             <div class="form-group">
                 <label asp-for="PurchaseDateTo" class="control-label"></label>
                 <input asp-for="PurchaseDateTo" class="form-control" type="date" />
             </div>
+
+            @* 登録日:開始(CreatedDateFrom) *@
+            <div class="form-group">
+                <label asp-for="CreatedDateFrom" class="control-label"></label>
+                <input asp-for="CreatedDateFrom" class="form-control" type="date" />
+            </div>
+
+            @* 登録日:終了(CreatedDateTo) *@
+            <div class="form-group">
+                <label asp-for="CreatedDateTo" class="control-label"></label>
+                <input asp-for="CreatedDateTo" class="form-control" type="date" />
+            </div>
+
+            @* 更新日:開始(UpdatedDateFrom) *@
             <div class="form-group">
                 <label asp-for="UpdatedDateFrom" class="control-label"></label>
                 <input asp-for="UpdatedDateFrom" class="form-control" type="date" />
             </div>
+
+            @* 更新日:終了(UpdatedDateTo) *@
             <div class="form-group">
                 <label asp-for="UpdatedDateTo" class="control-label"></label>
                 <input asp-for="UpdatedDateTo" class="form-control" type="date" />
             </div>
-            <!-- フォーム内容送信 -->
+
+            @* フォーム内容送信 *@
             <div class="form-group">
                 <input type="submit" value="検索" class="btn btn-primary" />
             </div>
@@ -90,7 +129,7 @@
     </div>
 </div>
 
-<!-- エラーメッセージがあればここに表示 -->
+<!-- メッセージ表示 -->
 @if (TempData["ErrorMessage"] != null)
 {
     <div class="alert alert-danger">

@@ -14,6 +14,7 @@
             <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.UserName)</th>
             <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.Status)</th>
             <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.PurchaseDate)</th>
+            <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.CreatedAt)</th>
             <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.UpdatedAt)</th>
         </tr>
     </thead>
@@ -31,6 +32,7 @@
                 <td>@Html.DisplayFor(modelItem => item.UserName)</td>
                 <td>@Html.DisplayFor(modelItem => item.Status)</td>
                 <td>@Html.DisplayFor(modelItem => item.PurchaseDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.CreatedAt)</td>
                 <td>@Html.DisplayFor(modelItem => item.UpdatedAt)</td>
             </tr>
         }

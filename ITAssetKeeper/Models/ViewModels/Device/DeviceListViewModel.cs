@@ -71,6 +71,18 @@ public class DeviceListViewModel
     [Display(Name = "更新日")]
     public DateTime? UpdatedAt { get; set; }
 
+    [Display(Name = "登録日 (開始)")]
+    [DataType(DataType.Date)]
+    public DateTime? CreatedDateFrom { get; set; }
+
+    [Display(Name = "登録日 (終了)")]
+    [DataType(DataType.Date)]
+    public DateTime? CreatedDateTo { get; set; }
+
+    [Display(Name = "登録日")]
+    public DateTime? CreatedAt { get; set; }
+
+
     // --- 並び替え ---
     [Display(Name = "並び替え基準")]
     public SelectList? SortKeyList { get; set; }

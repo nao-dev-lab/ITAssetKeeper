@@ -40,7 +40,7 @@ public class DeviceDto
     public string PurchaseDate { get; set; }
 
     [Display(Name = "登録日")]
-    public DateTime CreatedAt { get; set; }
+    public string CreatedAt { get; set; }
 
     [Display(Name = "更新日")]
     public string UpdatedAt { get; set; }

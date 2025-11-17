@@ -205,6 +205,7 @@ public class DeviceService : IDeviceService
                 UserName = x.UserName,
                 Status = x.Status,
                 PurchaseDate = x.PurchaseDate.ToString("yyyy/MM/dd"),
+                CreatedAt = x.CreatedAt.ToString("yyyy/MM/dd"),
                 UpdatedAt = x.UpdatedAt.ToString("yyyy/MM/dd")
             })
             .ToList();
@@ -319,7 +320,8 @@ public class DeviceService : IDeviceService
             Location = device.Location,
             UserName = device.UserName,
             PurchaseDate = device.PurchaseDate.ToString("yyyy/MM/dd"),
-            UpdatedAt = device.UpdatedAt.ToString("yyyy/MM/dd"),
+            CreatedAt = device.CreatedAt.ToString("yyyy/MM/dd HH:mm:ss"),
+            UpdatedAt = device.UpdatedAt.ToString("yyyy/MM/dd HH:mm:ss"),
             Memo = device.Memo
         };
 
