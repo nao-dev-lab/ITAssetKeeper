@@ -146,9 +146,12 @@
         <div class="modal-content">
 
             @* モーダルヘッダー *@
-            <div class="modal-header text-white">
-                <h5 class="modal-title">削除確認</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            <div class="modal-header">
+                <h5 class="modal-title d-flex align-items-center gap-2">
+                    <img src="~/img/warning.png" alt="warning" class="modal-icon" />
+                    削除確認
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             @* モーダルbody *@

@@ -23,6 +23,15 @@
 /* モーダルヘッダー */
 #deleteConfirmModal .modal-header {
     background-color: #6c3af0 !important;
+    color: #FFFFFF
+}
+
+/* モーダルヘッダー アイコン */
+.modal-icon {
+    width: 22px; /* 大きさは必要に応じて変更 */
+    height: 22px;
+    margin-right: 6px; /* 文字との間隔 */
+    object-fit: contain; /* ゆがみ防止 */
 }
 
 /* アニメーション */
