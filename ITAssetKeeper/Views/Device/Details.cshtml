@@ -6,12 +6,12 @@
 
 <h2>機器情報</h2>
 
-<!-- メッセージ表示 -->
-@if (TempData["SuccessMessage"] != null)
+@*  メッセージ表示 *@
+@if (TempData["ToastMessage"] != null)
 {
-    <div class="alert alert-success mt-3">
-        @TempData["SuccessMessage"]
-    </div>
+    <div id="toast-message"
+         data-message="@TempData["ToastMessage"]"
+         data-type="success"></div>
 }
 
 @if (TempData["ErrorMessage"] != null)
@@ -27,6 +27,7 @@
         @TempData["FailureMessage"]
     </div>
 }
+
 
 <div class="row">
     <div class="col-md-6">
@@ -111,7 +112,7 @@
 
         <div class="mt-4">
 
-            <!-- 戻る -->
+            @*  戻る *@
             <a asp-action="Index" class="btn btn-secondary me-2">一覧へ戻る</a>
 
             @* ロール判定で編集や削除を制限 *@
@@ -171,23 +172,8 @@
     </div>
 </div>
 
-
-@* トースト：削除結果通知用 *@
-@* data-bs-delay= で、6秒間トースト表示に指定 *@
-<div class="toast-container position-fixed top-0 end-0 p-4">
-    <div id="resultToast" class="toast align-items-center text-white border-0"
-         role="alert" aria-live="assertive" aria-atomic="true"
-         data-bs-delay="6000">
-        <div class="d-flex">
-            <div class="toast-body" id="toastMessage"></div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                    data-bs-dismiss="toast"></button>
-        </div>
-    </div>
-</div>
-
 @* 外部JS読み込み *@
 @section Scripts {
     <script src="~/js/device-delete.js"></script>
-}
+} 
 

@@ -5,15 +5,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const openBtn = document.getElementById("btnOpenDeleteModal"); // 削除確認モーダル起動ボタン
     const execBtn = document.getElementById("btnDeleteExec");      // モーダル上の削除ボタン
 
-    const toastEl = document.getElementById("resultToast");        // トースト全体の要素
-    const toastBody = document.getElementById("toastMessage");     // トーストの本文(メッセージ表示部分)
-
     // 削除対象のIDを保持する変数
     let selectedId = null;
 
     // Bootstrapコンポーネントのインスタンス化
     const deleteModal = new bootstrap.Modal(document.getElementById("deleteConfirmModal")); // 削除確認モーダル
-    const toast = new bootstrap.Toast(toastEl);     // トースト通知
 
     // ----- 削除ボタン押下 → モーダル表示 -----
     // 削除ボタンのクリックイベントを監視
@@ -58,17 +54,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     deleteModal.hide();
 
                     if (data.success) {
-                        // 成功時：トースト表示
-                        showToast("削除が完了しました。", true);
-
-                        // 1秒後に一覧画面へ遷移
-                        setTimeout(() => {
-                            window.location.href = "/Device/Index";
-                        }, 1000);
+                        // 成功時：一覧に自動で遷移
+                        window.location.href = "/Device/Index";
 
                     } else {
-                        // 失敗時：エラーメッセージをトースト表示
-                        showToast("削除に失敗しました。管理者に問い合わせてください。", false);
+                        // 失敗は画面内アラート表示の画面へ戻す
+                        window.location.href = `/Device/Details/${selectedId}`;
                     }
                 })
                 .catch(() => {
@@ -77,25 +68,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     showToast("通信エラーが発生しました。", false);
                 });
         });
-    }
-
-
-    // ----- トースト表示関数 -----
-    function showToast(message, isSuccess) {
-        toastBody.textContent = message;    // トーストにメッセージを設定
-
-        if (isSuccess) {
-            // 成功時は success クラスを付与
-            toastEl.classList.remove("error");
-            toastEl.classList.add("success");
-        } else {
-            // 失敗時は error クラスを付与
-            toastEl.classList.remove("success");
-            toastEl.classList.add("error");
-        }
-
-        // トーストを表示
-        toast.show();
     }
 
     // ----- CSRF用Token取得関数 -----

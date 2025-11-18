@@ -5,7 +5,7 @@
 }
 
 <div class="container mt-4">
-    <!-- 1行目：1列（テーブル入りカード） -->
+     @* 1行目：1列（テーブル入りカード）*@
     <div class="row mb-3">
         <div class="col-12">
             <div class="card">
@@ -51,14 +51,14 @@
         </div>
     </div>
 
-    <!-- 2行目：2列（グラフ入りカード） -->
+     @* 2行目：2列（グラフ入りカード）*@
     <div class="row">
         <div class="col-md-6 mb-3">
             <div class="card h-100">
                 <div class="card-body">
                     <h5 class="card-title">過去7日間の更新履歴件数</h5>
-                    <!-- 描画した棒グラフを表示 -->
-                    <!-- Listの中身が空じゃなければグラフを描画する -->
+                     @* 描画した棒グラフを表示*@
+                     @* Listの中身が空じゃなければグラフを描画する*@
                     @if (Model.HistoryLast7Days?.Any() == true)
                     {
                         <canvas id="historyCountChart" width="400" height="400"></canvas>
@@ -74,8 +74,8 @@
             <div class="card h-100">
                 <div class="card-body">
                     <h5 class="card-title">状態別の台数集計</h5>
-                    <!-- 描画したドーナツ型グラフを表示 -->
-                    <!-- Listの中身が空ではない&いずれかに1以上あればグラフを描画する -->
+                     @* 描画したドーナツ型グラフを表示*@
+                     @* Listの中身が空ではない&いずれかに1以上あればグラフを描画する*@
                     @{
                         var total = Model.StatusCount.ActiveCount
                                   + Model.StatusCount.SpareCount
@@ -97,12 +97,12 @@
         </div>
     </div>
 </div>
-<!-- グラフの描画 -->
+ @* グラフの描画*@
 @section Scripts {
     <script>
         // 棒グラフの描画
         // Listの値を取得して、labelとdataを定数に入れる
-        const updateData = @Html.Raw(Json.Serialize(Model.HistoryLast7Days))
+        const updateData = @Html.Raw(Json.Serialize(Model.HistoryLast7Days));
         const labels = updateData.map(item => item.displayDate);
         const data = updateData.map(item => item.count);
 

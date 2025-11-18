@@ -7,18 +7,12 @@
 
 <h1>機器情報一覧</h1>
 
-<!-- トースト用メッセージ -->
+@* メッセージ表示 *@
 @if (TempData["ToastMessage"] != null)
 {
-    <div id="toast-message" data-message="@TempData["ToastMessage"]"></div>
-}
-
-<!-- メッセージ表示 -->
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success mt-3">
-        @TempData["SuccessMessage"]
-    </div>
+    <div id="toast-message"
+         data-message="@TempData["ToastMessage"]"
+         data-type="success"></div>
 }
 
 @if (TempData["ErrorMessage"] != null)
@@ -35,7 +29,7 @@
     </div>
 }
 
-<!-- 検索フォーム -->
+@* 検索フォーム *@
 <div class="row">
     <div class="col-md-4">
         <form id="searchForm" asp-controller="Device" asp-action="Index" method="get">
@@ -131,7 +125,7 @@
                 <input asp-for="UpdatedDateTo" class="form-control" type="date" />
             </div>
 
-            @* a *@
+            @* ソートの選択項目(Hidden で送る) *@
             <input type="hidden" id="SortKeyValueHidden" name="SortKeyValue" value="@Model.SortKeyValue" />
             <input type="hidden" id="SortOrderValueHidden" name="SortOrderValue" value="@Model.SortOrderValue" />
 
@@ -144,15 +138,18 @@
 </div>
 
 
-<!-- 並び替え選択 -->
+@* 並び替え選択 *@
 <form id="sortForm">
     <div id="sortArea">
+
+        @* ソート基準 *@
         <div class="form-group">
             <label asp-for="SortKeyList" class="control-label"></label>
             @Html.DropDownListFor(model => model.SortKeyValue, Model.SortKeyList,
                 new { @class = "form-control", id = "SortKeyValue" })
         </div>
 
+        @* 昇順 or 降順 *@
         <div class="form-group">
             <label asp-for="SortOrderList" class="control-label"></label>
             @Html.DropDownListFor(model => model.SortOrderValue, Model.SortOrderList,
@@ -161,28 +158,13 @@
     </div>
 </form>
 
-<!-- テーブル表示 -->
+@* テーブル表示 *@
 <div id="deviceTableArea">
     @await Html.PartialAsync("_DeviceListPartial", Model)
 </div>
 
 
-@* トースト：削除結果通知用 *@
-@* data-bs-delay= で、6秒間トースト表示に指定 *@
-<div class="toast-container position-fixed top-0 end-0 p-4">
-    <div id="resultToast" class="toast align-items-center text-white border-0"
-         role="alert" aria-live="assertive" aria-atomic="true"
-         data-bs-delay="6000">
-        <div class="d-flex">
-            <div class="toast-body" id="toastMessage"></div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                    data-bs-dismiss="toast"></button>
-        </div>
-    </div>
-</div>
-
-<!-- jsファイルを読み込む -->
+@* jsファイルを読み込む *@
 @section Scripts {
     <script src="~/js/device-index.js"></script>
-    <script src="~/js/device-delete-index-toast.js"></script>
 }

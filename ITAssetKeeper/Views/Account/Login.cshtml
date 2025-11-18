@@ -7,7 +7,7 @@
     Layout = "_AuthLayout";
 }
 
-<!-- ロゴ表示 -->
+@* ロゴ表示 *@
 <div class="logo-box">
     <div class="logo-container">
         <img src="~/img/logo.png" class="logo-image" alt="logo" />
@@ -15,7 +15,7 @@
     </div>
 </div>
 
-<!-- タイトル表示 -->
+@* タイトル表示 *@
 <h2 class="auth-title text-center mt-4">
     <img src="~/img/login_icon.png" class="title-icon" alt="" />
     ログイン
@@ -65,7 +65,7 @@
         </div>
     }
 
-    <!-- ログインフォーム -->
+    @* ログインフォーム *@
     <div class="auth-form-wrapper">
         <div class="mb-3">
             <input asp-for="UserName" class="form-control auth-input" placeholder="ユーザーID" />
@@ -91,54 +91,3 @@
         </div>
     </div>
 </form>
-
-
-@* @using ITAssetKeeper.Models.Enums
-@using ITAssetKeeper.Models.ViewModels.Account
-@model LoginViewModel
-
-@{
-    ViewData["Title"] = "Login";
-    Layout = "_AuthLayout";
-}
-
-<h1>ログイン</h1>
-
-<div>
-    <form asp-action="Login" method="post">
-        @Html.AntiForgeryToken()
-
-        <!-- アラートメッセージがあればここに表示 -->
-        @if (ViewData.ModelState.ErrorCount > 0)
-        {
-            <div class="alert alert-warning mt-3" role="alert">
-                @Html.ValidationSummary(true, "", new { @class = "mb-0" })
-            </div>
-        }
-
-        <!-- パスワード変更からリダイレクトされた場合、ここにメッセージ表示 -->
-        @if (TempData[@ChangePWTemp.PasswordChangeMessage.ToString()] != null)
-        {
-            <div class="alert alert-warning">@TempData[@ChangePWTemp.PasswordChangeMessage.ToString()]</div>
-        }
-
-        <div class="form-group">
-            <label asp-for="UserName" class="control-label"></label>
-            <input asp-for="UserName" class="form-control" placeholder="ログインID"/>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="Password" class="control-label"></label>
-            <input asp-for="Password" class="form-control" placeholder="パスワード"/>
-        </div>
-
-        <div class="form-check">
-            <input asp-for="RememberMe" type="checkbox">
-            <label asp-for="RememberMe" class="control-label"></label>
-        </div>
-
-        <div class="form-group mt-3">
-            <input type="submit" value="ログイン" class="btn btn-primary" />
-        </div>
-    </form>
-</div> *@

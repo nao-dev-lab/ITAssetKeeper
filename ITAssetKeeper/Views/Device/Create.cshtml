@@ -6,12 +6,12 @@
 
 <h1>機器登録</h1>
 
-<!-- メッセージ表示 -->
-@if (TempData["SuccessMessage"] != null)
+@* メッセージ表示 *@
+@if (TempData["ToastMessage"] != null)
 {
-    <div class="alert alert-success mt-3">
-        @TempData["SuccessMessage"]
-    </div>
+    <div id="toast-message"
+         data-message="@TempData["ToastMessage"]"
+         data-type="success"></div>
 }
 
 @if (TempData["ErrorMessage"] != null)
@@ -28,67 +28,92 @@
     </div>
 }
 
+
 <div>
-    <!-- キャンセルを押したら内容を破棄してリロード -->
+    @* キャンセルを押したら内容を破棄してリロード *@
     <a asp-controller="Device" asp-action="Create">キャンセル</a>
 </div>
 
-<!-- 機器登録フォーム -->
+@* 機器登録フォーム *@
 <div class="row">
     <div class="col-md-4">
         <form id="CreateForm" asp-controller="Device" asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            @* 機器管理ID(ManagementId) *@
             <div class="form-group">
                 <label asp-for="ManagementId" class="control-label"></label>
                 <p>※登録後に自動で採番されます</p>
             </div>
+
+            @* 種別(Category) *@
             <div class="form-group">
                 <label asp-for="CategoryItems" class="control-label"></label>
                 @Html.DropDownListFor(model => model.SelectedCategory, Model.CategoryItems, "-- 未選択 --", new { @class = "form-control" })
                 <span asp-validation-for="SelectedCategory" class="text-danger"></span>
             </div>
+
+            @* 用途(Purpose) *@
             <div class="form-group">
                 <label asp-for="PurposeItems" class="control-label"></label>
                 @Html.DropDownListFor(model => model.SelectedPurpose, Model.PurposeItems, "-- 未選択 --", new { @class = "form-control" })
                 <span asp-validation-for="SelectedPurpose" class="text-danger"></span>
             </div>
+
+            @* 型番(ModelNumber) *@
             <div class="form-group">
                 <label asp-for="ModelNumber" class="control-label"></label>
                 <input asp-for="ModelNumber" class="form-control" />
                 <span asp-validation-for="ModelNumber" class="text-danger"></span>
             </div>
+
+            @* 製造番号(SerialNumber) *@
             <div class="form-group">
                 <label asp-for="SerialNumber" class="control-label"></label>
                 <input asp-for="SerialNumber" class="form-control" />
                 <span asp-validation-for="SerialNumber" class="text-danger"></span>
             </div>
+
+            @* ホスト名(HostName) *@
             <div class="form-group">
                 <label asp-for="HostName" class="control-label"></label>
                 <input asp-for="HostName" class="form-control" />
             </div>
+
+            @* 設置場所(Location) *@
             <div class="form-group">
                 <label asp-for="Location" class="control-label"></label>
                 <input asp-for="Location" class="form-control" />
                 <span asp-validation-for="Location" class="text-danger"></span>
             </div>
+
+            @* 使用者(UserName) *@
             <div class="form-group">
                 <label asp-for="UserName" class="control-label"></label>
                 <input asp-for="UserName" class="form-control" />
             </div>
+
+            @* 状態(Status) *@
             <div class="form-group">
                 <label asp-for="StatusItems" class="control-label"></label>
                 @Html.DropDownListFor(model => model.SelectedStatus, Model.StatusItems, "-- 未選択 --", new { @class = "form-control" })
                 <span asp-validation-for="SelectedStatus" class="text-danger"></span>
             </div>
+
+            @* 購入日(PurchaseDate) *@
             <div class="form-group">
                 <label asp-for="PurchaseDate" class="control-label"></label>
                 <input asp-for="PurchaseDate" class="form-control" type="date" />
                 <span asp-validation-for="PurchaseDate" class="text-danger"></span>
             </div>
+
+            @* メモ欄(Memo) *@
             <div class="form-group">
                 <label asp-for="Memo" class="control-label"></label>
                 <textarea asp-for="Memo" class="form-control"></textarea>
             </div>
+
+            @* フォーム送信 *@
             <div class="form-group">
                 <input type="submit" value="登録" class="btn btn-primary" />
             </div>

@@ -102,7 +102,8 @@ public class DeviceController : Controller
 
         if (result > 0)
         {
-            TempData["SuccessMessage"] = "登録が完了しました。";
+            //TempData["SuccessMessage"] = "登録が完了しました。";
+            TempData["ToastMessage"] = "登録が完了しました。";
         }
         else
         {
@@ -196,7 +197,8 @@ public class DeviceController : Controller
         }
         else if (result > 0)
         {
-            TempData["SuccessMessage"] = "更新が完了しました。";
+            //TempData["SuccessMessage"] = "更新が完了しました。";
+            TempData["ToastMessage"] = "更新が完了しました。";
         }
         else
         {

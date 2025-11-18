@@ -1,6 +1,4 @@
-﻿
-
-@model ITAssetKeeper.Models.ViewModels.Device.DeviceEditViewModel
+﻿@model ITAssetKeeper.Models.ViewModels.Device.DeviceEditViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -8,12 +6,12 @@
 
 <h1>機器情報編集</h1>
 
-<!-- メッセージ表示 -->
-@if (TempData["SuccessMessage"] != null)
+@* メッセージ表示 *@
+@if (TempData["ToastMessage"] != null)
 {
-    <div class="alert alert-success mt-3">
-        @TempData["SuccessMessage"]
-    </div>
+    <div id="toast-message"
+         data-message="@TempData["ToastMessage"]"
+         data-type="success"></div>
 }
 
 @if (TempData["ErrorMessage"] != null)
@@ -30,22 +28,23 @@
     </div>
 }
 
-<!-- 機器情報画面に戻る -->
+@* 機器情報画面に戻る *@
 <div class="mt-4">
     <a asp-action="Details" asp-route-id="@Model.IdHidden" class="btn btn-secondary me-2">キャンセル</a>
 </div>
 
-<!-- 機器情報編集フォーム -->
+@* 機器情報編集フォーム *@
 <div class="row">
     <div class="col-md-4">
         <form id="EditForm" asp-controller="Device" asp-action="Edit" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             
             @* ManagementId(機器管理ID)は更新不可 *@
+            @* Readonly に設定し、POSTされるようにする *@
             <div class="form-group">
                 <label asp-for="ManagementId" class="control-label"></label>
                 @Html.TextBoxFor(m => m.ManagementId,
-                new { @class = "form-control", @disabled = "disabled" })
+                new { @class = "form-control", @readonly = "readonly" })
             </div>
 
             @* Category(種別) *@
@@ -126,6 +125,7 @@
                     new { @class = "form-control disable-target", data_disable = Model.IsReadOnlyMemo })
             </div>
 
+            @* フォーム送信 *@
             <div class="form-group">
                 <input type="hidden" asp-for="IdHidden" />
                 <input type="submit" value="更新" class="btn btn-primary" />
@@ -133,8 +133,3 @@
         </form>
     </div>
 </div>
-
-@section Scripts {
-    <!-- jsファイルを読み込む -->
-    <script src="~/js/device-edit.js"></script>
-}
