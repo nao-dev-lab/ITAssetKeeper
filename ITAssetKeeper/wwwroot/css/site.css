@@ -1,3 +1,5 @@
+/* site.css */
+
 .main-content {
     margin-left: 230px; /* サイドバーと同じ幅 */
     width: calc(100% - 230px);

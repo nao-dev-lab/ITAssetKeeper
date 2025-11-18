@@ -239,7 +239,9 @@ public class DeviceService : IDeviceService
         using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
         {
             // ManagementIDを自動採番する為に、DBに存在するManagementIdを取得
+            // 削除フラグがついているものも取得したいのでクエリフィルタを無効化
             var idList = await _context.Devices
+                .IgnoreQueryFilters()
                 .Select(x => x.ManagementId)
                 .ToListAsync();
 
@@ -320,6 +322,7 @@ public class DeviceService : IDeviceService
             HostName = device.HostName,
             Location = device.Location,
             UserName = device.UserName,
+            Status = device.Status,
             PurchaseDate = device.PurchaseDate.ToString("yyyy/MM/dd"),
             CreatedAt = device.CreatedAt.ToString("yyyy/MM/dd HH:mm:ss"),
             UpdatedAt = device.UpdatedAt.ToString("yyyy/MM/dd HH:mm:ss"),

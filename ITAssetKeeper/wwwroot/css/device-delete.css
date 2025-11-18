@@ -1,13 +1,32 @@
-﻿/* device-delete.css */
+﻿/*device-delete.css*/
 
+/* トースト本体*/
+#resultToast {
+    min-width: 320px;
+    font-size: 1.05rem;
+    padding: 10px 14px;
+    border-radius: 10px;
+    color: #fff !important;
+}
+
+/* トースト通知の色 */
+/* 成功時（柔らかい緑） */
 #resultToast.success {
-    background-color: #6c3af0 !important; /* 紫 */
+    background-color: #3BB46A !important;
 }
 
+/* エラー時（柔らかい赤） */
 #resultToast.error {
-    background-color: #d9534f !important; /* 赤 */
+    background-color: #D64545 !important;
 }
 
+/* モーダルヘッダー */
 #deleteConfirmModal .modal-header {
     background-color: #6c3af0 !important;
+}
+
+/* アニメーション */
+#resultToast.showing {
+    transform: translateY(0) scale(1.05);
+    transition: transform 0.3s ease-out;
 }

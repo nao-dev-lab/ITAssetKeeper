@@ -122,15 +122,15 @@
 
             @if (User.IsInRole("Admin"))
             {
-                @* <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">削除</a> *@
-                @* 削除ボタンはページ遷移せずモーダル起動 *@
+                @* 削除ボタン：モーダル起動 *@
                 <button type="button"
                         class="btn btn-danger"
                         id="btnOpenDeleteModal"
                         data-device-id="@Model.Id"
                         data-device-mgmtid="@Model.ManagementId"
                         data-device-category="@Model.Category"
-                        data-device-status="@Model.Status">
+                        data-device-status="@Model.Status"
+                        data-device-user="@Model.UserName">
                     削除
                 </button>
             }
@@ -139,25 +139,29 @@
 </div>
 
 
-@* 削除確認モーダル *@
+@* モーダル：削除確認用 *@
 <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
 
-            <div class="modal-header text-white" style="background:#6c3af0;">
-                <h5 class="modal-title">🗑 削除確認</h5>
+            @* モーダルヘッダー *@
+            <div class="modal-header text-white">
+                <h5 class="modal-title">削除確認</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
 
+            @* モーダルbody *@
             <div class="modal-body">
                 <p>対象の機器情報を削除します。よろしいですか？</p>
                 <ul class="small">
                     <li>機器管理ID：<span id="delMgmtId"></span></li>
                     <li>種別：<span id="delCategory"></span></li>
                     <li>状態：<span id="delStatus"></span></li>
+                    <li>使用者：<span id="delUser"></span></li>
                 </ul>
             </div>
 
+            @* モーダルフッター *@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
                 <button type="button" id="btnDeleteExec" class="btn btn-danger">削除</button>
@@ -168,11 +172,12 @@
 </div>
 
 
-<!-- Toast -->
-<div class="toast-container position-fixed bottom-0 end-0 p-3">
+@* トースト：削除結果通知用 *@
+@* data-bs-delay= で、6秒間トースト表示に指定 *@
+<div class="toast-container position-fixed top-0 end-0 p-4">
     <div id="resultToast" class="toast align-items-center text-white border-0"
          role="alert" aria-live="assertive" aria-atomic="true"
-         data-bs-delay="5000">
+         data-bs-delay="6000">
         <div class="d-flex">
             <div class="toast-body" id="toastMessage"></div>
             <button type="button" class="btn-close btn-close-white me-2 m-auto"

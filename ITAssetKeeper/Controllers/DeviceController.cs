@@ -228,7 +228,7 @@ public class DeviceController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteAjax(int id)
+    public async Task<IActionResult> DeleteConfirmed(int id)
     {
         // Id が不正なら中断
         if (id <= 0)
@@ -260,6 +260,9 @@ public class DeviceController : Controller
                 return Json(new { success = false, message = "削除に失敗しました。" });
             }
         }
+
+        // 遷移先(Index) で Toast 再表示できるよう保存
+        TempData["ToastMessage"] = "削除が完了しました。";
 
         // 成功
         return Json(new { success = true, message = "削除が完了しました。" });

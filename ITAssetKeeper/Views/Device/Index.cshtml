@@ -7,6 +7,12 @@
 
 <h1>機器情報一覧</h1>
 
+<!-- トースト用メッセージ -->
+@if (TempData["ToastMessage"] != null)
+{
+    <div id="toast-message" data-message="@TempData["ToastMessage"]"></div>
+}
+
 <!-- メッセージ表示 -->
 @if (TempData["SuccessMessage"] != null)
 {
@@ -160,7 +166,23 @@
     @await Html.PartialAsync("_DeviceListPartial", Model)
 </div>
 
-@section Scripts {
+
+@* トースト：削除結果通知用 *@
+@* data-bs-delay= で、6秒間トースト表示に指定 *@
+<div class="toast-container position-fixed top-0 end-0 p-4">
+    <div id="resultToast" class="toast align-items-center text-white border-0"
+         role="alert" aria-live="assertive" aria-atomic="true"
+         data-bs-delay="6000">
+        <div class="d-flex">
+            <div class="toast-body" id="toastMessage"></div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                    data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
+
 <!-- jsファイルを読み込む -->
-<script src="~/js/device-index.js"></script>
+@section Scripts {
+    <script src="~/js/device-index.js"></script>
+    <script src="~/js/device-delete-index-toast.js"></script>
 }
