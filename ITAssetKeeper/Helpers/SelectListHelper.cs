@@ -5,54 +5,104 @@ namespace ITAssetKeeper.Helpers;
 
 public class SelectListHelper
 {
+    //// Enum → (内部名, 表示名) の Dictionary を生成
+    //// 例: StatusEnum.Active → { "Active", "稼働中" } のように内部名と表示名をペアにする
+    //public static Dictionary<string, string> ToDictionary<TEnum>()
+    //    where TEnum : struct, Enum
+    //{
+    //    // 引数で受け取った Enum の全メンバーを取得
+    //    // 型を TEnum にキャストし、Dictionary<string,string> に変換して返す
+    //    return Enum.GetValues(typeof(TEnum))
+    //        .Cast<TEnum>()
+    //        .ToDictionary(
+    //            e => e.ToString(),      // Key: Enum の内部名 (文字列)
+    //            e => GetDisplayName(e)  // Value: 表示名 
+    //        );
+    //}
+
     // Enum → (内部名, 表示名) の Dictionary を生成
-    public static Dictionary<string, string> ToDictionary<TEnum>()
-        where TEnum : struct, Enum
+    // 例: StatusEnum.Active → { "Active", "稼働中" } のように内部名と表示名をペアにする
+    public static Dictionary<string, string> ToDictionary<TEnum>(params TEnum[] exclude)
+    where TEnum : struct, Enum
     {
-        return Enum.GetValues(typeof(TEnum))
-            .Cast<TEnum>()
-            .ToDictionary(
-                e => e.ToString(),
-                e => GetDisplayName(e)
-            );
+        // Enum の全メンバーを取得し、TEnum 型にキャスト
+        var allValues = Enum.GetValues(typeof(TEnum)).Cast<TEnum>();
+
+        IEnumerable<TEnum> filtered;
+
+        // 除外対象が null または空配列の場合、全メンバーをそのまま利用
+        if (exclude == null || exclude.Length == 0)
+        {
+            filtered = allValues;
+        }
+        else
+        {
+            // 除外対象が指定されている場合、そのメンバーを除外したコレクションを作成
+            filtered = allValues.Where(x => !exclude.Contains(x));
+        }
+
+        // フィルタ済みの Enum 値を Dictionary<string,string> に変換
+        // Key: Enum の内部名 (文字列)
+        // Value: 表示名 (DisplayAttribute)
+        return filtered.ToDictionary(
+            e => e.ToString(),
+            e => GetDisplayName(e)
+        );
     }
 
-    // Enum → 表示名取得
+    // 引数で受け取った Enum のメンバーから表示名を取得
+    // DisplayAttribute があればその Name を返し、なければ内部名を返す
     private static string GetDisplayName<TEnum>(TEnum value)
         where TEnum : struct, Enum
     {
+        // Enum のメンバー情報を取得
         var memberInfo = value.GetType()
                               .GetMember(value.ToString())
                               .FirstOrDefault();
 
+        // メンバー情報が取れなければ内部名を返す
         if (memberInfo == null)
         {
             return value.ToString();
         }
 
+        // DisplayAttribute を取得
         var displayAttribute = memberInfo
             .GetCustomAttributes(typeof(DisplayAttribute), false)
             .Cast<DisplayAttribute>()
             .FirstOrDefault();
 
-        return displayAttribute?.Name ?? value.ToString();
+        // DisplayAttribute.Name があればそれを返し、なければ内部名を返す
+        if (displayAttribute != null && displayAttribute.Name != null)
+        {
+            return displayAttribute.Name;
+        }
+        else
+        {
+            return value.ToString();
+        }
     }
 
-    // Enum → SelectList（最終的にビューで使う形）
+    // ビューで <select> 要素を生成する為、Enum → SelectList に変換
     public static SelectList ToSelectList<TEnum>()
         where TEnum : struct, Enum
     {
+        // Enum を Dictionary に変換
         var dict = ToDictionary<TEnum>();
+
+        // Dictionary を SelectList に変換して返す
         return new SelectList(dict, "Key", "Value");
     }
 
     // SelectListを指定のビューモデルにセットする
+    // setter(Action<SelectList>)を渡し、任意のプロパティに SelectList を設定
     public static void SetEnumSelectList<TEnum>(
         object viewModel,
         Action<SelectList> setter
     )
         where TEnum : struct, Enum
     {
+        // Enum を SelectList に変換し、setterでビューモデルに設定
         var selectList = ToSelectList<TEnum>();
         setter(selectList);
     }

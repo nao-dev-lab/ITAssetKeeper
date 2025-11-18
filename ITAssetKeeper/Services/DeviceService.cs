@@ -4,6 +4,7 @@ using ITAssetKeeper.Helpers;
 using ITAssetKeeper.Models.Entities;
 using ITAssetKeeper.Models.Enums;
 using ITAssetKeeper.Models.ViewModels.Device;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Transactions;
@@ -185,11 +186,14 @@ public class DeviceService : IDeviceService
     public DeviceListViewModel ToViewModel(DeviceListViewModel condition, List<Device> devices)
     {
         // プルダウン用のデータを定数から取得
-        SelectListHelper.SetEnumSelectList<DeviceCategory>(condition, selectList => condition.Category = selectList);
-        SelectListHelper.SetEnumSelectList<DevicePurpose>(condition, selectList => condition.Purpose = selectList);
-        SelectListHelper.SetEnumSelectList<DeviceStatus>(condition, selectList => condition.Status = selectList);
+        SelectListHelper.SetEnumSelectList<DeviceCategory>(condition, selectList => condition.CategoryItems = selectList);
+        SelectListHelper.SetEnumSelectList<DevicePurpose>(condition, selectList => condition.PurposeItems = selectList);
         SelectListHelper.SetEnumSelectList<SortOrders>(condition, selectList => condition.SortOrderList = selectList);
         SelectListHelper.SetEnumSelectList<SortKeys>(condition, selectList => condition.SortKeyList = selectList);
+
+        // DeviceStatus は Deleted を除外して取得する
+        SelectListHelper.SetEnumSelectList<DeviceStatus>(condition, selectList => 
+            condition.StatusItems = new SelectList(SelectListHelper.ToDictionary(DeviceStatus.Deleted),"Key", "Value"));
 
         // 検索結果の一覧表示のデータをDTO型で詰める
         condition.Devices = devices
@@ -224,7 +228,10 @@ public class DeviceService : IDeviceService
         // ビューモデルに、ドロップダウン用のSelectListをセット
         SelectListHelper.SetEnumSelectList<DeviceCategory>(model, selectList => model.CategoryItems = selectList);
         SelectListHelper.SetEnumSelectList<DevicePurpose>(model, selectList => model.PurposeItems = selectList);
-        SelectListHelper.SetEnumSelectList<DeviceStatus>(model, selectList => model.StatusItems = selectList);
+
+        // DeviceStatus は Deleted を除外して取得する
+        SelectListHelper.SetEnumSelectList<DeviceStatus>(model, selectList =>
+            model.StatusItems = new SelectList(SelectListHelper.ToDictionary(DeviceStatus.Deleted), "Key", "Value"));
         
         // 購入日に今日の日付をセット
         model.PurchaseDate = DateTime.Now;
@@ -353,7 +360,10 @@ public class DeviceService : IDeviceService
         // ビューモデルに、ドロップダウン用のSelectListをセット
         SelectListHelper.SetEnumSelectList<DeviceCategory>(model, selectList => model.CategoryItems = selectList);
         SelectListHelper.SetEnumSelectList<DevicePurpose>(model, selectList => model.PurposeItems = selectList);
-        SelectListHelper.SetEnumSelectList<DeviceStatus>(model, selectList => model.StatusItems = selectList);
+
+        // DeviceStatus は Deleted を除外して取得する
+        SelectListHelper.SetEnumSelectList<DeviceStatus>(model, selectList =>
+            model.StatusItems = new SelectList(SelectListHelper.ToDictionary(DeviceStatus.Deleted), "Key", "Value"));
 
         // ビューモデルを返す
         return model;
@@ -422,7 +432,10 @@ public class DeviceService : IDeviceService
         // ビューモデルに、ドロップダウン用のSelectListをセット
         SelectListHelper.SetEnumSelectList<DeviceCategory>(model, selectList => model.CategoryItems = selectList);
         SelectListHelper.SetEnumSelectList<DevicePurpose>(model, selectList => model.PurposeItems = selectList);
-        SelectListHelper.SetEnumSelectList<DeviceStatus>(model, selectList => model.StatusItems = selectList);
+
+        // DeviceStatus は Deleted を除外して取得する
+        SelectListHelper.SetEnumSelectList<DeviceStatus>(model, selectList =>
+            model.StatusItems = new SelectList(SelectListHelper.ToDictionary(DeviceStatus.Deleted), "Key", "Value"));
 
         // ReadOnly制御再設定
         // Admin

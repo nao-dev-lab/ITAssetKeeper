@@ -43,14 +43,14 @@
 
             @* 種別(Category) *@
             <div class="form-group">
-                <label asp-for="Category" class="control-label"></label>
-                @Html.DropDownListFor(model => model.SelectedCategory, Model.Category, "全て", new { @class = "form-control" })
+                <label asp-for="CategoryItems" class="control-label"></label>
+                @Html.DropDownListFor(model => model.SelectedCategory, Model.CategoryItems, "全て", new { @class = "form-control" })
             </div>
 
             @* 用途(Purpose) *@
             <div class="form-group">
-                <label asp-for="Purpose" class="control-label"></label>
-                @Html.DropDownListFor(model => model.SelectedPurpose, Model.Purpose, "全て", new { @class = "form-control" })
+                <label asp-for="PurposeItems" class="control-label"></label>
+                @Html.DropDownListFor(model => model.SelectedPurpose, Model.PurposeItems, "全て", new { @class = "form-control" })
             </div>
 
             @* 型番(ModelNumber) *@
@@ -85,8 +85,8 @@
 
             @* 状態(Status) *@
             <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                @Html.DropDownListFor(model => model.SelectedStatus, Model.Status, "全て", new { @class = "form-control" })
+                <label asp-for="StatusItems" class="control-label"></label>
+                @Html.DropDownListFor(model => model.SelectedStatus, Model.StatusItems, "全て", new { @class = "form-control" })
             </div>
 
             @* 購入日:開始(PurchaseDateFrom) *@

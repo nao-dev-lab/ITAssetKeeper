@@ -26,10 +26,10 @@ public class DeviceListViewModel
     public string? ManagementId { get; set; }
 
     [Display(Name = "種別")]
-    public SelectList? Category { get; set; }
+    public SelectList? CategoryItems { get; set; }
 
     [Display(Name = "用途")]
-    public SelectList? Purpose { get; set; }
+    public SelectList? PurposeItems { get; set; }
 
     [Display(Name = "型番(モデル)")]
     public string? ModelNumber { get; set; }
@@ -47,7 +47,7 @@ public class DeviceListViewModel
     public string? UserName { get; set; }
 
     [Display(Name = "状態")]
-    public SelectList? Status { get; set; }
+    public SelectList? StatusItems { get; set; }
 
     [Display(Name = "購入日 (開始)")]
     [DataType(DataType.Date)]

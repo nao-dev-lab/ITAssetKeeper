@@ -18,5 +18,8 @@ public enum DeviceStatus
     Retiring = 4,
 
     [Display(Name = "廃棄済")]
-    Retired = 5
+    Retired = 5,
+
+    [Display(Name = "削除済")]
+    Deleted = 99
 }
