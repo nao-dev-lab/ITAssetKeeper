@@ -1,10 +1,86 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using ITAssetKeeper.Constants;
+using ITAssetKeeper.Models.Enums;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
 namespace ITAssetKeeper.Helpers;
 
 public class EnumDisplayHelper
 {
+    // 履歴用：ChangeField を見て「どのEnum/変換を使うか」決める
+    public static string ResolveHistoryDisplay(string changeField, string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return string.Empty;
+        }
+
+        switch (changeField)
+        {
+            // ChangeField = Category
+            case nameof(DeviceColumns.Category):
+                return ResolveDisplayName<DeviceCategory>(value);
+
+            // ChangeField = Purpose
+            case nameof(DeviceColumns.Purpose):
+                return ResolveDisplayName<DevicePurpose>(value);
+
+            // ChangeField = Status
+            case nameof(DeviceColumns.Status):
+                // IsDeleted が true の場合、履歴上のStatusを Deleted(削除済)に変換
+                return ResolveDisplayName<DeviceStatus>(value);
+
+            // ChangeField = PurchaseDate 
+            case nameof(DeviceColumns.PurchaseDate):
+                // TryParseでチェックしてからパースする
+                if (DateTime.TryParse(value, out var dtPurchase))
+                {
+                    return dtPurchase.ToString("yyyy/MM/dd");
+                }
+                // NGの場合そのまま返す
+                return value;
+
+            case nameof(DeviceColumns.UpdatedAt):
+                // TryParseでチェックしてからパースする
+                if (DateTime.TryParse(value, out var dtUpdated))
+                {
+                    return dtUpdated.ToString("yyyy/MM/dd");
+                }
+                // NGの場合そのまま返す
+                return value;
+
+            default:
+                // それ以外(Location, UserName など)は DB の文字列のまま
+                return value;
+        }
+    }
+
+    // DB保存値(Enum or 特殊値)を表示用の文字列に変換
+    public static string ResolveDisplayName<TEnum>(string value)
+    where TEnum : struct, Enum
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return string.Empty;
+        }
+
+        // Enum に該当する場合、Display 名に変換
+        if (Enum.TryParse<TEnum>(value, true, out var enumValue))
+        {
+            return GetDisplayName(enumValue);
+        }
+
+        // 特殊値辞書に登録されている場合
+        if (SpecialDisplayDictionary.VALUE_MAP.TryGetValue(value, out string mapped))
+        {
+            return mapped;
+        }
+
+        // どちらにも該当しない場合は値をそのまま返す
+        return value;
+    }
+
+
     // Enum → (内部名, 表示名) の Dictionary を生成
     // 例: StatusEnum.Active → { "Active", "稼働中" } のように内部名と表示名をペアにする
     public static Dictionary<string, string> ToDictionary<TEnum>(params TEnum[] exclude)
