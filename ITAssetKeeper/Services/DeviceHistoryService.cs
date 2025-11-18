@@ -46,9 +46,6 @@ public class DeviceHistoryService : IDeviceHistoryService
     // フィルタリング (条件に応じて IQueryable<DeviceHistory> を返す)
     public IQueryable<DeviceHistory> FilterHistories(IQueryable<DeviceHistory> query, DeviceHistoryViewModel condition)
     {
-        // Deviceテーブルから全てのデータを取得する
-        //query = _context.DeviceHistories;
-
         // 部分一致
         if (!string.IsNullOrWhiteSpace(condition.HistoryId))
         {
@@ -161,14 +158,14 @@ public class DeviceHistoryService : IDeviceHistoryService
     public DeviceHistoryViewModel ToViewModel(DeviceHistoryViewModel condition, List<DeviceHistory> histories)
     {
         // プルダウン用のデータを定数から取得
-        SelectListHelper.SetEnumSelectList<SortOrders>(condition, selectList => condition.SortOrderList = selectList);
-        SelectListHelper.SetEnumSelectList<DeviceHistoryColumns>(condition, selectList => condition.SortKeyList = selectList);
+        EnumDisplayHelper.SetEnumSelectList<SortOrders>(condition, selectList => condition.SortOrderList = selectList);
+        EnumDisplayHelper.SetEnumSelectList<DeviceHistoryColumns>(condition, selectList => condition.SortKeyList = selectList);
 
-        SelectListHelper.SetEnumSelectList<DeviceColumns>(condition, selectList => condition.ChangeFieldItems = selectList);
+        EnumDisplayHelper.SetEnumSelectList<DeviceColumns>(condition, selectList => condition.ChangeFieldItems = selectList);
 
         // DeviceColumns は UpdatedAt を除外して取得する
-        SelectListHelper.SetEnumSelectList<DeviceColumns>(condition, selectList =>
-            condition.ChangeFieldItems = new SelectList(SelectListHelper.ToDictionary(DeviceColumns.UpdatedAt), "Key", "Value"));
+        EnumDisplayHelper.SetEnumSelectList<DeviceColumns>(condition, selectList =>
+            condition.ChangeFieldItems = new SelectList(EnumDisplayHelper.ToDictionary(DeviceColumns.UpdatedAt), "Key", "Value"));
 
 
         // 検索結果の一覧表示のデータをDTO型で詰める

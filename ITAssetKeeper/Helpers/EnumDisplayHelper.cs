@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ITAssetKeeper.Helpers;
 
-public class SelectListHelper
+public class EnumDisplayHelper
 {
     // Enum → (内部名, 表示名) の Dictionary を生成
     // 例: StatusEnum.Active → { "Active", "稼働中" } のように内部名と表示名をペアにする

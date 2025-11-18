@@ -50,9 +50,6 @@ public class DeviceService : IDeviceService
     // フィルタリング (条件に応じて IQueryable<Device> を返す)
     public IQueryable<Device> FilterDevices(IQueryable<Device> query, DeviceListViewModel condition)
     {
-        // Deviceテーブルから全てのデータを取得する
-        //query = _context.Devices;
-
         // 部分一致
         if (!string.IsNullOrWhiteSpace(condition.ManagementId))
         {
@@ -220,14 +217,14 @@ public class DeviceService : IDeviceService
     public DeviceListViewModel ToViewModel(DeviceListViewModel condition, List<Device> devices)
     {
         // プルダウン用のデータを定数から取得
-        SelectListHelper.SetEnumSelectList<DeviceCategory>(condition, selectList => condition.CategoryItems = selectList);
-        SelectListHelper.SetEnumSelectList<DevicePurpose>(condition, selectList => condition.PurposeItems = selectList);
-        SelectListHelper.SetEnumSelectList<SortOrders>(condition, selectList => condition.SortOrderList = selectList);
-        SelectListHelper.SetEnumSelectList<DeviceColumns>(condition, selectList => condition.SortKeyList = selectList);
+        EnumDisplayHelper.SetEnumSelectList<DeviceCategory>(condition, selectList => condition.CategoryItems = selectList);
+        EnumDisplayHelper.SetEnumSelectList<DevicePurpose>(condition, selectList => condition.PurposeItems = selectList);
+        EnumDisplayHelper.SetEnumSelectList<SortOrders>(condition, selectList => condition.SortOrderList = selectList);
+        EnumDisplayHelper.SetEnumSelectList<DeviceColumns>(condition, selectList => condition.SortKeyList = selectList);
 
         // DeviceStatus は Deleted を除外して取得する
-        SelectListHelper.SetEnumSelectList<DeviceStatus>(condition, selectList => 
-            condition.StatusItems = new SelectList(SelectListHelper.ToDictionary(DeviceStatus.Deleted),"Key", "Value"));
+        EnumDisplayHelper.SetEnumSelectList<DeviceStatus>(condition, selectList => 
+            condition.StatusItems = new SelectList(EnumDisplayHelper.ToDictionary(DeviceStatus.Deleted),"Key", "Value"));
 
         // 検索結果の一覧表示のデータをDTO型で詰める
         condition.Devices = devices
@@ -260,12 +257,12 @@ public class DeviceService : IDeviceService
     public DeviceCreateViewModel InitializeCreateView(DeviceCreateViewModel model)
     {
         // ビューモデルに、ドロップダウン用のSelectListをセット
-        SelectListHelper.SetEnumSelectList<DeviceCategory>(model, selectList => model.CategoryItems = selectList);
-        SelectListHelper.SetEnumSelectList<DevicePurpose>(model, selectList => model.PurposeItems = selectList);
+        EnumDisplayHelper.SetEnumSelectList<DeviceCategory>(model, selectList => model.CategoryItems = selectList);
+        EnumDisplayHelper.SetEnumSelectList<DevicePurpose>(model, selectList => model.PurposeItems = selectList);
 
         // DeviceStatus は Deleted を除外して取得する
-        SelectListHelper.SetEnumSelectList<DeviceStatus>(model, selectList =>
-            model.StatusItems = new SelectList(SelectListHelper.ToDictionary(DeviceStatus.Deleted), "Key", "Value"));
+        EnumDisplayHelper.SetEnumSelectList<DeviceStatus>(model, selectList =>
+            model.StatusItems = new SelectList(EnumDisplayHelper.ToDictionary(DeviceStatus.Deleted), "Key", "Value"));
         
         // 購入日に今日の日付をセット
         model.PurchaseDate = DateTime.Now;
@@ -392,12 +389,12 @@ public class DeviceService : IDeviceService
         }
 
         // ビューモデルに、ドロップダウン用のSelectListをセット
-        SelectListHelper.SetEnumSelectList<DeviceCategory>(model, selectList => model.CategoryItems = selectList);
-        SelectListHelper.SetEnumSelectList<DevicePurpose>(model, selectList => model.PurposeItems = selectList);
+        EnumDisplayHelper.SetEnumSelectList<DeviceCategory>(model, selectList => model.CategoryItems = selectList);
+        EnumDisplayHelper.SetEnumSelectList<DevicePurpose>(model, selectList => model.PurposeItems = selectList);
 
         // DeviceStatus は Deleted を除外して取得する
-        SelectListHelper.SetEnumSelectList<DeviceStatus>(model, selectList =>
-            model.StatusItems = new SelectList(SelectListHelper.ToDictionary(DeviceStatus.Deleted), "Key", "Value"));
+        EnumDisplayHelper.SetEnumSelectList<DeviceStatus>(model, selectList =>
+            model.StatusItems = new SelectList(EnumDisplayHelper.ToDictionary(DeviceStatus.Deleted), "Key", "Value"));
 
         // ビューモデルを返す
         return model;
@@ -464,12 +461,12 @@ public class DeviceService : IDeviceService
     public async Task RestoreEditViewSettingsAsync(DeviceEditViewModel model, Roles role)
     {
         // ビューモデルに、ドロップダウン用のSelectListをセット
-        SelectListHelper.SetEnumSelectList<DeviceCategory>(model, selectList => model.CategoryItems = selectList);
-        SelectListHelper.SetEnumSelectList<DevicePurpose>(model, selectList => model.PurposeItems = selectList);
+        EnumDisplayHelper.SetEnumSelectList<DeviceCategory>(model, selectList => model.CategoryItems = selectList);
+        EnumDisplayHelper.SetEnumSelectList<DevicePurpose>(model, selectList => model.PurposeItems = selectList);
 
         // DeviceStatus は Deleted を除外して取得する
-        SelectListHelper.SetEnumSelectList<DeviceStatus>(model, selectList =>
-            model.StatusItems = new SelectList(SelectListHelper.ToDictionary(DeviceStatus.Deleted), "Key", "Value"));
+        EnumDisplayHelper.SetEnumSelectList<DeviceStatus>(model, selectList =>
+            model.StatusItems = new SelectList(EnumDisplayHelper.ToDictionary(DeviceStatus.Deleted), "Key", "Value"));
 
         // ReadOnly制御再設定
         // Admin
