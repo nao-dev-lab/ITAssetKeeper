@@ -2,7 +2,7 @@
 
 namespace ITAssetKeeper.Models.Enums;
 
-public enum SortKeys
+public enum DeviceColumns
 {
     [Display(Name = "機器管理ID")]
     ManagementId,

@@ -37,13 +37,13 @@ public class DeviceDto
     public string Memo { get; set; }
 
     [Display(Name = "購入日")]
-    public string PurchaseDate { get; set; }
+    public DateTime PurchaseDate { get; set; }
 
     [Display(Name = "登録日")]
-    public string CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
 
     [Display(Name = "更新日")]
-    public string UpdatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
 
     [Display(Name = "削除フラグ")]
     public bool IsDeleted { get; set; }
@@ -53,4 +53,13 @@ public class DeviceDto
 
     [Display(Name = "削除実施者")]
     public string DeletedBy { get; set; }
+
+    // 表示専用プロパティ(読み取り専用)
+    public string PurchaseDateText => PurchaseDate.ToString("yyyy/MM/dd");
+    public string CreatedAtDateText => CreatedAt.ToString("yyyy/MM/dd");
+    public string CreatedAtDateTimeText => CreatedAt.ToString("yyyy/MM/dd HH:mm:ss");
+    public string UpdatedAtDateText => UpdatedAt.ToString("yyyy/MM/dd");
+    public string UpdatedAtDateTimeText => UpdatedAt.ToString("yyyy/MM/dd HH:mm:ss");
+    public string DeletedAtDateText => DeletedAt.ToString("yyyy/MM/dd");
+    public string DeletedAtDateTimeText => DeletedAt.ToString("yyyy/MM/dd HH:mm:ss");
 }

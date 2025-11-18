@@ -16,7 +16,7 @@ public interface IDeviceService
     IQueryable<Device> FilterDevices(IQueryable<Device> query, DeviceListViewModel condition);
 
     // ソート (フィルタ済み IQueryable を昇順 / 降順に並べ替える)
-    IQueryable<Device> SortDevices(IQueryable<Device> query, SortKeys sortKey, SortOrders sortOrder);
+    IQueryable<Device> SortDevices(IQueryable<Device> query, DeviceColumns sortKey, SortOrders sortOrder);
 
     // ページング (Skip/Take の適用)
     IQueryable<Device> PagingDevices(IQueryable<Device> query, int pageNumber, int pageSize);

@@ -5,21 +5,6 @@ namespace ITAssetKeeper.Helpers;
 
 public class SelectListHelper
 {
-    //// Enum → (内部名, 表示名) の Dictionary を生成
-    //// 例: StatusEnum.Active → { "Active", "稼働中" } のように内部名と表示名をペアにする
-    //public static Dictionary<string, string> ToDictionary<TEnum>()
-    //    where TEnum : struct, Enum
-    //{
-    //    // 引数で受け取った Enum の全メンバーを取得
-    //    // 型を TEnum にキャストし、Dictionary<string,string> に変換して返す
-    //    return Enum.GetValues(typeof(TEnum))
-    //        .Cast<TEnum>()
-    //        .ToDictionary(
-    //            e => e.ToString(),      // Key: Enum の内部名 (文字列)
-    //            e => GetDisplayName(e)  // Value: 表示名 
-    //        );
-    //}
-
     // Enum → (内部名, 表示名) の Dictionary を生成
     // 例: StatusEnum.Active → { "Active", "稼働中" } のように内部名と表示名をペアにする
     public static Dictionary<string, string> ToDictionary<TEnum>(params TEnum[] exclude)

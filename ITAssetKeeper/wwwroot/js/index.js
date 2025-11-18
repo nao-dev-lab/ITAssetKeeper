@@ -17,12 +17,15 @@
             + '&sortOrder=' + sortOrder     // Ajax用
             + '&PageNumber=1';              // ソート変更時は必ず1ページ目
 
+        // 呼び出し元から渡された値で呼び出し先を指定
+        var ajaxUrl = $('#sortForm').data('ajax-url');
+
         $.ajax({
-            url: '/Device/GetSortedList',
+            url: ajaxUrl,
             type: 'GET',
             data: data,
             success: function (html) {
-                $('#deviceTableArea').html(html);   // テーブル更新
+                $('#tableArea').html(html);   // テーブル更新
             },
             error: function () {
                 console.error("ソート更新でエラーが発生しました");
@@ -48,12 +51,15 @@
             + '&SortKeyValue=' + sortKey
             + '&SortOrderValue=' + sortOrder;
 
+        // 呼び出し元から渡された値で呼び出し先を指定
+        var ajaxUrl = $('nav[aria-label="Page navigation"]').data('ajax-url');
+
         $.ajax({
-            url: '/Device/GetPagedList',
+            url: ajaxUrl,
             type: 'GET',
             data: data,
             success: function (html) {
-                $('#deviceTableArea').html(html);  // テーブル更新
+                $('#tableArea').html(html);  // テーブル更新
             },
             error: function () {
                 console.error("ページング処理でエラーが発生しました");

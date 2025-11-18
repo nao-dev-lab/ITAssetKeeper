@@ -1,6 +1,6 @@
 ﻿@model ITAssetKeeper.Models.ViewModels.Device.DeviceListViewModel
 
-<!-- テーブル表示 -->
+@* テーブル表示 *@
 <table class="table">
     <thead>
         <tr>
@@ -31,16 +31,16 @@
                 <td>@Html.DisplayFor(modelItem => item.Location)</td>
                 <td>@Html.DisplayFor(modelItem => item.UserName)</td>
                 <td>@Html.DisplayFor(modelItem => item.Status)</td>
-                <td>@Html.DisplayFor(modelItem => item.PurchaseDate)</td>
-                <td>@Html.DisplayFor(modelItem => item.CreatedAt)</td>
-                <td>@Html.DisplayFor(modelItem => item.UpdatedAt)</td>
+                <td>@Html.DisplayFor(modelItem => item.PurchaseDateText)</td>
+                <td>@Html.DisplayFor(modelItem => item.CreatedAtDateText)</td>
+                <td>@Html.DisplayFor(modelItem => item.UpdatedAtDateText)</td>
             </tr>
         }
     </tbody>
 </table>
 
-<!-- ページング表示 -->
-<nav aria-label="Page navigation" class="mt-3">
+@*ページング表示 *@
+<nav aria-label="Page navigation" class="mt-3" data-ajax-url="@Url.Action("GetPagedList", "Device")">
     <ul class="pagination">
 
         @if (Model.HasPreviousPage)

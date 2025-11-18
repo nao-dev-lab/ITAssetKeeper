@@ -51,7 +51,7 @@ public class DeviceService : IDeviceService
     public IQueryable<Device> FilterDevices(IQueryable<Device> query, DeviceListViewModel condition)
     {
         // Deviceテーブルから全てのデータを取得する
-        query = _context.Devices;
+        //query = _context.Devices;
 
         // 部分一致
         if (!string.IsNullOrWhiteSpace(condition.ManagementId))
@@ -103,52 +103,86 @@ public class DeviceService : IDeviceService
         }
 
         // 日付範囲：購入日
-        if (condition.PurchaseDateFrom != null && condition.PurchaseDateTo == null)
+        if (condition.PurchaseDateFrom != null || condition.PurchaseDateTo != null)
         {
-            // PurchaseDateFrom ～ 今日まで
-            query = query.Where(x => x.PurchaseDate >= condition.PurchaseDateFrom && x.PurchaseDate <= DateTime.Now);
-        }
-        else if (condition.PurchaseDateFrom == null && condition.PurchaseDateTo != null)
-        {
-            // PurchaseDateTo 以前のものすべて
-            query = query.Where(x => x.PurchaseDate <= condition.PurchaseDateTo);
-        }
-        else if (condition.PurchaseDateFrom != null && condition.PurchaseDateTo != null)
-        {
-            if (condition.PurchaseDateFrom == condition.PurchaseDateTo)
+            // 検索日付の丸め（Date にし、時刻 00:00:00 起点にする）
+            var from = condition.PurchaseDateFrom?.Date;
+            var to = condition.PurchaseDateTo?.Date;
+
+            // From のみ指定されている場合
+            if (from != null && to == null)
             {
-                // 同一の日付が入力されている場合は、PurchaseDateFromで指定された日付
-                query = query.Where(x => x.PurchaseDate == condition.PurchaseDateFrom);
+                // from ～ 今日の翌日 00:00 まで
+                query = query.Where(x =>
+                    x.PurchaseDate >= from.Value &&
+                    x.PurchaseDate < DateTime.Today.AddDays(1));
             }
-            else
+            // To のみ指定されている場合
+            else if (from == null && to != null)
             {
-                // PurchaseDateFrom ～ PurchaseDateToの範囲
-                query = query.Where(x => x.PurchaseDate >= condition.PurchaseDateFrom && x.PurchaseDate <= condition.PurchaseDateTo);
+                // ～ to の翌日 00:00 まで
+                query = query.Where(x =>
+                    x.PurchaseDate < to.Value.AddDays(1));
+            }
+            // From と To 両方指定されている場合
+            else if (from != null && to != null)
+            {
+                if (from == to)
+                {
+                    // 日付一致 → 当日の 00:00 ～ 翌日 00:00
+                    query = query.Where(x =>
+                        x.PurchaseDate >= from.Value &&
+                        x.PurchaseDate < from.Value.AddDays(1));
+                }
+                else
+                {
+                    // from ～ to(包含) → 翌日 00:00 まで
+                    query = query.Where(x =>
+                        x.PurchaseDate >= from.Value &&
+                        x.PurchaseDate < to.Value.AddDays(1));
+                }
             }
         }
 
         // 日付範囲：更新日
-        if (condition.UpdatedDateFrom != null && condition.UpdatedDateTo == null)
+        if (condition.UpdatedDateFrom != null || condition.UpdatedDateTo != null)
         {
-            // UpdatedDateFrom ～ 今日まで
-            query = query.Where(x => x.UpdatedAt >= condition.UpdatedDateFrom && x.UpdatedAt <= DateTime.Now);
-        }
-        else if (condition.UpdatedDateFrom == null && condition.UpdatedDateTo != null)
-        {
-            // UpdatedDateTo 以前のものすべて
-            query = query.Where(x => x.UpdatedAt <= condition.UpdatedDateTo);
-        }
-        else if (condition.UpdatedDateFrom != null && condition.UpdatedDateTo != null)
-        {
-            if (condition.UpdatedDateFrom == condition.UpdatedDateTo)
+            // 検索日付の丸め（Date にし、時刻 00:00:00 起点にする）
+            var from = condition.UpdatedDateFrom?.Date;
+            var to = condition.UpdatedDateTo?.Date;
+
+            // From のみ指定されている場合
+            if (from != null && to == null)
             {
-                // 同一の日付が入力されている場合は、UpdatedDateFromで指定された日付
-                query = query.Where(x => x.UpdatedAt == condition.UpdatedDateFrom);
+                // from ～ 今日の翌日 00:00 まで
+                query = query.Where(x =>
+                    x.UpdatedAt >= from.Value &&
+                    x.UpdatedAt < DateTime.Today.AddDays(1));
             }
-            else
+            // To のみ指定されている場合
+            else if (from == null && to != null)
             {
-                // UpdatedDateFrom ～ UpdatedDateToの範囲
-                query = query.Where(x => x.UpdatedAt >= condition.UpdatedDateFrom && x.UpdatedAt <= condition.UpdatedDateTo);
+                // ～ to の翌日 00:00 まで
+                query = query.Where(x =>
+                    x.UpdatedAt < to.Value.AddDays(1));
+            }
+            // From と To 両方指定されている場合
+            else if (from != null && to != null)
+            {
+                if (from == to)
+                {
+                    // 日付一致 → 当日の 00:00 ～ 翌日 00:00
+                    query = query.Where(x =>
+                        x.UpdatedAt >= from.Value &&
+                        x.UpdatedAt < from.Value.AddDays(1));
+                }
+                else
+                {
+                    // from ～ to(包含) → 翌日 00:00 まで
+                    query = query.Where(x =>
+                        x.UpdatedAt >= from.Value &&
+                        x.UpdatedAt < to.Value.AddDays(1));
+                }
             }
         }
 
@@ -156,7 +190,7 @@ public class DeviceService : IDeviceService
     }
 
     // ソート (フィルタ済み IQueryable を昇順 / 降順に並べ替える)
-    public IQueryable<Device> SortDevices(IQueryable<Device> query, SortKeys sortKey, SortOrders sortOrder)
+    public IQueryable<Device> SortDevices(IQueryable<Device> query, DeviceColumns sortKey, SortOrders sortOrder)
     {
         // 指定されたSortKeyを基準に、
         // 指定されたSortOrderに応じて、昇順 or 降順でソートする
@@ -189,7 +223,7 @@ public class DeviceService : IDeviceService
         SelectListHelper.SetEnumSelectList<DeviceCategory>(condition, selectList => condition.CategoryItems = selectList);
         SelectListHelper.SetEnumSelectList<DevicePurpose>(condition, selectList => condition.PurposeItems = selectList);
         SelectListHelper.SetEnumSelectList<SortOrders>(condition, selectList => condition.SortOrderList = selectList);
-        SelectListHelper.SetEnumSelectList<SortKeys>(condition, selectList => condition.SortKeyList = selectList);
+        SelectListHelper.SetEnumSelectList<DeviceColumns>(condition, selectList => condition.SortKeyList = selectList);
 
         // DeviceStatus は Deleted を除外して取得する
         SelectListHelper.SetEnumSelectList<DeviceStatus>(condition, selectList => 
@@ -209,9 +243,9 @@ public class DeviceService : IDeviceService
                 Location = x.Location,
                 UserName = x.UserName,
                 Status = x.Status,
-                PurchaseDate = x.PurchaseDate.ToString("yyyy/MM/dd"),
-                CreatedAt = x.CreatedAt.ToString("yyyy/MM/dd"),
-                UpdatedAt = x.UpdatedAt.ToString("yyyy/MM/dd")
+                PurchaseDate = x.PurchaseDate,
+                CreatedAt = x.CreatedAt,
+                UpdatedAt = x.UpdatedAt
             })
             .ToList();
 
@@ -330,9 +364,9 @@ public class DeviceService : IDeviceService
             Location = device.Location,
             UserName = device.UserName,
             Status = device.Status,
-            PurchaseDate = device.PurchaseDate.ToString("yyyy/MM/dd"),
-            CreatedAt = device.CreatedAt.ToString("yyyy/MM/dd HH:mm:ss"),
-            UpdatedAt = device.UpdatedAt.ToString("yyyy/MM/dd HH:mm:ss"),
+            PurchaseDate = device.PurchaseDate,
+            CreatedAt = device.CreatedAt,
+            UpdatedAt = device.UpdatedAt,
             Memo = device.Memo
         };
 

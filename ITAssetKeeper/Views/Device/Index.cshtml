@@ -1,5 +1,4 @@
-﻿@using ITAssetKeeper.Models.Enums
-@model ITAssetKeeper.Models.ViewModels.Device.DeviceListViewModel
+﻿@model ITAssetKeeper.Models.ViewModels.Device.DeviceListViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -139,7 +138,7 @@
 
 
 @* 並び替え選択 *@
-<form id="sortForm">
+<form id="sortForm" data-ajax-url="@Url.Action("GetSortedList","Device")">
     <div id="sortArea">
 
         @* ソート基準 *@
@@ -159,12 +158,12 @@
 </form>
 
 @* テーブル表示 *@
-<div id="deviceTableArea">
+<div id="tableArea">
     @await Html.PartialAsync("_DeviceListPartial", Model)
 </div>
 
 
 @* jsファイルを読み込む *@
 @section Scripts {
-    <script src="~/js/device-index.js"></script>
+    <script src="~/js/index.js"></script>
 }

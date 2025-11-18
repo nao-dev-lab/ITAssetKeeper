@@ -13,7 +13,7 @@ namespace ITAssetKeeper.Data
         ///////////////////////////////////////////
         // データベースのテーブル名のプロパティを用意
         public DbSet<Device> Devices { get; set; }
-        public DbSet<DeviceHistory> DeviceHistory { get; set; }
+        public DbSet<DeviceHistory> DeviceHistories { get; set; }
 
         // コンストラクタ
         public ITAssetKeeperDbContext(DbContextOptions<ITAssetKeeperDbContext> options)

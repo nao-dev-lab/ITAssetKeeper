@@ -1,19 +1,9 @@
-﻿using AspNetCoreGeneratedDocument;
-using ITAssetKeeper.Data;
+﻿using ITAssetKeeper.Data;
 using ITAssetKeeper.Models.Enums;
-using ITAssetKeeper.Models.ViewModels.Dashboard;
 using ITAssetKeeper.Models.ViewModels.Device;
 using ITAssetKeeper.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Globalization;
-using System.IO;
-using System.Security.Claims;
 
 namespace ITAssetKeeper.Controllers;
 
@@ -28,6 +18,7 @@ public class DeviceController : Controller
 
     // GET: Device/Index
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> Index(DeviceListViewModel model)
     {
         // 検索メソッド実行、結果を取得
@@ -41,7 +32,7 @@ public class DeviceController : Controller
     // JSから呼び出す
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> GetSortedList(SortKeys sortKey, SortOrders sortOrder, DeviceListViewModel model)
+    public async Task<IActionResult> GetSortedList(DeviceColumns sortKey, SortOrders sortOrder, DeviceListViewModel model)
     {
         // SortKey と SortOrderをモデルに反映させる
         model.SortKeyValue = sortKey;
