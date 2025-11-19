@@ -14,6 +14,7 @@ namespace ITAssetKeeper.Data
         // データベースのテーブル名のプロパティを用意
         public DbSet<Device> Devices { get; set; }
         public DbSet<DeviceHistory> DeviceHistories { get; set; }
+        public DbSet<DeviceHistorySequence> DeviceHistorySequences { get; set; }
 
         // コンストラクタ
         public ITAssetKeeperDbContext(DbContextOptions<ITAssetKeeperDbContext> options)
@@ -38,6 +39,14 @@ namespace ITAssetKeeper.Data
                 .ToTable("DeviceHistories")
                 .HasIndex(b => new { b.ManagementId, b.HistoryId })
                 .IsUnique();
+
+            // DeviceHistorySequenceテーブル
+            modelBuilder.Entity<DeviceHistorySequence>()
+                .HasData(new DeviceHistorySequence
+                {
+                    Id = 1,
+                    LastUsedNumber = 0
+                });
 
             base.OnModelCreating(modelBuilder);
         }

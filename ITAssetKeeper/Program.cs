@@ -39,10 +39,11 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredUniqueChars = 4;       // 最低4種類の異なる文字が必要
 });
 
-// DeviceService、DeviceHistoryService、IDeviceDiffServiceを登録
+// DeviceService、DeviceHistoryService、IDeviceDiffService、IDeviceHistorySequenceServiceを登録
 builder.Services.AddScoped<IDeviceService, DeviceService>();
 builder.Services.AddScoped<IDeviceHistoryService, DeviceHistoryService>();
 builder.Services.AddScoped<IDeviceDiffService, DeviceDiffService>();
+builder.Services.AddScoped<IDeviceHistorySequenceService, DeviceHistorySequenceService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -78,6 +79,13 @@ using (var scope = app.Services.CreateScope())
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
     await DbInitializer.SeedAsync(userManager, roleManager);
+}
+
+// HistoryId採番の開始位置を調整
+using (var scope = app.Services.CreateScope())
+{
+    var historyService = scope.ServiceProvider.GetRequiredService<IDeviceHistoryService>();
+    await historyService.SyncHistorySequenceAsync();
 }
 
 app.Run();

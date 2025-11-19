@@ -39,7 +39,7 @@
                class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Device"
                         && ViewContext.RouteData.Values["action"]?.ToString() == "Index"
                         ? "active" : "")">
-                <i class="bi bi-laptop"></i> 機器一覧
+                <i class="bi bi-laptop"></i> 機器情報
             </a>
         </li>
 
@@ -51,14 +51,15 @@
                     class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Device"
                         && ViewContext.RouteData.Values["action"]?.ToString() == "Create"
                         ? "active" : "")">
-                    <i class="bi bi-speedometer2"></i> 機器登録
+                <i class="bi bi-speedometer2"></i> 機器情報 登録
                 </a>
             </li>
         }
 
         @* 履歴(全ロール) *@
         <li>
-            <a asp-controller="DeviceHistory" asp-action="Index">
+            <a asp-controller="DeviceHistory" asp-action="Index"
+               class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "DeviceHistory" ? "active" : "")">
                 <i class="bi bi-clock-history"></i> 更新履歴
             </a>
         </li>
@@ -68,7 +69,7 @@
         {
             <li>
                 <a asp-controller="User" asp-action="Index">
-                    <i class="bi bi-people"></i> ユーザー一覧
+                    <i class="bi bi-people"></i> ユーザー 管理
                 </a>
             </li>
         }

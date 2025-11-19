@@ -627,7 +627,7 @@ public class DeviceService : IDeviceService
             var result = await _context.SaveChangesAsync();
 
             // 削除に関する履歴レコードを追加
-            await _deviceHistoryService.AddDeleteHistoryAsync(before, deletedBy);
+            await _deviceHistoryService.AddDeleteHistoryAsync(before, entity, deletedBy);
 
             // Commitする
             scope.Complete();

@@ -14,11 +14,16 @@ public class DeviceHistoryService : IDeviceHistoryService
 {
     private readonly ITAssetKeeperDbContext _context;
     private readonly IDeviceDiffService _deviceDiffService;
+    private readonly IDeviceHistorySequenceService _sequenceService;
 
-    public DeviceHistoryService(ITAssetKeeperDbContext context, IDeviceDiffService deviceDiffService)
+    public DeviceHistoryService(
+        ITAssetKeeperDbContext context,
+        IDeviceDiffService deviceDiffService,
+        IDeviceHistorySequenceService sequenceService)
     {
         _context = context;
         _deviceDiffService = deviceDiffService;
+        _sequenceService = sequenceService;
     }
 
     // Index用 統合メソッド
@@ -195,7 +200,7 @@ public class DeviceHistoryService : IDeviceHistoryService
         // 履歴の Entity 作成
         var history = new DeviceHistory
         {
-            HistoryId = GenerateHistoryId(),    // 新しい履歴IDを生成して設定
+            HistoryId = await GenerateHistoryIdAsync(),    // 新しい履歴IDを生成して設定
             ManagementId = created.ManagementId,
             ChangeField = DeviceColumns.Status.ToString(),
             BeforeValue = null,
@@ -218,16 +223,13 @@ public class DeviceHistoryService : IDeviceHistoryService
 
         // 更新箇所を履歴に反映させる
         // 更新箇所1つにつき、1レコード生成
-        int counter = 0;
         foreach (var change in changes)
         {
             // 履歴の Entity 作成
             var history = new DeviceHistory
             {
-                // 更新箇所の数だけ HistoryId を取得
-                // SaveChangesAsyncするまで現存のHistoryIdの最大値が変わらない為、
-                // ループ終了時に+1してIDを取得する
-                HistoryId = GenerateHistoryId(counter),
+                // 複数行のレコード追加時でもGenerateHistoryIdAsync()でID競合を回避
+                HistoryId = await GenerateHistoryIdAsync(),
                 ManagementId = before.ManagementId,
                 ChangeField = change.FieldName,
                 BeforeValue = change.BeforeValue,
@@ -235,27 +237,27 @@ public class DeviceHistoryService : IDeviceHistoryService
                 UpdatedBy = userName,
                 UpdatedAt = after.UpdatedAt
             };
+
             // 履歴テーブルにレコードを追加
             _context.DeviceHistories.Add(history);
-            counter++;
         }
         // まとめて保存
         await _context.SaveChangesAsync();
     }
 
     // 削除時の履歴作成
-    public async Task AddDeleteHistoryAsync(Device before, string userName)
+    public async Task AddDeleteHistoryAsync(Device before, Device after, string userName)
     {
         // 履歴の Entity 作成
         var history = new DeviceHistory
         {
-            HistoryId = GenerateHistoryId(),    // 新しい履歴IDを生成して設定
+            HistoryId = await GenerateHistoryIdAsync(),    // 新しい履歴IDを生成して設定
             ManagementId = before.ManagementId,
             ChangeField = DeviceColumns.Status.ToString(),
             BeforeValue = before.Status,
             AfterValue = "Deleted",
             UpdatedBy = userName,
-            UpdatedAt = before.DeletedAt == null ? before.UpdatedAt : before.DeletedAt.Value
+            UpdatedAt = after.DeletedAt == null ? after.UpdatedAt : after.DeletedAt.Value
         };
 
         // 履歴テーブルにレコードを追加
@@ -264,49 +266,33 @@ public class DeviceHistoryService : IDeviceHistoryService
     }
 
     // HistoryId を生成して返す
-    // Edit時は、履歴がDB登録される前に複数履歴作成される為、都度DB上のIDの最大値+1だと重複する
-    // その為、Edit時用に引数で渡された数を加算して生成することで重複しないようにする
-    private string GenerateHistoryId(int count = 0)
+    // 採番テーブルを使って、HistoryId が競合しないようにする
+    private async Task<string> GenerateHistoryIdAsync()
     {
-        // HistoryIdを自動採番する為に、DBに存在するHistoryIDを取得
-        var query = _context.DeviceHistories.Select(x => x.HistoryId);
+        var seq = await _sequenceService.GetNextAsync();
 
-        // プレフィックスを除いた数字部分をint型で取得しなおす
-        // 一番大きい数字を取得し、新しいManagementId用に +1 する
-        var maxNum = query
-            .AsEnumerable()
-            .Select(id => ExtractNumericId(id))
-            .DefaultIfEmpty(0)
-            .Max() + 1;
-
-        // 引数で数値を渡されていれば、その分を足したIDを払い出す
-        return DeviceHistoryConstants.HISTORY_ID_PREFIX + (maxNum + count).ToString($"D{DeviceHistoryConstants.HISTORY_ID_NUM_DIGIT_COUNT}");
+        return DeviceHistoryConstants.HISTORY_ID_PREFIX +
+               seq.ToString($"D{DeviceHistoryConstants.HISTORY_ID_NUM_DIGIT_COUNT}");
     }
 
-    // HistoryId を生成して返す
-    //private string GenerateHistoryId()
-    //{
-    //    // HistoryIdを自動採番する為に、DBに存在するHistoryIDを取得
-    //    var query = _context.DeviceHistories.Select(x => x.HistoryId);
-
-    //    // プレフィックスを除いた数字部分をint型で取得しなおす
-    //    // 一番大きい数字を取得し、新しいManagementId用に +1 する
-    //    var maxNum = query
-    //        .AsEnumerable()
-    //        .Select(id => ExtractNumericId(id))
-    //        .DefaultIfEmpty(0)
-    //        .Max() + 1;
-
-    //    // 新しい HistoryId を生成
-    //    // プレフィックスを付けて、数字部分が規定の桁数になるように先行0埋めする
-    //    return DeviceHistoryConstants.HISTORY_ID_PREFIX + maxNum.ToString($"D{DeviceHistoryConstants.HISTORY_ID_NUM_DIGIT_COUNT}");
-    //}
-
-    // HistoryIdから数字部分を取り出す
-    private int ExtractNumericId(string historyId)
+    // HistoryIdの自動採番を履歴テーブル内の最大 HistoryId からの連番になるよう同期
+    // ダミーデータ追加時などの整合性の担保
+    public async Task SyncHistorySequenceAsync()
     {
-        return int.Parse(historyId.Substring(
-                DeviceHistoryConstants.HISTORY_ID_PREFIX.Length,
-                DeviceHistoryConstants.HISTORY_ID_NUM_DIGIT_COUNT));
+        // 履歴テーブル内の最大 HistoryId を取得
+        var maxHistoryId = await _context.DeviceHistories
+            .Select(h => h.HistoryId)
+            .ToListAsync();
+
+        // "UH000001" → 数字部分 "000001" → 1 に変換
+        int maxNum = maxHistoryId
+            .Select(id => int.Parse(id.Substring(DeviceHistoryConstants.HISTORY_ID_PREFIX.Length)))
+            .DefaultIfEmpty(0)
+            .Max();
+
+        // 採番テーブルを最新の値に同期
+        // 最大値をプレースホルダーで渡す
+        await _context.Database.ExecuteSqlRawAsync(
+            "UPDATE DeviceHistorySequences SET LastUsedNumber = @p0 WHERE Id = 1", maxNum);
     }
 }

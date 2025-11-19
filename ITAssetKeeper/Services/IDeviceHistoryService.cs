@@ -25,5 +25,9 @@ public interface IDeviceHistoryService
     Task AddUpdateHistoryAsync(Device before, Device after, string userName);
 
     // 削除時の履歴作成
-    Task AddDeleteHistoryAsync(Device before, string userName);
+    Task AddDeleteHistoryAsync(Device before, Device after, string userName);
+
+    // HistoryIdの自動採番を履歴テーブル内の最大 HistoryId からの連番になるよう同期
+    // ダミーデータ追加時などの整合性の担保
+    Task SyncHistorySequenceAsync();
 }
