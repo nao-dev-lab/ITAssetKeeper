@@ -10,20 +10,20 @@ public interface IDeviceHistoryService
     //////////////////////////////////////////
     // --- Index ---
 
-    // Index用 統合メソッド
+    // Index用 統合メソッド：検索、ソート、ページング処理を実施
     Task<DeviceHistoryViewModel> SearchHistoriesAsync(DeviceHistoryViewModel condition);
 
-    // フィルタリング (条件に応じて IQueryable<DeviceHistory> を返す)
-    IQueryable<DeviceHistory> FilterHistories(IQueryable<DeviceHistory> query, DeviceHistoryViewModel condition);
 
-    // ソート (フィルタ済み IQueryable を昇順 / 降順に並べ替える)
-    IQueryable<DeviceHistory> SortHistories(IQueryable<DeviceHistory> query, DeviceHistoryColumns sortKey, SortOrders sortOrder);
+    //////////////////////////////////////////
+    // --- 履歴データ作成 ---
 
-    // ページング (Skip/Take の適用)
-    IQueryable<DeviceHistory> PagingHistories(IQueryable<DeviceHistory> query, int pageNumber, int pageSize);
+    // 新規登録時の履歴作成
+    Task AddCreateHistoryAsync(Device created, string userName);
 
-    // ViewModel 変換(結果を DeviceHistoryViewModel に詰める)
-    DeviceHistoryViewModel ToViewModel(DeviceHistoryViewModel condition, List<DeviceHistory> histories);
+    // 更新時の履歴作成
+    // DeviceDiffService で取得した差分データを元に履歴データを作成する
+    Task AddUpdateHistoryAsync(Device before, Device after, string userName);
 
-
+    // 削除時の履歴作成
+    Task AddDeleteHistoryAsync(Device before, string userName);
 }

@@ -14,7 +14,7 @@ public class DeviceHistoryViewModel
     // ---ドロップダウン選択用 ---
     public string? SelectedChangeField { get; set; }
     public DeviceHistoryColumns SortKeyValue { get; set; } = DeviceHistoryColumns.HistoryId;
-    public SortOrders SortOrderValue { get; set; } = SortOrders.Asc;
+    public SortOrders SortOrderValue { get; set; } = SortOrders.Desc;
 
     // --- 検索結果 ---
     public List<DeviceHistoryDto> DeviceHistories { get; set; } = new();

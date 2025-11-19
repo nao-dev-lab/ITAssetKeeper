@@ -29,4 +29,5 @@ public class DeviceHistoryDto
 
     // 表示専用プロパティ（読み取り専用）
     public string UpdatedAtText => UpdatedAt.ToString("yyyy/MM/dd HH:mm:ss");
+
 }

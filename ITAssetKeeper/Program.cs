@@ -39,9 +39,10 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredUniqueChars = 4;       // Å’á4í—Ş‚ÌˆÙ‚È‚é•¶š‚ª•K—v
 });
 
-// DeviceServiceADeviceHistoryService‚ğ“o˜^
+// DeviceServiceADeviceHistoryServiceAIDeviceDiffService‚ğ“o˜^
 builder.Services.AddScoped<IDeviceService, DeviceService>();
 builder.Services.AddScoped<IDeviceHistoryService, DeviceHistoryService>();
+builder.Services.AddScoped<IDeviceDiffService, DeviceDiffService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

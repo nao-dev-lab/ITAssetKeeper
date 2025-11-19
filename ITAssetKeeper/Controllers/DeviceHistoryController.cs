@@ -12,7 +12,7 @@ public class DeviceHistoryController : Controller
 {
     private readonly IDeviceHistoryService _deviceHistoryService;
 
-    public DeviceHistoryController(ITAssetKeeperDbContext context, IDeviceHistoryService deviceHistoryService)
+    public DeviceHistoryController(IDeviceHistoryService deviceHistoryService)
     {
         _deviceHistoryService = deviceHistoryService;
     }

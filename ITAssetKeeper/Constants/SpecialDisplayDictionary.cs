@@ -8,6 +8,7 @@ public class SpecialDisplayDictionary
             new(StringComparer.OrdinalIgnoreCase)
             {
                 { "Deleted", "削除済" },
+                { "Created", "新規作成" },
                 // 今後追加する場合はここに足す
             };
 }

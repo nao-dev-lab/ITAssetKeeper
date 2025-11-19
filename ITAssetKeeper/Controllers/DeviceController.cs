@@ -11,7 +11,7 @@ public class DeviceController : Controller
 {
     private readonly IDeviceService _deviceService;
 
-    public DeviceController(ITAssetKeeperDbContext context, IDeviceService deviceService)
+    public DeviceController(IDeviceService deviceService)
     {
         _deviceService = deviceService;
     }
@@ -88,12 +88,21 @@ public class DeviceController : Controller
             return View(model);
         }
 
+        // ログインユーザー名を取得
+        string userName = User.Identity.Name;
+
+        // ユーザー情報が取得できなかった場合、機器登録画面に戻す
+        if (string.IsNullOrEmpty(userName))
+        {
+            TempData["ErrorMessage"] = "認証情報の取得に失敗しました。";
+            return RedirectToAction(nameof(Create));
+        }
+
         // クエリ実行結果の状態のエントリ数を取得
-        var result = await _deviceService.RegisterNewDeviceAsync(model);
+        var result = await _deviceService.RegisterNewDeviceAsync(model, userName);
 
         if (result > 0)
         {
-            //TempData["SuccessMessage"] = "登録が完了しました。";
             TempData["ToastMessage"] = "登録が完了しました。";
         }
         else
@@ -179,8 +188,18 @@ public class DeviceController : Controller
             return View(model);
         }
 
+        // ログインユーザー名を取得
+        string userName = User.Identity.Name;
+
+        // ユーザー情報が取得できなかった場合、機器登録画面に戻す
+        if (string.IsNullOrEmpty(userName))
+        {
+            TempData["ErrorMessage"] = "認証情報の取得に失敗しました。";
+            return RedirectToAction(nameof(Create));
+        }
+
         // クエリ実行結果の状態のエントリ数を取得
-        var result = await _deviceService.UpdateDeviceAsync(model, role);
+        var result = await _deviceService.UpdateDeviceAsync(model, role, userName);
 
         if (result == -1)
         {

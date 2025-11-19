@@ -14,10 +14,12 @@ namespace ITAssetKeeper.Services;
 public class DeviceService : IDeviceService
 {
     private readonly ITAssetKeeperDbContext _context;
+    private readonly IDeviceHistoryService _deviceHistoryService;
 
-    public DeviceService(ITAssetKeeperDbContext context)
+    public DeviceService(ITAssetKeeperDbContext context, IDeviceHistoryService deviceHistoryService)
     {
         _context = context;
+        _deviceHistoryService = deviceHistoryService;
     }
 
     ///////////////////////////////////////////////////
@@ -48,7 +50,7 @@ public class DeviceService : IDeviceService
     }
 
     // フィルタリング (条件に応じて IQueryable<Device> を返す)
-    public IQueryable<Device> FilterDevices(IQueryable<Device> query, DeviceListViewModel condition)
+    private IQueryable<Device> FilterDevices(IQueryable<Device> query, DeviceListViewModel condition)
     {
         // 部分一致
         if (!string.IsNullOrWhiteSpace(condition.ManagementId))
@@ -187,7 +189,7 @@ public class DeviceService : IDeviceService
     }
 
     // ソート (フィルタ済み IQueryable を昇順 / 降順に並べ替える)
-    public IQueryable<Device> SortDevices(IQueryable<Device> query, DeviceColumns sortKey, SortOrders sortOrder)
+    private IQueryable<Device> SortDevices(IQueryable<Device> query, DeviceColumns sortKey, SortOrders sortOrder)
     {
         // 指定されたSortKeyを基準に、
         // 指定されたSortOrderに応じて、昇順 or 降順でソートする
@@ -204,7 +206,7 @@ public class DeviceService : IDeviceService
     }
 
     // ページング (Skip/Take の適用)
-    public IQueryable<Device> PagingDevices(IQueryable<Device> query, int pageNumber, int pageSize)
+    private IQueryable<Device> PagingDevices(IQueryable<Device> query, int pageNumber, int pageSize)
     {
         // ページングを適用
         query = query.Skip((pageNumber - 1) * pageSize);
@@ -214,7 +216,7 @@ public class DeviceService : IDeviceService
     }
 
     // ViewModel 変換(結果を DeviceListViewModel に詰める)
-    public DeviceListViewModel ToViewModel(DeviceListViewModel condition, List<Device> devices)
+    private DeviceListViewModel ToViewModel(DeviceListViewModel condition, List<Device> devices)
     {
         // プルダウン用のデータを定数から取得
         EnumDisplayHelper.SetEnumSelectList<DeviceCategory>(condition, selectList => condition.CategoryItems = selectList);
@@ -271,34 +273,15 @@ public class DeviceService : IDeviceService
     }
 
     // 機器情報の新規登録処理
-    public async Task<int> RegisterNewDeviceAsync(DeviceCreateViewModel model)
+    public async Task<int> RegisterNewDeviceAsync(DeviceCreateViewModel model, string userName)
     {
         // トランザクション処理
         using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
         {
-            // ManagementIDを自動採番する為に、DBに存在するManagementIdを取得
-            // 削除フラグがついているものも取得したいのでクエリフィルタを無効化
-            var idList = await _context.Devices
-                .IgnoreQueryFilters()
-                .Select(x => x.ManagementId)
-                .ToListAsync();
-
-            // プレフィックスを除いた数字部分をint型で取得しなおす
-            // 一番大きい数字を取得し、新しいManagementId用に +1 する
-            var maxNum = idList
-            .Select(id => ExtractNumericId(id))
-            .DefaultIfEmpty(0)
-            .Max() + 1;
-
-
-            // 新しい ManagementId を生成
-            // プレフィックスを付けて、数字部分が規定の桁数になるように先行0埋めする
-            string newMid = DeviceConstants.DEVICE_ID_PREFIX + maxNum.ToString($"D{DeviceConstants.DEVICE_ID_NUM_DIGIT_COUNT}");
-
             // 受け取ったビューモデルからEntity 作成
             var entity = new Device
             {
-                ManagementId = newMid,
+                ManagementId = GenerateManagementId(),
                 Category = model.SelectedCategory,
                 Purpose = model.SelectedPurpose,
                 ModelNumber = model.ModelNumber,
@@ -311,10 +294,14 @@ public class DeviceService : IDeviceService
                 PurchaseDate = model.PurchaseDate
             };
 
+            // Device を追加
             _context.Devices.Add(entity);
 
-            // DBへの登録処理を実施、状態エントリの数を受け取る
+            // DeviceのDBへの登録処理を実施
             var result =  await _context.SaveChangesAsync();
+
+            // 新規登録に関する履歴レコードを追加
+            await _deviceHistoryService.AddCreateHistoryAsync(entity, userName);
 
             // Commitする
             scope.Complete();
@@ -324,12 +311,34 @@ public class DeviceService : IDeviceService
         }
     }
 
+    // ManagementID を生成して返す
+    private string GenerateManagementId()
+    {
+        // ManagementIDを自動採番する為に、DBに存在するManagementIdを取得
+        // 削除フラグがついているものも取得したいのでクエリフィルタを無効化
+        var idList = _context.Devices
+            .IgnoreQueryFilters()
+            .Select(x => x.ManagementId);
+
+        // プレフィックスを除いた数字部分をint型で取得しなおす
+        // 一番大きい数字を取得し、新しいManagementId用に +1 する
+        var maxNum = idList
+            .AsEnumerable()
+            .Select(id => ExtractNumericId(id))
+            .DefaultIfEmpty(0)
+            .Max() + 1;
+
+        // 新しい ManagementId を生成
+        // プレフィックスを付けて、数字部分が規定の桁数になるように先行0埋めする
+        return DeviceConstants.DEVICE_ID_PREFIX + maxNum.ToString($"D{DeviceConstants.DEVICE_ID_NUM_DIGIT_COUNT}");
+    }
+
     // ManagementIDから数字部分を取り出す
     private int ExtractNumericId(string managementId)
     {
         return int.Parse(managementId.Substring(
-            DeviceConstants.DEVICE_ID_PREFIX.Length,
-            DeviceConstants.DEVICE_ID_NUM_DIGIT_COUNT));
+                DeviceConstants.DEVICE_ID_PREFIX.Length,
+                DeviceConstants.DEVICE_ID_NUM_DIGIT_COUNT));
     }
 
 
@@ -402,7 +411,7 @@ public class DeviceService : IDeviceService
 
     // Edit画面に表示する為の Device情報を取得し、ビューモデルを返す
     // Role別の編集可否項目もここで設定する
-    public async Task<DeviceEditViewModel?> GetDeviceEditViewAsync(int id, Roles role)
+    private async Task<DeviceEditViewModel?> GetDeviceEditViewAsync(int id, Roles role)
     {
         // Devicesテーブルから指定のIdのデータを取得する
         var device = await _context.Devices.FindAsync(id);
@@ -494,8 +503,19 @@ public class DeviceService : IDeviceService
     }
 
     // 機器情報の更新処理
-    public async Task<int> UpdateDeviceAsync(DeviceEditViewModel model, Roles role)
+    public async Task<int> UpdateDeviceAsync(DeviceEditViewModel model, Roles role, string userName)
     {
+        // 履歴作成用に、トラッキングなしで事前のデータを取得しておく
+        var before = await _context.Devices
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == model.IdHidden);
+
+        // 見つからなかった場合は -1 を返す
+        if (before == null)
+        {
+            return -1;
+        }
+
         // Devicesテーブルから指定のIdのデータを取得する
         var entity = await _context.Devices.FindAsync(model.IdHidden);
 
@@ -521,7 +541,7 @@ public class DeviceService : IDeviceService
                 entity.UserName = model.UserName;
                 entity.Status = model.SelectedStatus;
                 entity.Memo = model.Memo;
-                entity.PurchaseDate = model.PurchaseDate.Value;
+                entity.PurchaseDate = model.PurchaseDate;
             }
             else
             {
@@ -531,6 +551,9 @@ public class DeviceService : IDeviceService
 
             // DBへの登録処理を実施、状態エントリの数を受け取る
             var result = await _context.SaveChangesAsync();
+
+            // 更新に関する履歴レコードを追加
+            await _deviceHistoryService.AddUpdateHistoryAsync(before, entity, userName);
 
             // Commitする
             scope.Complete();
@@ -573,6 +596,17 @@ public class DeviceService : IDeviceService
     // 対象の機器情報を論理削除(ソフトデリート)する
     public async Task<int> DeleteDeviceAsync(int id, string deletedBy)
     {
+        // 履歴作成用に、トラッキングなしで事前のデータを取得しておく
+        var before = await _context.Devices
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        // 見つからない or 削除フラグがすでに true の場合は、-1 を返す
+        if (before == null || before.IsDeleted)
+        {
+            return -1;
+        }
+
         // Devicesテーブルから指定のIdのデータを取得する
         var entity = await _context.Devices.FindAsync(id);
 
@@ -591,6 +625,9 @@ public class DeviceService : IDeviceService
 
             // DBへの更新処理を実施、状態エントリの数を受け取る
             var result = await _context.SaveChangesAsync();
+
+            // 削除に関する履歴レコードを追加
+            await _deviceHistoryService.AddDeleteHistoryAsync(before, deletedBy);
 
             // Commitする
             scope.Complete();

@@ -4,6 +4,7 @@ using ITAssetKeeper.Helpers;
 using ITAssetKeeper.Models.Entities;
 using ITAssetKeeper.Models.Enums;
 using ITAssetKeeper.Models.ViewModels.DeviceHistory;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,10 +13,12 @@ namespace ITAssetKeeper.Services;
 public class DeviceHistoryService : IDeviceHistoryService
 {
     private readonly ITAssetKeeperDbContext _context;
+    private readonly IDeviceDiffService _deviceDiffService;
 
-    public DeviceHistoryService(ITAssetKeeperDbContext context)
+    public DeviceHistoryService(ITAssetKeeperDbContext context, IDeviceDiffService deviceDiffService)
     {
         _context = context;
+        _deviceDiffService = deviceDiffService;
     }
 
     // Index用 統合メソッド
@@ -44,7 +47,7 @@ public class DeviceHistoryService : IDeviceHistoryService
     }
 
     // フィルタリング (条件に応じて IQueryable<DeviceHistory> を返す)
-    public IQueryable<DeviceHistory> FilterHistories(IQueryable<DeviceHistory> query, DeviceHistoryViewModel condition)
+    private IQueryable<DeviceHistory> FilterHistories(IQueryable<DeviceHistory> query, DeviceHistoryViewModel condition)
     {
         // 部分一致
         if (!string.IsNullOrWhiteSpace(condition.HistoryId))
@@ -128,7 +131,7 @@ public class DeviceHistoryService : IDeviceHistoryService
     }
 
     // ソート (フィルタ済み IQueryable を昇順 / 降順に並べ替える)
-    public IQueryable<DeviceHistory> SortHistories(IQueryable<DeviceHistory> query, DeviceHistoryColumns sortKey, SortOrders sortOrder)
+    private IQueryable<DeviceHistory> SortHistories(IQueryable<DeviceHistory> query, DeviceHistoryColumns sortKey, SortOrders sortOrder)
     {
         // 指定されたSortKeyを基準に、
         // 指定されたSortOrderに応じて、昇順 or 降順でソートする
@@ -145,7 +148,7 @@ public class DeviceHistoryService : IDeviceHistoryService
     }
 
     // ページング (Skip/Take の適用)
-    public IQueryable<DeviceHistory> PagingHistories(IQueryable<DeviceHistory> query, int pageNumber, int pageSize)
+    private IQueryable<DeviceHistory> PagingHistories(IQueryable<DeviceHistory> query, int pageNumber, int pageSize)
     {
         // ページングを適用
         query = query.Skip((pageNumber - 1) * pageSize);
@@ -155,7 +158,7 @@ public class DeviceHistoryService : IDeviceHistoryService
     }
 
     // ViewModel 変換(結果を DeviceHistoryViewModel に詰める)
-    public DeviceHistoryViewModel ToViewModel(DeviceHistoryViewModel condition, List<DeviceHistory> histories)
+    private DeviceHistoryViewModel ToViewModel(DeviceHistoryViewModel condition, List<DeviceHistory> histories)
     {
         // プルダウン用のデータを定数から取得
         EnumDisplayHelper.SetEnumSelectList<SortOrders>(condition, selectList => condition.SortOrderList = selectList);
@@ -184,5 +187,126 @@ public class DeviceHistoryService : IDeviceHistoryService
             .ToList();
 
         return condition;
+    }
+
+    // 新規登録時の履歴作成
+    public async Task AddCreateHistoryAsync(Device created, string userName)
+    {
+        // 履歴の Entity 作成
+        var history = new DeviceHistory
+        {
+            HistoryId = GenerateHistoryId(),    // 新しい履歴IDを生成して設定
+            ManagementId = created.ManagementId,
+            ChangeField = DeviceColumns.Status.ToString(),
+            BeforeValue = null,
+            AfterValue = "Created",
+            UpdatedBy = userName,
+            UpdatedAt = created.UpdatedAt
+        };
+
+        // 履歴テーブルにレコードを追加
+        _context.DeviceHistories.Add(history);
+        await _context.SaveChangesAsync();
+    }
+
+    // 更新時の履歴作成
+    // DeviceDiffService で取得した差分データを元に履歴データを作成する
+    public async Task AddUpdateHistoryAsync(Device before, Device after, string userName)
+    {
+        // 更新箇所のみ取得
+        var changes = _deviceDiffService.GetChanges(before, after);
+
+        // 更新箇所を履歴に反映させる
+        // 更新箇所1つにつき、1レコード生成
+        int counter = 0;
+        foreach (var change in changes)
+        {
+            // 履歴の Entity 作成
+            var history = new DeviceHistory
+            {
+                // 更新箇所の数だけ HistoryId を取得
+                // SaveChangesAsyncするまで現存のHistoryIdの最大値が変わらない為、
+                // ループ終了時に+1してIDを取得する
+                HistoryId = GenerateHistoryId(counter),
+                ManagementId = before.ManagementId,
+                ChangeField = change.FieldName,
+                BeforeValue = change.BeforeValue,
+                AfterValue = change.AfterValue,
+                UpdatedBy = userName,
+                UpdatedAt = after.UpdatedAt
+            };
+            // 履歴テーブルにレコードを追加
+            _context.DeviceHistories.Add(history);
+            counter++;
+        }
+        // まとめて保存
+        await _context.SaveChangesAsync();
+    }
+
+    // 削除時の履歴作成
+    public async Task AddDeleteHistoryAsync(Device before, string userName)
+    {
+        // 履歴の Entity 作成
+        var history = new DeviceHistory
+        {
+            HistoryId = GenerateHistoryId(),    // 新しい履歴IDを生成して設定
+            ManagementId = before.ManagementId,
+            ChangeField = DeviceColumns.Status.ToString(),
+            BeforeValue = before.Status,
+            AfterValue = "Deleted",
+            UpdatedBy = userName,
+            UpdatedAt = before.DeletedAt == null ? before.UpdatedAt : before.DeletedAt.Value
+        };
+
+        // 履歴テーブルにレコードを追加
+        _context.DeviceHistories.Add(history);
+        await _context.SaveChangesAsync();
+    }
+
+    // HistoryId を生成して返す
+    // Edit時は、履歴がDB登録される前に複数履歴作成される為、都度DB上のIDの最大値+1だと重複する
+    // その為、Edit時用に引数で渡された数を加算して生成することで重複しないようにする
+    private string GenerateHistoryId(int count = 0)
+    {
+        // HistoryIdを自動採番する為に、DBに存在するHistoryIDを取得
+        var query = _context.DeviceHistories.Select(x => x.HistoryId);
+
+        // プレフィックスを除いた数字部分をint型で取得しなおす
+        // 一番大きい数字を取得し、新しいManagementId用に +1 する
+        var maxNum = query
+            .AsEnumerable()
+            .Select(id => ExtractNumericId(id))
+            .DefaultIfEmpty(0)
+            .Max() + 1;
+
+        // 引数で数値を渡されていれば、その分を足したIDを払い出す
+        return DeviceHistoryConstants.HISTORY_ID_PREFIX + (maxNum + count).ToString($"D{DeviceHistoryConstants.HISTORY_ID_NUM_DIGIT_COUNT}");
+    }
+
+    // HistoryId を生成して返す
+    //private string GenerateHistoryId()
+    //{
+    //    // HistoryIdを自動採番する為に、DBに存在するHistoryIDを取得
+    //    var query = _context.DeviceHistories.Select(x => x.HistoryId);
+
+    //    // プレフィックスを除いた数字部分をint型で取得しなおす
+    //    // 一番大きい数字を取得し、新しいManagementId用に +1 する
+    //    var maxNum = query
+    //        .AsEnumerable()
+    //        .Select(id => ExtractNumericId(id))
+    //        .DefaultIfEmpty(0)
+    //        .Max() + 1;
+
+    //    // 新しい HistoryId を生成
+    //    // プレフィックスを付けて、数字部分が規定の桁数になるように先行0埋めする
+    //    return DeviceHistoryConstants.HISTORY_ID_PREFIX + maxNum.ToString($"D{DeviceHistoryConstants.HISTORY_ID_NUM_DIGIT_COUNT}");
+    //}
+
+    // HistoryIdから数字部分を取り出す
+    private int ExtractNumericId(string historyId)
+    {
+        return int.Parse(historyId.Substring(
+                DeviceHistoryConstants.HISTORY_ID_PREFIX.Length,
+                DeviceHistoryConstants.HISTORY_ID_NUM_DIGIT_COUNT));
     }
 }
