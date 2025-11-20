@@ -349,7 +349,9 @@ public class DeviceService : IDeviceService
     public async Task<DeviceDto?> GetDeviceDetailsByIdAsync(int id)
     {
         // Devicesテーブルから指定のIdのデータを取得する
-        var device = await _context.Devices.FindAsync(id);
+        var device = await _context.Devices
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == id);
 
         // 見つからなかった場合は null を返す
         if (device == null)

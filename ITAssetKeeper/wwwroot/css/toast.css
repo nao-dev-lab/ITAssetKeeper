@@ -1,0 +1,28 @@
+﻿/* toast.css */
+/* トースト通知のCSS */
+
+/* トースト本体*/
+#resultToast {
+    min-width: 320px;
+    font-size: 1.05rem;
+    padding: 10px 14px;
+    border-radius: 10px;
+    color: #fff !important;
+}
+
+/* トースト通知の色 */
+/* 成功時（柔らかい緑） */
+#resultToast.success {
+    background-color: #3BB46A !important;
+}
+
+/* アニメーション */
+#resultToast.showing {
+    transform: translateY(0) scale(1.05);
+    transition: transform 0.3s ease-out;
+}
+
+/* エラー時（柔らかい赤） */
+#resultToast.error {
+    background-color: #D64545 !important;
+}

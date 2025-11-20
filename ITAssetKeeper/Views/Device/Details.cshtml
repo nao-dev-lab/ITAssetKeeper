@@ -157,17 +157,30 @@
             @* モーダルbody *@
             <div class="modal-body">
                 <p>対象の機器情報を削除します。よろしいですか？</p>
-                <ul class="small">
-                    <li>機器管理ID：<span id="delMgmtId"></span></li>
-                    <li>種別：<span id="delCategory"></span></li>
-                    <li>状態：<span id="delStatus"></span></li>
-                    <li>使用者：<span id="delUser"></span></li>
-                </ul>
+                <div class="row mb-2">
+                    <div class="col-3 fw-bold">@Html.DisplayNameFor(m => m.ManagementId)</div>
+                    <div class="col-9" id="delMgmtId"></div>
+                </div>
+
+                <div class="row mb-2">
+                    <div class="col-3 fw-bold">@Html.DisplayNameFor(m => m.Category)</div>
+                    <div class="col-9" id="delCategory"></div>
+                </div>
+
+                <div class="row mb-2">
+                    <div class="col-3 fw-bold">@Html.DisplayNameFor(m => m.Status)</div>
+                    <div class="col-9" id="delStatus"></div>
+                </div>
+
+                <div class="row mb-2">
+                    <div class="col-3 fw-bold">@Html.DisplayNameFor(m => m.UserName)</div>
+                    <div class="col-9" id="delUser"></div>
+                </div>
             </div>
 
             @* モーダルフッター *@
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                <button type="button" class="btn btn-secondary me-auto" data-bs-dismiss="modal">キャンセル</button>
                 <button type="button" id="btnDeleteExec" class="btn btn-danger">削除</button>
             </div>
 

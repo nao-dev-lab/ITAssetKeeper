@@ -30,4 +30,11 @@ public interface IDeviceHistoryService
     // HistoryIdの自動採番を履歴テーブル内の最大 HistoryId からの連番になるよう同期
     // ダミーデータ追加時などの整合性の担保
     Task SyncHistorySequenceAsync();
+
+
+    //////////////////////////////////////////
+    // --- Details ---
+
+    // 履歴情報を ID から取得し、DTO型で返す
+    Task<DeviceHistoryDto?> GetHistoryDetailsByIdAsync(int id);
 }

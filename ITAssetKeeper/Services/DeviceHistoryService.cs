@@ -3,6 +3,7 @@ using ITAssetKeeper.Data;
 using ITAssetKeeper.Helpers;
 using ITAssetKeeper.Models.Entities;
 using ITAssetKeeper.Models.Enums;
+using ITAssetKeeper.Models.ViewModels.Device;
 using ITAssetKeeper.Models.ViewModels.DeviceHistory;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -194,6 +195,10 @@ public class DeviceHistoryService : IDeviceHistoryService
         return condition;
     }
 
+
+    //////////////////////////////////////////
+    // --- CreateHistory ---
+
     // 新規登録時の履歴作成
     public async Task AddCreateHistoryAsync(Device created, string userName)
     {
@@ -294,5 +299,40 @@ public class DeviceHistoryService : IDeviceHistoryService
         // 最大値をプレースホルダーで渡す
         await _context.Database.ExecuteSqlRawAsync(
             "UPDATE DeviceHistorySequences SET LastUsedNumber = @p0 WHERE Id = 1", maxNum);
+    }
+
+
+
+    //////////////////////////////////////////
+    // --- Details ---
+    // 履歴情報を ID から取得し、DTO型で返す
+    public async Task<DeviceHistoryDto?> GetHistoryDetailsByIdAsync(int id)
+    {
+        // DeviceHistoriesテーブルから指定のIdのデータを取得する
+        var history = await _context.DeviceHistories
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        // 見つからなかった場合は null を返す
+        if (history == null)
+        {
+            return null;
+        }
+
+        // 取得したデータをDTOの項目に詰める
+        var dto = new DeviceHistoryDto
+        {
+            Id = history.Id,
+            HistoryId = history.HistoryId,
+            ManagementId = history.ManagementId,
+            ChangeField = history.ChangeField,
+            BeforeValue = history.BeforeValue,
+            AfterValue = history.AfterValue,
+            UpdatedBy = history.UpdatedBy,
+            UpdatedAt = history.UpdatedAt
+        };
+
+        // DTO型を返す
+        return dto;
     }
 }

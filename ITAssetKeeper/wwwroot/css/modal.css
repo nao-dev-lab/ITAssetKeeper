@@ -1,0 +1,49 @@
+﻿/* modal.css */
+/* モーダルのCSS */
+
+/* モーダルヘッダー */
+.modal-header {
+    background-color: #6c3af0 !important;
+    color: #FFFFFF
+}
+
+/* モーダルヘッダー アイコン */
+.modal-icon {
+    width: 22px; /* 大きさは必要に応じて変更 */
+    height: 22px;
+    margin-right: 6px; /* 文字との間隔 */
+    object-fit: contain; /* ゆがみ防止 */
+}
+
+/* モーダル × ボタンを白にする */
+.btn-close {
+    filter: invert(1) brightness(200%);
+}
+
+/* モーダルの角丸を強める */
+.modal-header {
+    border-top-left-radius: 10px !important;
+    border-top-right-radius: 10px !important;
+}
+
+.modal-content {
+    border-radius: 12px !important;
+}
+
+.modal-footer {
+    border-bottom-left-radius: 12px !important;
+    border-bottom-right-radius: 12px !important;
+}
+
+/* 履歴表示：間隔を調整 */
+#historyDetailContainer .row {
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+/* 履歴表示：横幅を調整 */
+#historyDetailModal .modal-custom-width {
+    max-width: 600px;
+    width: 95%;
+}
+

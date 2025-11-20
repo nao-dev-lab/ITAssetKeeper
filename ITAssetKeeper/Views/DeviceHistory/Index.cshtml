@@ -121,7 +121,36 @@
 </div>
 
 
+@* モーダル：履歴情報表示用 *@
+<div class="modal fade" id="historyDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-custom-width">
+        <div class="modal-content">
+
+            @* モーダルヘッダー *@
+            <div class="modal-header">
+                <h5 class="modal-title d-flex align-items-center gap-2">
+                    <img src="~/img/info.png" alt="infomation" class="modal-icon" />
+                    履歴情報
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            @* モーダルbody *@
+            <div class="modal-body" id="historyDetailContainer">
+                @* ここに部分ビュー(_DeviceHistoryDetailPartial)を差し込む *@
+            </div>
+
+            @* モーダルフッター *@
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @* jsファイルを読み込む *@
 @section Scripts {
     <script src="~/js/index.js"></script>
+    <script src="~/js/history.js"></script>
 }

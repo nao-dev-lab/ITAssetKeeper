@@ -17,7 +17,8 @@
         @foreach (var item in Model.DeviceHistories)
         {
             <tr>
-                <td><a asp-controller="DeviceHistory" asp-action="Details" asp-route-id="@item.Id">@item.HistoryId</a></td>
+                <td><a asp-controller="DeviceHistory" asp-action="Details" asp-route-id="@item.Id" 
+                    class="history-detail-link" data-id="@item.Id">@item.HistoryId</a></td>
                 <td>@Html.DisplayFor(modelItem => item.ManagementId)</td>
                 <td>@Html.DisplayFor(modelItem => item.ChangeField)</td>
                 <td>@Html.DisplayFor(modelItem => item.BeforeValue)</td>
