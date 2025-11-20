@@ -232,16 +232,18 @@ public class DeviceService : IDeviceService
         condition.Devices = devices
             .Select(x => new DeviceDto
             {
+                // Category,Purpose,Statusは Helperを使って日本語表示名に変換
+                // HostName,UserNameは、nullなら "-"を表示
                 Id = x.Id,
                 ManagementId = x.ManagementId,
-                Category = x.Category,
-                Purpose = x.Purpose,
+                Category = EnumDisplayHelper.ResolveDisplayName<DeviceCategory>(x.Category),
+                Purpose = EnumDisplayHelper.ResolveDisplayName<DevicePurpose>(x.Purpose),
                 ModelNumber = x.ModelNumber,
                 SerialNumber = x.SerialNumber,
-                HostName = x.HostName,
+                HostName = x.HostName ?? "-",
                 Location = x.Location,
-                UserName = x.UserName,
-                Status = x.Status,
+                UserName = x.UserName ?? "-",
+                Status = EnumDisplayHelper.ResolveDisplayName<DeviceStatus>(x.Status),
                 PurchaseDate = x.PurchaseDate,
                 CreatedAt = x.CreatedAt,
                 UpdatedAt = x.UpdatedAt
@@ -362,20 +364,22 @@ public class DeviceService : IDeviceService
         // 取得したデータをDTOの項目に詰める
         var dto = new DeviceDto
         {
+            // Category,Purpose,Statusは Helperを使って日本語表示名に変換
+            // HostName,UserName,Memoは、nullなら "-"を表示
             Id = device.Id,
             ManagementId = device.ManagementId,
-            Category = device.Category,
-            Purpose = device.Purpose,
+            Category = EnumDisplayHelper.ResolveDisplayName<DeviceCategory>(device.Category),
+            Purpose = EnumDisplayHelper.ResolveDisplayName<DevicePurpose>(device.Purpose),
             ModelNumber = device.ModelNumber,
             SerialNumber = device.SerialNumber,
-            HostName = device.HostName,
+            HostName = device.HostName ?? "-",
             Location = device.Location,
-            UserName = device.UserName,
-            Status = device.Status,
+            UserName = device.UserName ?? "-",
+            Status = EnumDisplayHelper.ResolveDisplayName<DeviceStatus>(device.Status),
             PurchaseDate = device.PurchaseDate,
             CreatedAt = device.CreatedAt,
             UpdatedAt = device.UpdatedAt,
-            Memo = device.Memo
+            Memo = device.Memo ?? "-"
         };
 
         // DTO型を返す

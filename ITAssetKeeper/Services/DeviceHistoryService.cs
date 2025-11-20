@@ -181,12 +181,14 @@ public class DeviceHistoryService : IDeviceHistoryService
         condition.DeviceHistories = histories
             .Select(x => new DeviceHistoryDto
             {
+                // ChangeField,BeforeValue,AfterValue は Helperを使って日本語表示名に変換
+                // BeforeValue,AfterValue は、nullなら"-"に変換される
                 Id = x.Id,
                 HistoryId = x.HistoryId,
                 ManagementId = x.ManagementId,
-                ChangeField = x.ChangeField,
-                BeforeValue = x.BeforeValue,
-                AfterValue = x.AfterValue,
+                ChangeField = EnumDisplayHelper.ResolveDisplayName<DeviceColumns>(x.ChangeField),
+                BeforeValue = EnumDisplayHelper.ResolveHistoryDisplay(x.ChangeField, x.BeforeValue),
+                AfterValue = EnumDisplayHelper.ResolveHistoryDisplay(x.ChangeField, x.AfterValue),
                 UpdatedBy = x.UpdatedBy,
                 UpdatedAt = x.UpdatedAt
             })
@@ -207,9 +209,9 @@ public class DeviceHistoryService : IDeviceHistoryService
         {
             HistoryId = await GenerateHistoryIdAsync(),    // 新しい履歴IDを生成して設定
             ManagementId = created.ManagementId,
-            ChangeField = DeviceColumns.Status.ToString(),
+            ChangeField = "Created",
             BeforeValue = null,
-            AfterValue = "Created",
+            AfterValue = null,
             UpdatedBy = userName,
             UpdatedAt = created.UpdatedAt
         };
@@ -258,9 +260,9 @@ public class DeviceHistoryService : IDeviceHistoryService
         {
             HistoryId = await GenerateHistoryIdAsync(),    // 新しい履歴IDを生成して設定
             ManagementId = before.ManagementId,
-            ChangeField = DeviceColumns.Status.ToString(),
-            BeforeValue = before.Status,
-            AfterValue = "Deleted",
+            ChangeField = "Deleted",
+            BeforeValue = null,
+            AfterValue = null,
             UpdatedBy = userName,
             UpdatedAt = after.DeletedAt == null ? after.UpdatedAt : after.DeletedAt.Value
         };
@@ -322,12 +324,14 @@ public class DeviceHistoryService : IDeviceHistoryService
         // 取得したデータをDTOの項目に詰める
         var dto = new DeviceHistoryDto
         {
+            // ChangeField,BeforeValue,AfterValue は Helperを使って日本語表示名に変換
+            // BeforeValue,AfterValue は、nullなら"-"に変換される
             Id = history.Id,
             HistoryId = history.HistoryId,
             ManagementId = history.ManagementId,
-            ChangeField = history.ChangeField,
-            BeforeValue = history.BeforeValue,
-            AfterValue = history.AfterValue,
+            ChangeField = EnumDisplayHelper.ResolveDisplayName<DeviceColumns>(history.ChangeField),
+            BeforeValue = EnumDisplayHelper.ResolveHistoryDisplay(history.ChangeField, history.BeforeValue),
+            AfterValue = EnumDisplayHelper.ResolveHistoryDisplay(history.ChangeField, history.AfterValue),
             UpdatedBy = history.UpdatedBy,
             UpdatedAt = history.UpdatedAt
         };

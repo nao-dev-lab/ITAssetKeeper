@@ -1,7 +1,9 @@
 ﻿using ITAssetKeeper.Data;
+using ITAssetKeeper.Helpers;
 using ITAssetKeeper.Models.Enums;
 using ITAssetKeeper.Models.ViewModels.Dashboard;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace ITAssetKeeper.Services;
 
@@ -29,14 +31,16 @@ public class DashboardService : IDashboardService
             .Take(5)
             .Select(x => new DeviceRecentlyAddedDto
             {
-                DisplayDate = x.CreatedAt.ToString("yyyy/MM/dd"),
+                // Category,Statusは Helperを使って日本語表示名に変換
+                // HostName,UserNameは、nullなら"-"を表示
+                CreatedAt = x.CreatedAt.ToString("yyyy/MM/dd"),
                 ManagementId = x.ManagementId,
-                Category = x.Category,
+                Category = EnumDisplayHelper.ResolveDisplayName<DeviceCategory>(x.Category),
                 ModelNumber = x.ModelNumber,
-                HostName = x.HostName,
+                HostName = x.HostName ?? "-",
                 Location = x.Location,
-                UserName = x.UserName,
-                Status = x.Status
+                UserName = x.UserName ?? "-",
+                Status = EnumDisplayHelper.ResolveDisplayName<DeviceStatus>(x.Status)
             })
             .ToList();
 

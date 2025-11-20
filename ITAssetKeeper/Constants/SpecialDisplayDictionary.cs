@@ -7,8 +7,8 @@ public class SpecialDisplayDictionary
     public static readonly Dictionary<string, string> VALUE_MAP =
             new(StringComparer.OrdinalIgnoreCase)
             {
-                { "Deleted", "削除済" },
-                { "Created", "新規作成" },
+                { "Deleted", "削除" },
+                { "Created", "新規登録" },
                 // 今後追加する場合はここに足す
             };
 }

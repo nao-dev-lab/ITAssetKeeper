@@ -15,7 +15,7 @@
                         <table class="table table-bordered table-sm">
                             <thead class="table-light">
                                 <tr>
-                                    <th>@Html.DisplayNameFor(model => model.RecentlyHeader.DisplayDate)</th>
+                                    <th>@Html.DisplayNameFor(model => model.RecentlyHeader.CreatedAt)</th>
                                     <th>@Html.DisplayNameFor(model => model.RecentlyHeader.ManagementId)</th>
                                     <th>@Html.DisplayNameFor(model => model.RecentlyHeader.Category)</th>
                                     <th>@Html.DisplayNameFor(model => model.RecentlyHeader.ModelNumber)</th>
@@ -33,7 +33,7 @@
                                 @foreach (var item in Model.RecentlyAddedDevices)
                                 {
                                     <tr>
-                                        <td>@Html.DisplayFor(modelItem => item.DisplayDate)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.CreatedAt)</td>
                                         <td>@Html.DisplayFor(modelItem => item.ManagementId)</td>
                                         <td>@Html.DisplayFor(modelItem => item.Category)</td>
                                         <td>@Html.DisplayFor(modelItem => item.ModelNumber)</td>

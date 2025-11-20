@@ -17,6 +17,7 @@ public class DeviceDiffService : IDeviceDiffService
 
         // Deviceの各項目に変更があるかチェック
         // 変更されたものは List に追加していく
+        // 更新日の変更は対象外の為、以下には含めない
         Compare(nameof(Device.Category), before.Category, after.Category, changes);
         Compare(nameof(Device.Purpose), before.Purpose, after.Purpose, changes);
         Compare(nameof(Device.ModelNumber), before.ModelNumber, after.ModelNumber, changes);
@@ -28,7 +29,6 @@ public class DeviceDiffService : IDeviceDiffService
         Compare(nameof(Device.Memo), before.Memo, after.Memo, changes);
         Compare(nameof(Device.PurchaseDate), before.PurchaseDate.ToString(datefm), after.PurchaseDate.ToString(datefm), changes);
         Compare(nameof(Device.CreatedAt), before.CreatedAt.ToString(dateTimefm), after.CreatedAt.ToString(dateTimefm), changes);
-        Compare(nameof(Device.UpdatedAt), before.UpdatedAt.ToString(dateTimefm), after.UpdatedAt.ToString(dateTimefm), changes);
         Compare(nameof(Device.IsDeleted), before.IsDeleted.ToString(), after.IsDeleted.ToString(), changes);
         Compare(nameof(Device.DeletedAt), before.DeletedAt.HasValue == false ? null : before.DeletedAt.Value.ToString(dateTimefm), after.DeletedAt.HasValue == false ? null : after.DeletedAt.Value.ToString(dateTimefm), changes);
         Compare(nameof(Device.DeletedBy), before.DeletedBy, after.DeletedBy, changes);

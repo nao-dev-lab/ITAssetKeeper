@@ -7,7 +7,7 @@ namespace ITAssetKeeper.Models.ViewModels.Dashboard;
 public class DeviceRecentlyAddedDto
 {
     [Display(Name = "登録日")]
-    public string DisplayDate { get; set; }
+    public string CreatedAt { get; set; }
 
     [Display(Name = "機器管理ID")]
     public string ManagementId { get; set; }

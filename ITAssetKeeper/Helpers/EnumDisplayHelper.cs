@@ -12,7 +12,7 @@ public class EnumDisplayHelper
     {
         if (string.IsNullOrWhiteSpace(value))
         {
-            return string.Empty;
+            return "-";
         }
 
         switch (changeField)
@@ -27,7 +27,6 @@ public class EnumDisplayHelper
 
             // ChangeField = Status
             case nameof(DeviceColumns.Status):
-                // IsDeleted が true の場合、履歴上のStatusを Deleted(削除済)に変換
                 return ResolveDisplayName<DeviceStatus>(value);
 
             // ChangeField = PurchaseDate 

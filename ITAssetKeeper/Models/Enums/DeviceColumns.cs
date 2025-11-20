@@ -31,6 +31,9 @@ public enum DeviceColumns
     [Display(Name = "状態")]
     Status,
 
+    [Display(Name = "メモ")]
+    Memo,
+
     [Display(Name = "購入日")]
     PurchaseDate,
 
