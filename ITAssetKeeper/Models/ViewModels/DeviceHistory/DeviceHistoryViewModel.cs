@@ -49,6 +49,20 @@ public class DeviceHistoryViewModel
     [Display(Name = "更新日時")]
     public DateTime? UpdatedAt { get; set; }
 
+    // 検索フォーム折り畳み判別用
+    public bool IsSearchExecuted { get; set; }
+
+    // 検索フォームに項目が入って検索されたかをチェック
+    public bool HasAnyFilter =>
+    !string.IsNullOrWhiteSpace(HistoryId)
+    || !string.IsNullOrWhiteSpace(ManagementId)
+    || !string.IsNullOrWhiteSpace(SelectedChangeField)
+    || !string.IsNullOrWhiteSpace(BeforeValue)
+    || !string.IsNullOrWhiteSpace(AfterValue)
+    || !string.IsNullOrWhiteSpace(UpdatedBy)
+    || UpdatedDateFrom != null
+    || UpdatedDateTo != null;
+
     // --- 並び替え ---
     [Display(Name = "並び替え基準")]
     public SelectList? SortKeyList { get; set; }

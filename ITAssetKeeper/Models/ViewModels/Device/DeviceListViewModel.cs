@@ -82,6 +82,26 @@ public class DeviceListViewModel
     [Display(Name = "登録日")]
     public DateTime? CreatedAt { get; set; }
 
+    // 検索フォーム折り畳み判別用
+    public bool IsSearchExecuted { get; set; }
+
+    // 検索フォームに項目が入って検索されたかをチェック
+    public bool HasAnyFilter =>
+    !string.IsNullOrWhiteSpace(ManagementId)
+    || !string.IsNullOrWhiteSpace(SelectedCategory)
+    || !string.IsNullOrWhiteSpace(SelectedPurpose)
+    || !string.IsNullOrWhiteSpace(ModelNumber)
+    || !string.IsNullOrWhiteSpace(SerialNumber)
+    || !string.IsNullOrWhiteSpace(HostName)
+    || !string.IsNullOrWhiteSpace(Location)
+    || !string.IsNullOrWhiteSpace(UserName)
+    || !string.IsNullOrWhiteSpace(SelectedStatus)
+    || PurchaseDateFrom != null
+    || PurchaseDateTo != null
+    || CreatedDateFrom != null
+    || CreatedDateTo != null
+    || UpdatedDateFrom != null
+    || UpdatedDateTo != null;
 
     // --- 並び替え ---
     [Display(Name = "並び替え基準")]

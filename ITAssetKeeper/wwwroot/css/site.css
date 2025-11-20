@@ -40,3 +40,53 @@
     padding: 20px;
     margin-left: 0;
 }
+
+/* --- 詳細検索ボタン --- */
+/* アイコン */
+.detail-search-icon {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+}
+
+/* フォーカス枠を完全に消す */
+.detail-search-btn:focus,
+.detail-search-btn:focus-visible,
+.detail-search-btn:active {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* 詳細検索：通常(閉じた状態) */
+.detail-search-btn {
+    background-color: #7749F8; /* メイン紫 */
+    color: #fff;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: all 0.15s ease;
+}
+
+/* ホバー */
+.detail-search-btn:hover {
+    color: #FFFFFF;
+    background-color: #8A62F9;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+/* 詳細検索：開いてる時のボタン */
+.detail-search-btn.open {
+    background-color: #686D72 !important;
+}
+
+.detail-search-btn.open:hover {
+    background-color: #72777C !important;
+}
+
+

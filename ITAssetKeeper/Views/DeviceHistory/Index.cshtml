@@ -28,69 +28,86 @@
     </div>
 }
 
+@* 検索フォーム 折り畳みボタン *@
+<button id="toggleSearchBtn"
+        class="btn detail-search-btn mb-3"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#searchCollapse"
+        data-is-search="@Model.HasAnyFilter.ToString().ToLower()">
+
+    <img src="~/img/search_details.png" class="detail-search-icon" />
+    詳細検索
+</button>
+
 @* 検索フォーム *@
-<div class="row">
-    <div class="col-md-4">
-        <form id="searchForm" asp-controller="DeviceHistory" asp-action="Index" method="get">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="collapse @(Model.HasAnyFilter ? "show" : "")" id="searchCollapse">
+    <div class="card card-body mb-3">
 
-            @* 履歴ID(HistoryId) *@
-            <div class="form-group">
-                <label asp-for="HistoryId" class="control-label"></label>
-                <input asp-for="HistoryId" class="form-control" />
+        <div class="row">
+            <div class="col-md-4">
+                <form id="searchForm" asp-controller="DeviceHistory" asp-action="Index" method="get">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    @* 履歴ID(HistoryId) *@
+                    <div class="form-group">
+                        <label asp-for="HistoryId" class="control-label"></label>
+                        <input asp-for="HistoryId" class="form-control" />
+                    </div>
+
+                    @* 機器管理ID(ManagementId) *@
+                    <div class="form-group">
+                        <label asp-for="ManagementId" class="control-label"></label>
+                        <input asp-for="ManagementId" class="form-control" />
+                    </div>
+
+                    @* 更新項目(ChangeField) *@
+                    <div class="form-group">
+                        <label asp-for="ChangeFieldItems" class="control-label"></label>
+                        @Html.DropDownListFor(model => model.SelectedChangeField, Model.ChangeFieldItems, "全て", new { @class = "form-control" })
+                    </div>
+
+                    @* 更新前の値(BeforeValue) *@
+                    <div class="form-group">
+                        <label asp-for="BeforeValue" class="control-label"></label>
+                        <input asp-for="BeforeValue" class="form-control" />
+                    </div>
+
+                    @* 更新後の値(AfterValue) *@
+                    <div class="form-group">
+                        <label asp-for="AfterValue" class="control-label"></label>
+                        <input asp-for="AfterValue" class="form-control" />
+                    </div>
+
+                    @* 更新者(UpdatedBy) *@
+                    <div class="form-group">
+                        <label asp-for="UpdatedBy" class="control-label"></label>
+                        <input asp-for="UpdatedBy" class="form-control" />
+                    </div>
+
+                    @* 更新日:開始(UpdatedDateFrom) *@
+                    <div class="form-group">
+                        <label asp-for="UpdatedDateFrom" class="control-label"></label>
+                        <input asp-for="UpdatedDateFrom" class="form-control" type="date" />
+                    </div>
+
+                    @* 更新日:終了(UpdatedDateTo) *@
+                    <div class="form-group">
+                        <label asp-for="UpdatedDateTo" class="control-label"></label>
+                        <input asp-for="UpdatedDateTo" class="form-control" type="date" />
+                    </div>
+
+                    @* ソートの選択項目(Hidden で送る) *@
+                    <input type="hidden" id="SortKeyValueHidden" name="SortKeyValue" value="@Model.SortKeyValue" />
+                    <input type="hidden" id="SortOrderValueHidden" name="SortOrderValue" value="@Model.SortOrderValue" />
+
+                    @* フォーム内容送信 *@
+                    <div class="form-group">
+                        <input type="submit" value="検索" class="btn btn-primary" />
+                    </div>
+                </form>
             </div>
-
-            @* 機器管理ID(ManagementId) *@
-            <div class="form-group">
-                <label asp-for="ManagementId" class="control-label"></label>
-                <input asp-for="ManagementId" class="form-control" />
-            </div>
-
-            @* 更新項目(ChangeField) *@
-            <div class="form-group">
-                <label asp-for="ChangeFieldItems" class="control-label"></label>
-                @Html.DropDownListFor(model => model.SelectedChangeField, Model.ChangeFieldItems, "全て", new { @class = "form-control" })
-            </div>
-
-            @* 更新前の値(BeforeValue) *@
-            <div class="form-group">
-                <label asp-for="BeforeValue" class="control-label"></label>
-                <input asp-for="BeforeValue" class="form-control" />
-            </div>
-
-            @* 更新後の値(AfterValue) *@
-            <div class="form-group">
-                <label asp-for="AfterValue" class="control-label"></label>
-                <input asp-for="AfterValue" class="form-control" />
-            </div>
-
-            @* 更新者(UpdatedBy) *@
-            <div class="form-group">
-                <label asp-for="UpdatedBy" class="control-label"></label>
-                <input asp-for="UpdatedBy" class="form-control" />
-            </div>
-
-            @* 更新日:開始(UpdatedDateFrom) *@
-            <div class="form-group">
-                <label asp-for="UpdatedDateFrom" class="control-label"></label>
-                <input asp-for="UpdatedDateFrom" class="form-control" type="date" />
-            </div>
-
-            @* 更新日:終了(UpdatedDateTo) *@
-            <div class="form-group">
-                <label asp-for="UpdatedDateTo" class="control-label"></label>
-                <input asp-for="UpdatedDateTo" class="form-control" type="date" />
-            </div>
-
-            @* ソートの選択項目(Hidden で送る) *@
-            <input type="hidden" id="SortKeyValueHidden" name="SortKeyValue" value="@Model.SortKeyValue" />
-            <input type="hidden" id="SortOrderValueHidden" name="SortOrderValue" value="@Model.SortOrderValue" />
-
-            @* フォーム内容送信 *@
-            <div class="form-group">
-                <input type="submit" value="検索" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 

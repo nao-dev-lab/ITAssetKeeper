@@ -1,6 +1,6 @@
 ﻿$(function () {
 
-    // ソート変更部分
+    // --- ソート変更部分 ---
     // SortKey または SortOrder が変わったら Ajax 実行
     $('#SortKeyValue, #SortOrderValue').on('change', function (event) {
 
@@ -34,7 +34,7 @@
 
     });
 
-    // ページング部分
+    // --- ページング部分 ---
     $(document).on('click', '.paging-link', function (event) {
         // リンクのデフォルト動作をキャンセル
         event.preventDefault();
@@ -66,4 +66,32 @@
             }
         });
     });
+
+
+    // --- 詳細検索 開閉ボタン ---
+    const btn = document.getElementById("toggleSearchBtn");
+    const collapseEl = document.getElementById("searchCollapse");
+
+    if (btn && collapseEl) {
+
+        // 開いたとき
+        collapseEl.addEventListener('shown.bs.collapse', () => {
+            btn.innerHTML = `<img src="/img/arrow_up.png" class="detail-search-icon" /> 閉じる`;
+            btn.classList.add("open");
+        });
+
+        // 閉じたとき
+        collapseEl.addEventListener('hidden.bs.collapse', () => {
+            btn.innerHTML = `<img src="/img/search_details.png" class="detail-search-icon" /> 詳細検索`;
+            btn.classList.remove("open");
+        });
+
+        // --- 初期状態判定（検索済みなら最初から閉じる状態をセット） ---
+        const isSearchExecuted = btn.getAttribute("data-is-search") === "true";
+        if (isSearchExecuted) {
+            // collapse が既に show の場合もあるので強制更新
+            btn.innerHTML = `<img src="/img/arrow_up.png" class="detail-search-icon" /> 閉じる`;
+            btn.classList.add("open");
+        }
+    }
 });
