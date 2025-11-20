@@ -39,7 +39,8 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredUniqueChars = 4;       // 最低4種類の異なる文字が必要
 });
 
-// DeviceService、DeviceHistoryService、IDeviceDiffService、IDeviceHistorySequenceServiceを登録
+// Serviceを登録
+builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IDeviceService, DeviceService>();
 builder.Services.AddScoped<IDeviceHistoryService, DeviceHistoryService>();
 builder.Services.AddScoped<IDeviceDiffService, DeviceDiffService>();

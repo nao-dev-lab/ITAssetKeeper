@@ -1,23 +1,5 @@
 ﻿/* admin.css */
 
-/* サイドバー */
-.sidebar-wrapper {
-    background-color: #F1EDFF !important;
-}
-
-    /* サイドバー ボタン */
-    .sidebar-wrapper .btn,
-    .sidebar-wrapper .nav-link {
-        background-color: #8744CE !important;
-        border-color: #8744CE !important;
-        color: #ffffff !important;
-    }
-
-        .sidebar-wrapper .btn:hover,
-        .sidebar-wrapper .nav-link:hover {
-            opacity: 0.85;
-        }
-
 /* ダッシュボード カード Header */
 .card .card-title {
     background-color: #7749F8;
