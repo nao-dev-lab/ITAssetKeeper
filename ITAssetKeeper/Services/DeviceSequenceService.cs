@@ -3,29 +3,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ITAssetKeeper.Services;
 
-// HistoryId自動採番用
-public class DeviceHistorySequenceService : IDeviceHistorySequenceService
+public class DeviceSequenceService : IDeviceSequenceService
 {
     private readonly ITAssetKeeperDbContext _context;
-
-    public DeviceHistorySequenceService(ITAssetKeeperDbContext context)
+    public DeviceSequenceService(ITAssetKeeperDbContext context)
     {
         _context = context;
     }
 
-    public async Task<int> GetNextHistoryIdAsync()
+    public async Task<int> GetNextManagementIdAsync()
     {
         // UPDATE 文を実行
         // Id=1 のレコードの LastUsedNumber を 1 増加させる
         await _context.Database.ExecuteSqlRawAsync(@"
-        UPDATE DeviceHistorySequences
+        UPDATE DeviceSequences
         SET LastUsedNumber = LastUsedNumber + 1
         WHERE Id = 1;
         ");
 
         // UPDATE では値を返さないので、別途 SELECT で取得する
         // Id=1 のレコードを対象にLastUsedNumber カラムだけを取り出す
-        var next = await _context.DeviceHistorySequences
+        var next = await _context.DeviceSequences
             .Where(x => x.Id == 1)
             .Select(x => x.LastUsedNumber)
             .SingleAsync();

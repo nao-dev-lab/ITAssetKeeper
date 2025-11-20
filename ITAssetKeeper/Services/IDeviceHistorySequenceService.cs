@@ -3,5 +3,5 @@
 // HistoryId自動採番用
 public interface IDeviceHistorySequenceService
 {
-    Task<int> GetNextAsync();
+    Task<int> GetNextHistoryIdAsync();
 }

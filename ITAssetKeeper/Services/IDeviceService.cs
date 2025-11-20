@@ -19,9 +19,11 @@ public interface IDeviceService
     // Create,画面のinitialize
     DeviceCreateViewModel InitializeCreateView(DeviceCreateViewModel model);
 
-    // --- Create ---
     // 機器登録処理
     Task<int> RegisterNewDeviceAsync(DeviceCreateViewModel model, string userName);
+
+    // 採番テーブルの同期用
+    Task SyncDeviceSequenceAsync();
 
 
     //////////////////////////////////////////

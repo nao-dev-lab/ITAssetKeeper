@@ -45,6 +45,7 @@ builder.Services.AddScoped<IDeviceService, DeviceService>();
 builder.Services.AddScoped<IDeviceHistoryService, DeviceHistoryService>();
 builder.Services.AddScoped<IDeviceDiffService, DeviceDiffService>();
 builder.Services.AddScoped<IDeviceHistorySequenceService, DeviceHistorySequenceService>();
+builder.Services.AddScoped<IDeviceSequenceService, DeviceSequenceService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -82,10 +83,13 @@ using (var scope = app.Services.CreateScope())
     await DbInitializer.SeedAsync(userManager, roleManager);
 }
 
-// HistoryId採番の開始位置を調整
+// ManagementId,HistoryId採番の開始位置を調整
 using (var scope = app.Services.CreateScope())
 {
+    var deviceService = scope.ServiceProvider.GetRequiredService<IDeviceService>();
     var historyService = scope.ServiceProvider.GetRequiredService<IDeviceHistoryService>();
+
+    await deviceService.SyncDeviceSequenceAsync();
     await historyService.SyncHistorySequenceAsync();
 }
 

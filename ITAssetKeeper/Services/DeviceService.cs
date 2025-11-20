@@ -15,11 +15,16 @@ public class DeviceService : IDeviceService
 {
     private readonly ITAssetKeeperDbContext _context;
     private readonly IDeviceHistoryService _deviceHistoryService;
+    private readonly IDeviceSequenceService _deviceSequenceService;
 
-    public DeviceService(ITAssetKeeperDbContext context, IDeviceHistoryService deviceHistoryService)
+    public DeviceService(
+        ITAssetKeeperDbContext context,
+        IDeviceHistoryService deviceHistoryService,
+        IDeviceSequenceService deviceSequenceService)
     {
         _context = context;
         _deviceHistoryService = deviceHistoryService;
+        _deviceSequenceService = deviceSequenceService;
     }
 
     ///////////////////////////////////////////////////
@@ -283,7 +288,8 @@ public class DeviceService : IDeviceService
             // 受け取ったビューモデルからEntity 作成
             var entity = new Device
             {
-                ManagementId = GenerateManagementId(),
+                //ManagementId = GenerateManagementId(),
+                ManagementId = await GenerateManagementIdAsync(),
                 Category = model.SelectedCategory,
                 Purpose = model.SelectedPurpose,
                 ModelNumber = model.ModelNumber,
@@ -313,34 +319,35 @@ public class DeviceService : IDeviceService
         }
     }
 
-    // ManagementID を生成して返す
-    private string GenerateManagementId()
+    // ManagementId を生成して返す
+    // 採番テーブルを使って、ManagementId が競合しないようにする
+    private async Task<string> GenerateManagementIdAsync()
     {
-        // ManagementIDを自動採番する為に、DBに存在するManagementIdを取得
-        // 削除フラグがついているものも取得したいのでクエリフィルタを無効化
-        var idList = _context.Devices
-            .IgnoreQueryFilters()
-            .Select(x => x.ManagementId);
+        var seq = await _deviceSequenceService.GetNextManagementIdAsync();
 
-        // プレフィックスを除いた数字部分をint型で取得しなおす
-        // 一番大きい数字を取得し、新しいManagementId用に +1 する
-        var maxNum = idList
-            .AsEnumerable()
-            .Select(id => ExtractNumericId(id))
-            .DefaultIfEmpty(0)
-            .Max() + 1;
-
-        // 新しい ManagementId を生成
-        // プレフィックスを付けて、数字部分が規定の桁数になるように先行0埋めする
-        return DeviceConstants.DEVICE_ID_PREFIX + maxNum.ToString($"D{DeviceConstants.DEVICE_ID_NUM_DIGIT_COUNT}");
+        return DeviceConstants.DEVICE_ID_PREFIX +
+               seq.ToString($"D{DeviceConstants.DEVICE_ID_NUM_DIGIT_COUNT}");
     }
 
-    // ManagementIDから数字部分を取り出す
-    private int ExtractNumericId(string managementId)
+    // ManagementIdの自動採番を履歴テーブル内の最大 ManagementId からの連番になるよう同期
+    // ダミーデータ追加時などの整合性の担保
+    public async Task SyncDeviceSequenceAsync()
     {
-        return int.Parse(managementId.Substring(
-                DeviceConstants.DEVICE_ID_PREFIX.Length,
-                DeviceConstants.DEVICE_ID_NUM_DIGIT_COUNT));
+        // 履歴テーブル内の最大 ManagementId を取得
+        var maxHistoryId = await _context.Devices
+            .Select(h => h.ManagementId)
+            .ToListAsync();
+
+        // "DE000001" → 数字部分 "000001" → 1 に変換
+        int maxNum = maxHistoryId
+            .Select(id => int.Parse(id.Substring(DeviceConstants.DEVICE_ID_PREFIX.Length)))
+            .DefaultIfEmpty(0)
+            .Max();
+
+        // 採番テーブルを最新の値に同期
+        // 最大値をプレースホルダーで渡す
+        await _context.Database.ExecuteSqlRawAsync(
+            "UPDATE DeviceSequences SET LastUsedNumber = @p0 WHERE Id = 1", maxNum);
     }
 
 

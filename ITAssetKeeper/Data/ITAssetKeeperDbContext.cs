@@ -15,6 +15,7 @@ namespace ITAssetKeeper.Data
         public DbSet<Device> Devices { get; set; }
         public DbSet<DeviceHistory> DeviceHistories { get; set; }
         public DbSet<DeviceHistorySequence> DeviceHistorySequences { get; set; }
+        public DbSet<DeviceSequence> DeviceSequences { get; set; }
 
         // コンストラクタ
         public ITAssetKeeperDbContext(DbContextOptions<ITAssetKeeperDbContext> options)
@@ -40,8 +41,18 @@ namespace ITAssetKeeper.Data
                 .HasIndex(b => new { b.ManagementId, b.HistoryId })
                 .IsUnique();
 
+            // DeviceSequenceテーブル
+            modelBuilder.Entity<DeviceSequence>()
+                .ToTable("DeviceSequences")
+                .HasData(new DeviceSequence
+                {
+                    Id = 1,
+                    LastUsedNumber = 0
+                });
+
             // DeviceHistorySequenceテーブル
             modelBuilder.Entity<DeviceHistorySequence>()
+                .ToTable("DeviceHistorySequences")
                 .HasData(new DeviceHistorySequence
                 {
                     Id = 1,

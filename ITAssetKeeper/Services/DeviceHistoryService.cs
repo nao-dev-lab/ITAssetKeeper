@@ -276,7 +276,7 @@ public class DeviceHistoryService : IDeviceHistoryService
     // 採番テーブルを使って、HistoryId が競合しないようにする
     private async Task<string> GenerateHistoryIdAsync()
     {
-        var seq = await _sequenceService.GetNextAsync();
+        var seq = await _sequenceService.GetNextHistoryIdAsync();
 
         return DeviceHistoryConstants.HISTORY_ID_PREFIX +
                seq.ToString($"D{DeviceHistoryConstants.HISTORY_ID_NUM_DIGIT_COUNT}");
