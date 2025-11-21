@@ -7,53 +7,6 @@ namespace ITAssetKeeper.Helpers;
 
 public class EnumDisplayHelper
 {
-    // 履歴用：ChangeField を見て「どのEnum/変換を使うか」決める
-    public static string ResolveHistoryDisplay(string changeField, string? value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            return "-";
-        }
-
-        switch (changeField)
-        {
-            // ChangeField = Category
-            case nameof(DeviceColumns.Category):
-                return ResolveDisplayName<DeviceCategory>(value);
-
-            // ChangeField = Purpose
-            case nameof(DeviceColumns.Purpose):
-                return ResolveDisplayName<DevicePurpose>(value);
-
-            // ChangeField = Status
-            case nameof(DeviceColumns.Status):
-                return ResolveDisplayName<DeviceStatus>(value);
-
-            // ChangeField = PurchaseDate 
-            case nameof(DeviceColumns.PurchaseDate):
-                // TryParseでチェックしてからパースする
-                if (DateTime.TryParse(value, out var dtPurchase))
-                {
-                    return dtPurchase.ToString("yyyy/MM/dd");
-                }
-                // NGの場合そのまま返す
-                return value;
-
-            case nameof(DeviceColumns.UpdatedAt):
-                // TryParseでチェックしてからパースする
-                if (DateTime.TryParse(value, out var dtUpdated))
-                {
-                    return dtUpdated.ToString("yyyy/MM/dd");
-                }
-                // NGの場合そのまま返す
-                return value;
-
-            default:
-                // それ以外(Location, UserName など)は DB の文字列のまま
-                return value;
-        }
-    }
-
     // DB保存値(Enum or 特殊値)を表示用の文字列に変換
     public static string ResolveDisplayName<TEnum>(string value)
     where TEnum : struct, Enum
@@ -143,6 +96,87 @@ public class EnumDisplayHelper
         }
     }
 
+    // フリーワード検索用：
+    // フリーワードが含まれる表示名に対応する生値を取得
+    // 例: freeText = "稼働" → "Active"
+    public static List<string> GetRawOfDisplayNameContainsText<TEnum>(string freeText)
+        where TEnum : struct, Enum
+    {
+        // 引数で渡されたEnum の値:表示名の辞書を取得
+        var rawDisplayNamePairs = EnumDisplayHelper.EnumToDictionary<TEnum>();
+
+        // rawDisplayNamePairs の値で、freeText が含まれるValueのKeyを取得
+        var raws = rawDisplayNamePairs
+            .Where(x => x.Value.Contains(freeText))
+            .Select(x => x.Key)
+            .ToList();
+
+        // 引数で渡されたのがDeviceColumnsであれば、特殊値辞書内も探す
+        if (typeof(TEnum).Name == nameof(DeviceColumns))
+        {
+            // 特殊値辞書 の値で、freeText が含まれるValueのKeyを取得
+            var spRaws = SpecialDisplayDictionary.VALUE_MAP
+                .Where(x => x.Value.Contains(freeText))
+                .Select(x => x.Key)
+                .ToList();
+
+            // 結果のListを raws に追加
+            raws.AddRange(spRaws);
+        }
+
+        // 取得した値が入ったListを返す
+        return raws;
+    }
+
+    // 履歴用：
+    // ChangeField を見て「どのEnum/変換を使うか」決める
+    public static string ResolveHistoryDisplay(string changeField, string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return "-";
+        }
+
+        switch (changeField)
+        {
+            // ChangeField = Category
+            case nameof(DeviceColumns.Category):
+                return ResolveDisplayName<DeviceCategory>(value);
+
+            // ChangeField = Purpose
+            case nameof(DeviceColumns.Purpose):
+                return ResolveDisplayName<DevicePurpose>(value);
+
+            // ChangeField = Status
+            case nameof(DeviceColumns.Status):
+                return ResolveDisplayName<DeviceStatus>(value);
+
+            // ChangeField = PurchaseDate 
+            case nameof(DeviceColumns.PurchaseDate):
+                // TryParseでチェックしてからパースする
+                if (DateTime.TryParse(value, out var dtPurchase))
+                {
+                    return dtPurchase.ToString("yyyy/MM/dd");
+                }
+                // NGの場合そのまま返す
+                return value;
+
+            case nameof(DeviceColumns.UpdatedAt):
+                // TryParseでチェックしてからパースする
+                if (DateTime.TryParse(value, out var dtUpdated))
+                {
+                    return dtUpdated.ToString("yyyy/MM/dd");
+                }
+                // NGの場合そのまま返す
+                return value;
+
+            default:
+                // それ以外(Location, UserName など)は DB の文字列のまま
+                return value;
+        }
+    }
+
+    // SelectList生成用：
     // ビューで <select> 要素を生成する為、Enum → SelectList に変換
     public static SelectList ToSelectList<TEnum>()
         where TEnum : struct, Enum
@@ -154,6 +188,7 @@ public class EnumDisplayHelper
         return new SelectList(dict, "Key", "Value");
     }
 
+    // SelectList生成用：
     // SelectListを指定のビューモデルにセットする
     // setter(Action<SelectList>)を渡し、任意のプロパティに SelectList を設定
     public static void SetEnumSelectList<TEnum>(

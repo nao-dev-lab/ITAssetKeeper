@@ -64,26 +64,6 @@ public class DeviceService : IDeviceService
         return ToViewModel(condition, devices);
     }
 
-    // フリーワード検索用：
-    // フリーワードが含まれる表示名に対応する生値を取得
-    // 例: freeText = "稼働" → "Active"
-    private List<string> GetRawOfDisplayNameContainsText<TEnum>(string freeText) 
-        where TEnum : struct, Enum
-    {
-        // 引数で渡されたEnum の値:表示名の辞書を取得
-        var rawDisplayNamePairs = EnumDisplayHelper.EnumToDictionary<TEnum>();
-
-        // rawDisplayNamePairs の値に freeText が含まれるValueを取得
-        var values = rawDisplayNamePairs.Values.Where(x => x.Contains(freeText)).ToList();
-
-        // rawDisplayNamePairs から freeText が含まれるValue の Keyを取得し、rawsに格納
-        var raws = new List<string>();
-        values.ForEach(x => raws.Add(rawDisplayNamePairs.FirstOrDefault(k => k.Value == x).Key));
-
-        // 取得した値が入ったListを返す
-        return raws;
-    }
-
     // フリーワード検索用フィルタリング
     private IQueryable<Device> FilterDevicesByFreeText(IQueryable<Device> query, DeviceListViewModel condition)
     {
@@ -94,9 +74,9 @@ public class DeviceService : IDeviceService
         bool isDate = DateTime.TryParse(free, out dt);
 
         // フリーワードが含まれる表示名に対応する生値を取得
-        var categoryValues = GetRawOfDisplayNameContainsText<DeviceCategory>(free);
-        var purposeValues = GetRawOfDisplayNameContainsText<DevicePurpose>(free);
-        var statusValues = GetRawOfDisplayNameContainsText<DeviceStatus>(free);
+        var categoryValues = EnumDisplayHelper.GetRawOfDisplayNameContainsText<DeviceCategory>(free);
+        var purposeValues = EnumDisplayHelper.GetRawOfDisplayNameContainsText<DevicePurpose>(free);
+        var statusValues = EnumDisplayHelper.GetRawOfDisplayNameContainsText<DeviceStatus>(free);
 
         // すべての項目から部分一致で検索
         query = query.Where(x =>

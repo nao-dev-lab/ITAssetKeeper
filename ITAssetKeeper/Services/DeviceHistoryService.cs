@@ -33,8 +33,16 @@ public class DeviceHistoryService : IDeviceHistoryService
         // Deviceテーブルから全てのデータを取得する
         IQueryable<DeviceHistory> query = _context.DeviceHistories;
 
-        // フィルタリング実施
-        query = FilterHistories(query, condition); 
+        if (!string.IsNullOrWhiteSpace(condition.FreeText))
+        {
+            // フリーワードに入力があれば、フリーワード検索
+            query = FilterHistoryByFreeText(query, condition);
+        }
+        else
+        {
+            // なければ、詳細検索
+            query = FilterHistories(query, condition);
+        }
 
         // 並び替え
         query = SortHistories(query, condition.SortKeyValue, condition.SortOrderValue);
@@ -50,6 +58,40 @@ public class DeviceHistoryService : IDeviceHistoryService
 
         // ビューモデルに詰めて、呼び出し元に返す
         return ToViewModel(condition, devices);
+    }
+
+    // フリーワード検索用フィルタリング
+    private IQueryable<DeviceHistory> FilterHistoryByFreeText(IQueryable<DeviceHistory> query, DeviceHistoryViewModel condition)
+    {
+        var free = condition.FreeText;
+
+        // フリーワードが日付として解釈できるかチェック
+        DateTime dt;
+        bool isDate = DateTime.TryParse(free, out dt);
+
+        // フリーワードが含まれる表示名に対応する生値を取得
+        var categoryValues = EnumDisplayHelper.GetRawOfDisplayNameContainsText<DeviceCategory>(free);
+        var purposeValues = EnumDisplayHelper.GetRawOfDisplayNameContainsText<DevicePurpose>(free);
+        var statusValues = EnumDisplayHelper.GetRawOfDisplayNameContainsText<DeviceStatus>(free);
+        var changeFieldValues = EnumDisplayHelper.GetRawOfDisplayNameContainsText<DeviceColumns>(free);
+
+        // BeforeValue, AfterValue用に、Category, Purpose,Statusのリストを結合する
+        var values = categoryValues.Union(purposeValues).Union(statusValues);
+
+        // すべての項目から部分一致で検索
+        query = query.Where(x =>
+            x.HistoryId.Contains(free)
+            || x.ManagementId.Contains(free)
+            || x.BeforeValue != null && x.BeforeValue.Contains(free)
+            || x.BeforeValue != null && values.Contains(x.BeforeValue)
+            || x.AfterValue != null && x.AfterValue.Contains(free)
+            || x.AfterValue != null && values.Contains(x.AfterValue)
+            || x.UpdatedBy.Contains(free)
+            || changeFieldValues.Contains(x.ChangeField)
+            || (isDate && x.UpdatedAt.Date == dt.Date)
+            );
+
+        return query;
     }
 
     // フィルタリング (条件に応じて IQueryable<DeviceHistory> を返す)

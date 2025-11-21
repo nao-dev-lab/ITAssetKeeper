@@ -49,6 +49,9 @@ public class DeviceHistoryViewModel
     [Display(Name = "更新日時")]
     public DateTime? UpdatedAt { get; set; }
 
+    [Display(Name = "フリーワード")]
+    public string? FreeText { get; set; }
+
     // 検索フォーム折り畳み判別用
     public bool IsSearchExecuted { get; set; }
 
