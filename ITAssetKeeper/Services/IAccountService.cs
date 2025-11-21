@@ -1,4 +1,5 @@
 ﻿using ITAssetKeeper.Models.Entities;
+using ITAssetKeeper.Models.ViewModels.Account;
 
 namespace ITAssetKeeper.Services;
 
@@ -12,4 +13,6 @@ public interface IAccountService
 
     // パスワード期限の更新処理
     void UpdatePasswordExpiration(ApplicationUser user);
+
+    Task<ProfileViewModel> GetProfileViewModelAsync(ApplicationUser user);
 }

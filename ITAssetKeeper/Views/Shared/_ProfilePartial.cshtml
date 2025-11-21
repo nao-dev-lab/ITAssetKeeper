@@ -1,0 +1,53 @@
+﻿@model ITAssetKeeper.Models.ViewModels.Account.ProfileViewModel;
+
+@* アカウント情報確認用モーダル *@
+<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            @* モーダルヘッダー *@
+            <div class="modal-header">
+                <h5 class="modal-title d-flex align-items-center gap-2" id="profileModalLabel">
+                    <img src="~/img/info.png" alt="infomation" class="modal-icon" />
+                    アカウント情報
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            @* モーダルbody *@
+            <div class="modal-body">
+                @* ユーザーID(UserName) *@
+                <div class="row mb-2">
+                    <div class="col-4 fw-bold">@Html.DisplayNameFor(m => m.UserName)</div>
+                    <div class="col-8">@Model.UserName</div>
+                </div>
+
+                @* 権限(Role) *@
+                <div class="row mb-2">
+                    <div class="col-4 fw-bold">@Html.DisplayNameFor(m => m.Role)</div>
+                    <div class="col-8">@Model.Role</div>
+                </div>
+
+                @* メールアドレス(Email) *@
+                <div class="row mb-2">
+                    <div class="col-4 fw-bold">@Html.DisplayNameFor(m => m.Email)</div>
+                    <div class="col-8">@Model.Email</div>
+                </div>
+
+                @* パスワード有効期限(PasswordExpirationDate) *@
+                <div class="row mb-2">
+                    <div class="col-4 fw-bold">@Html.DisplayNameFor(m => m.PasswordExpirationDate)</div>
+                    <div class="col-8">@Model.PasswordExpirationDate</div>
+                </div>
+            </div>
+
+            @* モーダルフッター *@
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary me-auto" id="openChangePasswordConfirm">
+                    パスワード変更
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+            </div>
+        </div>
+    </div>
+</div>

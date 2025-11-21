@@ -33,6 +33,17 @@
         </div>
     </div>
 
+    @* アカウント情報表示用モーダル *@
+    <div id="profileModalContainer">
+        @* ここに部分ビュー(_ProfilePartial)が差し込まれる *@
+    </div>
+
+    @* パスワード変更画面への遷移確認用 *@
+    @await Html.PartialAsync("_ChangePasswordConfirmPartial")
+
+    @* ログアウト確認用モーダル *@
+    @await Html.PartialAsync("_LogoutConfirmPartial")
+
     @* トースト UI *@
     <div class="toast-container position-fixed top-0 end-0 p-4">
         <div id="resultToast" class="toast align-items-center text-white border-0"
@@ -51,10 +62,10 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/toast.js"></script>
-    <script src="~/js/layout.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    @await Html.PartialAsync("_LogoutConfirmPartial")
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script src="~/js/layout.js"></script>
 </body>
 </html>

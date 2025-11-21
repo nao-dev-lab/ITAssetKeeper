@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ITAssetKeeper.Constants;
 using ITAssetKeeper.Services;
+using System.Threading.Tasks;
 
 namespace ITAssetKeeper.Controllers;
 
@@ -117,12 +118,27 @@ public class AccountController : Controller
         return RedirectToAction("Login", "Account", new { loggedout = true });
     }
 
-    // GET: Account/LogoutConfirm
+    // GET: Account/Profile
     [HttpGet]
     [Authorize]
-    public IActionResult LogoutConfirm()
+    public async Task<IActionResult> Profile(string username)
     {
-        return PartialView();
+        // ユーザー情報を取得
+        var user = await _userManager.FindByNameAsync(username);
+
+        // ユーザー情報が取得できなければログアウト
+        if (user == null)
+        {
+            await _signInManager.SignOutAsync();
+            TempData["FailureMessage"] = "ユーザーの検証に失敗しました。ログインからやり直してください。";
+            return RedirectToAction("Login");
+        }
+
+        // ユーザー情報からモーダルに表示するアカウント情報を取得
+        var model = await _accountService.GetProfileViewModelAsync(user);
+
+        // 部分ビューにモデルを渡す
+        return PartialView("_ProfilePartial", model);
     }
 
     // GET: Account/ChangePassword

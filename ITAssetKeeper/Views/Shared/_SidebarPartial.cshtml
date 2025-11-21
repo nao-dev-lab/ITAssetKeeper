@@ -90,9 +90,10 @@
     <ul class="sidebar-footer">
         @* アカウント *@
         <li>
-            <form asp-controller="Account" asp-action="Info" method="post">
-                    <a asp-controller="Account" asp-action="Info" class="sidebar-footer-link">アカウント</a>
-            </form>
+            <a asp-controller="Account" asp-action="Profile" asp-route-username="@user.UserName"
+               class="sidebar-footer-link" id="profileLink">
+                アカウント
+            </a>
         </li>
 
         @* ログアウト *@
