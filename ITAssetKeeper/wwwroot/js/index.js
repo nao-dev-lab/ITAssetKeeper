@@ -82,7 +82,7 @@
 
         // 閉じたとき
         collapseEl.addEventListener('hidden.bs.collapse', () => {
-            btn.innerHTML = `<img src="/img/search_details.png" class="detail-search-icon" /> 詳細検索`;
+            btn.innerHTML = `<img src="/img/arrow_down.png" class="detail-search-icon" /> 詳細検索`;
             btn.classList.remove("open");
         });
 

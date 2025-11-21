@@ -28,7 +28,25 @@
     </div>
 }
 
-@* 検索フォーム 折り畳みボタン *@
+@* 検索フォーム *@
+ <div class="row">
+     <div class="col-md-4">
+        <form id="searchForm" asp-controller="Device" asp-action="Index" method="get">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @* フリーワード検索 *@
+            <div class="form-group">
+                <label asp-for="FreeText" class="control-label"></label>
+                <input asp-for="FreeText" class="form-control" placeholder="検索する文字を入力" />
+            </div>
+            @* フォーム内容送信 *@
+            <div class="form-group">
+                <input type="submit" value="検索" class="btn btn-primary" />
+            </div>
+        </form>
+     </div>
+</div>
+
+@* 詳細検索フォーム 折り畳みボタン *@
 <button id="toggleSearchBtn"
         class="btn detail-search-btn mb-3"
         type="button"
@@ -36,11 +54,11 @@
         data-bs-target="#searchCollapse"
         data-is-search="@Model.HasAnyFilter.ToString().ToLower()">
 
-    <img src="~/img/search_details.png" class="detail-search-icon" />
+    <img src="~/img/arrow_down.png" class="detail-search-icon" />
     詳細検索
 </button>
 
-@* 検索フォーム *@
+@* 詳細検索フォーム *@
 <div class="collapse @(Model.HasAnyFilter ? "show" : "")" id="searchCollapse">
     <div class="card card-body mb-3">
 

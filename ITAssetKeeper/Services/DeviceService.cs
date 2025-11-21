@@ -6,7 +6,9 @@ using ITAssetKeeper.Models.Enums;
 using ITAssetKeeper.Models.ViewModels.Device;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Data;
+using System.Linq;
 using System.Transactions;
 
 namespace ITAssetKeeper.Services;
@@ -35,8 +37,16 @@ public class DeviceService : IDeviceService
         // Deviceテーブルから全てのデータを取得する
         IQueryable<Device> query = _context.Devices;
 
-        // フィルタリング実施
-        query = FilterDevices(query, condition); 
+        if (!string.IsNullOrWhiteSpace(condition.FreeText))
+        {
+            // フリーワードに入力があれば、フリーワード検索
+            query = FilterDevicesByFreeText(query, condition);
+        }
+        else
+        {
+            // なければ、詳細検索
+            query = FilterDevices(query, condition);
+        }
 
         // 並び替え
         query = SortDevices(query, condition.SortKeyValue, condition.SortOrderValue);
@@ -52,6 +62,59 @@ public class DeviceService : IDeviceService
 
         // ビューモデルに詰めて、呼び出し元に返す
         return ToViewModel(condition, devices);
+    }
+
+    // フリーワード検索用：
+    // フリーワードが含まれる表示名に対応する生値を取得
+    // 例: freeText = "稼働" → "Active"
+    private List<string> GetRawOfDisplayNameContainsText<TEnum>(string freeText) 
+        where TEnum : struct, Enum
+    {
+        // 引数で渡されたEnum の値:表示名の辞書を取得
+        var rawDisplayNamePairs = EnumDisplayHelper.EnumToDictionary<TEnum>();
+
+        // rawDisplayNamePairs の値に freeText が含まれるValueを取得
+        var values = rawDisplayNamePairs.Values.Where(x => x.Contains(freeText)).ToList();
+
+        // rawDisplayNamePairs から freeText が含まれるValue の Keyを取得し、rawsに格納
+        var raws = new List<string>();
+        values.ForEach(x => raws.Add(rawDisplayNamePairs.FirstOrDefault(k => k.Value == x).Key));
+
+        // 取得した値が入ったListを返す
+        return raws;
+    }
+
+    // フリーワード検索用フィルタリング
+    private IQueryable<Device> FilterDevicesByFreeText(IQueryable<Device> query, DeviceListViewModel condition)
+    {
+        var free = condition.FreeText;
+
+        // フリーワードが日付として解釈できるかチェック
+        DateTime dt;
+        bool isDate = DateTime.TryParse(free, out dt);
+
+        // フリーワードが含まれる表示名に対応する生値を取得
+        var categoryValues = GetRawOfDisplayNameContainsText<DeviceCategory>(free);
+        var purposeValues = GetRawOfDisplayNameContainsText<DevicePurpose>(free);
+        var statusValues = GetRawOfDisplayNameContainsText<DeviceStatus>(free);
+
+        // すべての項目から部分一致で検索
+        query = query.Where(x =>
+            x.ManagementId.Contains(free)
+            || x.ModelNumber.Contains(free)
+            || x.SerialNumber.Contains(free)
+            || x.HostName != null && x.HostName.Contains(free)
+            || x.Location.Contains(free)
+            || x.UserName != null && x.UserName.Contains(free)
+            || x.Memo != null && x.Memo.Contains(free)
+            || categoryValues.Contains(x.Category)
+            || purposeValues.Contains(x.Purpose)
+            || statusValues.Contains(x.Status)
+            || (isDate && x.PurchaseDate.Date == dt.Date)
+            || (isDate && x.UpdatedAt.Date == dt.Date)
+            );
+
+        return query;
     }
 
     // フィルタリング (条件に応じて IQueryable<Device> を返す)
@@ -231,7 +294,7 @@ public class DeviceService : IDeviceService
 
         // DeviceStatus は Deleted を除外して取得する
         EnumDisplayHelper.SetEnumSelectList<DeviceStatus>(condition, selectList => 
-            condition.StatusItems = new SelectList(EnumDisplayHelper.ToDictionary(DeviceStatus.Deleted),"Key", "Value"));
+            condition.StatusItems = new SelectList(EnumDisplayHelper.EnumToDictionary(DeviceStatus.Deleted),"Key", "Value"));
 
         // 検索結果の一覧表示のデータをDTO型で詰める
         condition.Devices = devices
@@ -271,7 +334,7 @@ public class DeviceService : IDeviceService
 
         // DeviceStatus は Deleted を除外して取得する
         EnumDisplayHelper.SetEnumSelectList<DeviceStatus>(model, selectList =>
-            model.StatusItems = new SelectList(EnumDisplayHelper.ToDictionary(DeviceStatus.Deleted), "Key", "Value"));
+            model.StatusItems = new SelectList(EnumDisplayHelper.EnumToDictionary(DeviceStatus.Deleted), "Key", "Value"));
         
         // 購入日に今日の日付をセット
         model.PurchaseDate = DateTime.Now;
@@ -416,7 +479,7 @@ public class DeviceService : IDeviceService
 
         // DeviceStatus は Deleted を除外して取得する
         EnumDisplayHelper.SetEnumSelectList<DeviceStatus>(model, selectList =>
-            model.StatusItems = new SelectList(EnumDisplayHelper.ToDictionary(DeviceStatus.Deleted), "Key", "Value"));
+            model.StatusItems = new SelectList(EnumDisplayHelper.EnumToDictionary(DeviceStatus.Deleted), "Key", "Value"));
 
         // ビューモデルを返す
         return model;
@@ -488,7 +551,7 @@ public class DeviceService : IDeviceService
 
         // DeviceStatus は Deleted を除外して取得する
         EnumDisplayHelper.SetEnumSelectList<DeviceStatus>(model, selectList =>
-            model.StatusItems = new SelectList(EnumDisplayHelper.ToDictionary(DeviceStatus.Deleted), "Key", "Value"));
+            model.StatusItems = new SelectList(EnumDisplayHelper.EnumToDictionary(DeviceStatus.Deleted), "Key", "Value"));
 
         // ReadOnly制御再設定
         // Admin

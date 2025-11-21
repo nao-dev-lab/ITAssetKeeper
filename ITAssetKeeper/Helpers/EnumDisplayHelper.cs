@@ -82,7 +82,7 @@ public class EnumDisplayHelper
 
     // Enum → (内部名, 表示名) の Dictionary を生成
     // 例: StatusEnum.Active → { "Active", "稼働中" } のように内部名と表示名をペアにする
-    public static Dictionary<string, string> ToDictionary<TEnum>(params TEnum[] exclude)
+    public static Dictionary<string, string> EnumToDictionary<TEnum>(params TEnum[] exclude)
     where TEnum : struct, Enum
     {
         // Enum の全メンバーを取得し、TEnum 型にキャスト
@@ -148,7 +148,7 @@ public class EnumDisplayHelper
         where TEnum : struct, Enum
     {
         // Enum を Dictionary に変換
-        var dict = ToDictionary<TEnum>();
+        var dict = EnumToDictionary<TEnum>();
 
         // Dictionary を SelectList に変換して返す
         return new SelectList(dict, "Key", "Value");
