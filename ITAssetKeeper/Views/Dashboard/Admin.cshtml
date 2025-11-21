@@ -61,7 +61,11 @@
                      @* Listの中身が空じゃなければグラフを描画する*@
                     @if (Model.HistoryLast7Days?.Any() == true)
                     {
-                        <canvas id="historyCountChart" width="400" height="400"></canvas>
+                        <canvas id="historyCountChart"
+                            width="400"
+                            height="400"
+                            data-history ='@Html.Raw(Json.Serialize(Model.HistoryLast7Days))'>
+                        </canvas>
                     }
                     else
                     {
@@ -86,7 +90,24 @@
 
                     @if (Model.StatusCount != null && total > 0)
                     {
-                        <canvas id="statusChart" width="400" height="400"></canvas>
+                        <canvas id="statusChart"
+                            width="400"
+                            height="400"
+                            data-labels='[
+                                "@Html.DisplayNameFor(model => model.StatusHeader.ActiveCount)",
+                                "@Html.DisplayNameFor(model => model.StatusHeader.SpareCount)",
+                                "@Html.DisplayNameFor(model => model.StatusHeader.BrokenCount)",
+                                "@Html.DisplayNameFor(model => model.StatusHeader.RetiringCount)",
+                                "@Html.DisplayNameFor(model => model.StatusHeader.RetiredCount)"
+                            ]'
+                            data-values='[
+                                @Model.StatusCount.ActiveCount,
+                                @Model.StatusCount.SpareCount,
+                                @Model.StatusCount.BrokenCount,
+                                @Model.StatusCount.RetiringCount,
+                                @Model.StatusCount.RetiredCount
+                            ]'>
+                        </canvas>
                     }
                     else
                     {
@@ -97,8 +118,14 @@
         </div>
     </div>
 </div>
- @* グラフの描画*@
+
+@* グラフの描画をするJSファイルの読み込み*@
 @section Scripts {
+    <script src="~/js/admin_dashboard.js"></script>
+}
+
+
+@* @section Scripts {
     <script>
         // 棒グラフの描画
         // Listの値を取得して、labelとdataを定数に入れる
@@ -212,4 +239,4 @@
             }
         });
     </script>
-}
+} *@
