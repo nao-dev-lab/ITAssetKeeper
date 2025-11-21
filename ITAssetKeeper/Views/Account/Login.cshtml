@@ -7,6 +7,14 @@
     Layout = "_AuthLayout";
 }
 
+@* ログアウトボタンからログアウトした場合、トースト表示 *@
+@if (ViewContext.HttpContext.Request.Query["loggedout"].ToString().ToLower() == "true")
+{
+    <div id="toast-message"
+         data-message="ログアウトしました。"
+         data-type="success"></div>
+}
+
 @* ロゴ表示 *@
 <div class="logo-box">
     <div class="logo-container">

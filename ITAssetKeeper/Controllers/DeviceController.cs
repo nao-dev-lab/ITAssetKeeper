@@ -219,25 +219,6 @@ public class DeviceController : Controller
         return RedirectToAction(nameof(Details), new { id = model.IdHidden });
     }
 
-
-    [HttpGet]
-    [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Delete(int id)
-    {
-        // 対象の機器データを取得
-        var model = await _deviceService.GetDeleteDeviceByIdAsync(id);
-
-        // 取得できなければ一覧に戻す
-        if (model == null)
-        {
-            TempData["ErrorMessage"] = "対象の機器が見つかりません。";
-            return RedirectToAction(nameof(Index));
-        }
-
-        // ビューにモデルを渡す
-        return View(model);
-    }
-
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)

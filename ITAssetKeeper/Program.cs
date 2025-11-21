@@ -46,6 +46,7 @@ builder.Services.AddScoped<IDeviceHistoryService, DeviceHistoryService>();
 builder.Services.AddScoped<IDeviceDiffService, DeviceDiffService>();
 builder.Services.AddScoped<IDeviceHistorySequenceService, DeviceHistorySequenceService>();
 builder.Services.AddScoped<IDeviceSequenceService, DeviceSequenceService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -70,7 +71,8 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     //pattern: "{controller=Home}/{action=Index}/{id?}");
-    pattern: "{controller=Account}/{action=Login}/{id?}");
+    //pattern: "{controller=Account}/{action=Login}/{id?}");
+    pattern: "{controller=Device}/{action=Index}/{id?}");
 
 // Seed Adminの作成
 // サービススコープ内で実行する

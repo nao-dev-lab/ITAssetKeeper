@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/toast.css" />
 
 </head>
 <body class="auth-body">
@@ -24,6 +25,24 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/password-toggle.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
+
+    @* Views 側が描画されてから toast.js が実行されるように RenderSectionAsyncの後に置く *@
+    <script src="~/js/toast.js"></script>
+
+    @* トーストUI *@
+    <div class="toast-container position-fixed top-0 end-0 p-4">
+        <div id="resultToast" class="toast align-items-center text-white border-0"
+             role="alert" aria-live="assertive" aria-atomic="true"
+             data-bs-delay="6000">
+            <div class="d-flex">
+                <div class="toast-body" id="toastMessage"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                        data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

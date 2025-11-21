@@ -90,16 +90,14 @@
     <ul class="sidebar-footer">
         @* アカウント *@
         <li>
-        <form asp-controller="Account" asp-action="Info" method="post">
-                <a asp-controller="Account" asp-action="Info" class="sidebar-footer-link">アカウント</a>
-        </form>
+            <form asp-controller="Account" asp-action="Info" method="post">
+                    <a asp-controller="Account" asp-action="Info" class="sidebar-footer-link">アカウント</a>
+            </form>
         </li>
 
         @* ログアウト *@
         <li>
-        <form asp-controller="Account" asp-action="Logout" method="post">
-                <a asp-controller="Account" asp-action="Logout" class="sidebar-footer-link">ログアウト</a>
-        </form>
+            <a href="#" class="sidebar-footer-link" id="logoutLink">ログアウト</a>
         </li>
     </ul>
 

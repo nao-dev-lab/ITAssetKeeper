@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ITAssetKeeper.Constants;
+using ITAssetKeeper.Services;
 
 namespace ITAssetKeeper.Controllers;
 
@@ -15,12 +16,17 @@ public class AccountController : Controller
     // フィールド
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly IAccountService _accountService;
 
     // コンストラクタ
-    public AccountController(ITAssetKeeperDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+    public AccountController(
+        ITAssetKeeperDbContext context,
+        UserManager<ApplicationUser> userManager,
+        SignInManager<ApplicationUser> signInManager, IAccountService accountService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _accountService = accountService;
     }
 
     // GET: Account/Login
@@ -84,7 +90,7 @@ public class AccountController : Controller
         }
 
         // パスワード期限が超過していないかチェック
-        if (user.PasswordExpirationDate < DateTime.Now)
+        if (_accountService.IsPasswordExpired(user))
         {
             // 超過している場合はパスワード変更画面にリダイレクト
             TempData["ErrorMessage"]
@@ -94,18 +100,13 @@ public class AccountController : Controller
 
         // ログインに成功したら、
         // AdminはDashboard、他RoleはIndexにリダイレクト
-        if (await _userManager.IsInRoleAsync(user, Roles.Admin.ToString()))
-        {
-            return RedirectToAction("Admin", "Dashboard");
-        }
-        else
-        {
-            return RedirectToAction("Index", "Device");
-        }
+        var redirectUrl = await _accountService.ResolveRedirectAfterLoginAsync(user);
+        return Redirect(redirectUrl);
     }
 
     // POST: Account/Logout
     [HttpPost]
+    [Authorize]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Logout()
     {
@@ -113,11 +114,20 @@ public class AccountController : Controller
         await _signInManager.SignOutAsync();
 
         // ログイン画面にリダイレクト
-        return RedirectToAction("Login", "Account");
+        return RedirectToAction("Login", "Account", new { loggedout = true });
+    }
+
+    // GET: Account/LogoutConfirm
+    [HttpGet]
+    [Authorize]
+    public IActionResult LogoutConfirm()
+    {
+        return PartialView();
     }
 
     // GET: Account/ChangePassword
     [HttpGet]
+    [Authorize]
     public IActionResult ChangePassword()
     {
         // パスワード変更画面を表示
@@ -126,6 +136,7 @@ public class AccountController : Controller
 
     // POST: Account/ChangePassword
     [HttpPost]
+    [Authorize]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ChangePassword([Bind("CurrentPassword, NewPassword, ConfirmPassword")] ChangePasswordViewModel model)
     {
@@ -196,9 +207,9 @@ public class AccountController : Controller
             return View(model);
         }
 
-        // パスワード変更に成功したら、
-        // パスワード期限を更新
-        user.PasswordExpirationDate = DateTime.Now.AddDays(ApplicationIdentityConstants.PASSWORD_VALID_DAYS);
+        // パスワード変更に成功したら、パスワード期限を更新
+        _accountService.UpdatePasswordExpiration(user);
+        //user.PasswordExpirationDate = DateTime.Now.AddDays(ApplicationIdentityConstants.PASSWORD_VALID_DAYS);
         var updateResult = await _userManager.UpdateAsync(user);
 
         // DB側の更新に失敗していればコンソールにログを出力

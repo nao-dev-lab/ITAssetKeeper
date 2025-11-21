@@ -1,0 +1,31 @@
+﻿@*
+    ログアウト確認用モーダル
+*@
+<div class="modal fade" id="logoutModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title d-flex align-items-center gap-2">
+                    <img src="~/img/info.png" alt="infomation" class="modal-icon" />
+                    ログアウト 確認
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <p>編集中のデータがある場合、内容が破棄されます。</p>
+                <p>ログアウト してよろしいですか？</p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary me-auto" data-bs-dismiss="modal">キャンセル</button>
+                <form asp-action="Logout" asp-controller="Account" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">ログアウト</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
