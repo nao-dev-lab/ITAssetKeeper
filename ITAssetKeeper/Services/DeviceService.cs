@@ -274,7 +274,7 @@ public class DeviceService : IDeviceService
 
         // DeviceStatus は Deleted を除外して取得する
         EnumDisplayHelper.SetEnumSelectList<DeviceStatus>(condition, selectList => 
-            condition.StatusItems = new SelectList(EnumDisplayHelper.EnumToDictionary(DeviceStatus.Deleted),"Key", "Value"));
+            condition.StatusItems = new SelectList(EnumDisplayHelper.EnumToDictionary(false, DeviceStatus.Deleted),"Key", "Value"));
 
         // 検索結果の一覧表示のデータをDTO型で詰める
         condition.Devices = devices
@@ -314,7 +314,7 @@ public class DeviceService : IDeviceService
 
         // DeviceStatus は Deleted を除外して取得する
         EnumDisplayHelper.SetEnumSelectList<DeviceStatus>(model, selectList =>
-            model.StatusItems = new SelectList(EnumDisplayHelper.EnumToDictionary(DeviceStatus.Deleted), "Key", "Value"));
+            model.StatusItems = new SelectList(EnumDisplayHelper.EnumToDictionary(false, DeviceStatus.Deleted), "Key", "Value"));
         
         // 購入日に今日の日付をセット
         model.PurchaseDate = DateTime.Now;
@@ -459,7 +459,7 @@ public class DeviceService : IDeviceService
 
         // DeviceStatus は Deleted を除外して取得する
         EnumDisplayHelper.SetEnumSelectList<DeviceStatus>(model, selectList =>
-            model.StatusItems = new SelectList(EnumDisplayHelper.EnumToDictionary(DeviceStatus.Deleted), "Key", "Value"));
+            model.StatusItems = new SelectList(EnumDisplayHelper.EnumToDictionary(false, DeviceStatus.Deleted), "Key", "Value"));
 
         // ビューモデルを返す
         return model;
@@ -531,7 +531,7 @@ public class DeviceService : IDeviceService
 
         // DeviceStatus は Deleted を除外して取得する
         EnumDisplayHelper.SetEnumSelectList<DeviceStatus>(model, selectList =>
-            model.StatusItems = new SelectList(EnumDisplayHelper.EnumToDictionary(DeviceStatus.Deleted), "Key", "Value"));
+            model.StatusItems = new SelectList(EnumDisplayHelper.EnumToDictionary(false, DeviceStatus.Deleted), "Key", "Value"));
 
         // ReadOnly制御再設定
         // Admin

@@ -1,5 +1,22 @@
-﻿// --- 詳細検索フォーム 入力内容クリア ---
+﻿// --- 検索フォーム 入力内容クリア ---
+//window.clearFreeWord = function () {
+//    const text = document.querySelector(".freeword-input");
+//    if (text) {
+//        text.value = "";
+//    }
+//};
+document.addEventListener("DOMContentLoaded", () => {
+    const clearBtn = document.querySelector(".freeword-clear");
+    const input = document.querySelector(".freeword-input");
 
+    if (clearBtn) {
+        clearBtn.addEventListener("click", () => {
+            input.value = "";
+        });
+    }
+});
+
+// --- 詳細検索フォーム 入力内容クリア ---
 function clearForm() {
 
     const form = document.getElementById("searchFormDetail");

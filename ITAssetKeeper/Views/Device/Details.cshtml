@@ -4,7 +4,10 @@
     ViewData["Title"] = "Details";
 }
 
-<h2>機器情報</h2>
+@* タイトルバー *@
+<div class="contents-header-bar mb-4">
+    機器情報
+</div>
 
 @*  メッセージ表示 *@
 @if (TempData["ToastMessage"] != null)
@@ -107,13 +110,13 @@
         @* メモ欄(Memo) *@
         <div class="form-group mb-2">
             <label class="fw-bold">@Html.DisplayNameFor(m => m.Memo)</label>
-            <div>@Model.Memo</div>
+            <div class="white-space-pre-wrap">@Model.Memo</div>
         </div>
 
         <div class="mt-4">
 
             @*  戻る *@
-            <a asp-action="Index" class="btn btn-secondary me-2">一覧へ戻る</a>
+            <a asp-action="Index" asp-route-id=""class="btn btn-secondary me-2">一覧へ戻る</a>
 
             @* ロール判定で編集や削除を制限 *@
             @if (User.IsInRole("Admin") || User.IsInRole("Editor"))

@@ -1,6 +1,6 @@
 ﻿// --- モーダルのバックドロップを強制除去 ---
 function clearModalBackdrop() {
-    document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+    document.querySelectorAll(".modal-backdrop").forEach(b => b.remove());
 }
 
 // --- イベント delegating（リンククリック対応） ---
@@ -43,7 +43,7 @@ document.addEventListener("click", async (e) => {
         clearModalBackdrop();
 
         // 今開いてるモーダルを閉じる
-        document.querySelectorAll('.modal.show').forEach(m => {
+        document.querySelectorAll(".modal.show").forEach(m => {
             const instance = bootstrap.Modal.getInstance(m);
             if (instance) instance.hide();
         });

@@ -4,7 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>更新履歴 一覧</h1>
+@* タイトルバー *@
+<div class="contents-header-bar mb-4">
+    更新履歴 一覧
+</div>
 
 @* グローバル hidden(ページ全体で simple/detail の状態を保持)> *@
 <input type="hidden" id="activeSearchType" value="@Model.ActiveSearchType" />

@@ -242,4 +242,18 @@ public class AccountController : Controller
         TempData["SuccessMessage"] = "パスワード変更に成功しました。ログインしてください。";
         return RedirectToAction("Login", "Account");
     }
+
+    [HttpGet]
+    [Authorize(Roles = "Admin, Editor")]
+    public IActionResult GetList()
+    {
+        return View();
+    }
+
+    [HttpGet]
+    [Authorize(Roles = "Admin")]
+    public IActionResult Create()
+    {
+        return View();
+    }
 }

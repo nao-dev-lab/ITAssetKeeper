@@ -35,7 +35,7 @@ public class EnumDisplayHelper
 
     // Enum → (内部名, 表示名) の Dictionary を生成
     // 例: StatusEnum.Active → { "Active", "稼働中" } のように内部名と表示名をペアにする
-    public static Dictionary<string, string> EnumToDictionary<TEnum>(params TEnum[] exclude)
+    public static Dictionary<string, string> EnumToDictionary<TEnum>(bool special = false, params TEnum[] exclude)
     where TEnum : struct, Enum
     {
         // Enum の全メンバーを取得し、TEnum 型にキャスト
@@ -57,10 +57,22 @@ public class EnumDisplayHelper
         // フィルタ済みの Enum 値を Dictionary<string,string> に変換
         // Key: Enum の内部名 (文字列)
         // Value: 表示名 (DisplayAttribute)
-        return filtered.ToDictionary(
+        var dict = filtered.ToDictionary(
             e => e.ToString(),
             e => GetDisplayName(e)
         );
+
+        // 特殊辞書値が必要(bool special = true)であれば、それも追加
+        if (special)
+        {
+            foreach (var item in SpecialDisplayDictionary.VALUE_MAP)
+            {
+                dict.Add(item.Key, item.Value);
+            }
+        }
+
+        // 作成したdictionaryを返す
+        return dict;
     }
 
     // 引数で受け取った Enum のメンバーから表示名を取得
@@ -103,7 +115,7 @@ public class EnumDisplayHelper
         where TEnum : struct, Enum
     {
         // 引数で渡されたEnum の値:表示名の辞書を取得
-        var rawDisplayNamePairs = EnumDisplayHelper.EnumToDictionary<TEnum>();
+        var rawDisplayNamePairs = EnumToDictionary<TEnum>();
 
         // rawDisplayNamePairs の値で、freeText が含まれるValueのKeyを取得
         var raws = rawDisplayNamePairs

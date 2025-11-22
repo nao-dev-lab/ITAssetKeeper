@@ -212,12 +212,9 @@ public class DeviceHistoryService : IDeviceHistoryService
         EnumDisplayHelper.SetEnumSelectList<SortOrders>(condition, selectList => condition.SortOrderList = selectList);
         EnumDisplayHelper.SetEnumSelectList<DeviceHistoryColumns>(condition, selectList => condition.SortKeyList = selectList);
 
-        EnumDisplayHelper.SetEnumSelectList<DeviceColumns>(condition, selectList => condition.ChangeFieldItems = selectList);
-
         // DeviceColumns は UpdatedAt を除外して取得する
         EnumDisplayHelper.SetEnumSelectList<DeviceColumns>(condition, selectList =>
-            condition.ChangeFieldItems = new SelectList(EnumDisplayHelper.EnumToDictionary(DeviceColumns.UpdatedAt), "Key", "Value"));
-
+            condition.ChangeFieldItems = new SelectList(EnumDisplayHelper.EnumToDictionary(true, DeviceColumns.ManagementId, DeviceColumns.UpdatedAt), "Key", "Value"));
 
         // 検索結果の一覧表示のデータをDTO型で詰める
         condition.DeviceHistories = histories

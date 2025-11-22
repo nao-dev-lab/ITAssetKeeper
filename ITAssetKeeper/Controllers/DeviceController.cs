@@ -62,14 +62,6 @@ public class DeviceController : Controller
     }
 
     [HttpGet]
-    public IActionResult Cancel(string returnUrl)
-    {
-        // キャンセルボタンが押された時の処理
-        // まだ作成していない
-        return View();
-    }
-
-    [HttpGet]
     [Authorize(Roles = "Admin")]
     public IActionResult Create()
     {

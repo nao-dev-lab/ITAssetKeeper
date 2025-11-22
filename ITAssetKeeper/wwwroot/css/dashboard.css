@@ -1,12 +1,47 @@
 ﻿/* admin_dashboard.css */
 
-/* ダッシュボード カード Header */
-.card .card-title {
+/* ダッシュボード全体のタイトルバー */
+.dashboard-header-bar {
+    background-color: #F1EDFF;
+    color: #520DC2;
+    padding: 24px 20px;
+    font-size: 24px;
+    font-weight: 700;
+    border-radius: 0; /* ← 角丸ナシ */
+    margin-bottom: 24px;
+}
+
+/* カード全体 */
+.dashboard-card {
+    border-radius: 12px;
+    overflow: hidden; /* 角丸を上部ヘッダーにも反映 */
+    border: 1px solid #E0D7FF;
+}
+
+/* カードヘッダー */
+.dashboard-card-header {
+    background-color: #7749F8;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 12px 16px;
+    border-bottom: none;
+}
+
+/* ダッシュボード カード Title */
+/*.card .card-title {
     background-color: #7749F8;
     color: #ffffff;
     padding: 8px 12px;
     border-radius: 6px;
     margin: -0.75rem -0.75rem 1rem -0.75rem;
+}*/
+.card .card-title {
+    background: none !important;
+    color: inherit !important;
+    padding: 0 !important;
+    margin: 0 0 12px 0 !important;
+    border-radius: 0 !important;
 }
 
 /* テーブルヘッダー */

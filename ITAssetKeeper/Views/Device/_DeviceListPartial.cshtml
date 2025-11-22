@@ -1,43 +1,45 @@
 ﻿@model ITAssetKeeper.Models.ViewModels.Device.DeviceListViewModel
 
 @* テーブル表示 *@
-<table class="table">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.ManagementId)</th>
-            <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.Category)</th>
-            <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.Purpose)</th>
-            <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.ModelNumber)</th>
-            <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.SerialNumber)</th>
-            <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.HostName)</th>
-            <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.Location)</th>
-            <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.UserName)</th>
-            <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.Status)</th>
-            <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.PurchaseDate)</th>
-            <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.CreatedAt)</th>
-            <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.UpdatedAt)</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Devices)
-        {
+<div class="table-wrapper">
+    <table class="table table-hover table-bordered nowrap-table">
+        <thead>
             <tr>
-                <td><a asp-controller="Device" asp-action="Details" asp-route-id="@item.Id">@item.ManagementId</a></td>
-                <td>@Html.DisplayFor(modelItem => item.Category)</td>
-                <td>@Html.DisplayFor(modelItem => item.Purpose)</td>
-                <td>@Html.DisplayFor(modelItem => item.ModelNumber)</td>
-                <td>@Html.DisplayFor(modelItem => item.SerialNumber)</td>
-                <td>@Html.DisplayFor(modelItem => item.HostName)</td>
-                <td>@Html.DisplayFor(modelItem => item.Location)</td>
-                <td>@Html.DisplayFor(modelItem => item.UserName)</td>
-                <td>@Html.DisplayFor(modelItem => item.Status)</td>
-                <td>@Html.DisplayFor(modelItem => item.PurchaseDateText)</td>
-                <td>@Html.DisplayFor(modelItem => item.CreatedAtDateText)</td>
-                <td>@Html.DisplayFor(modelItem => item.UpdatedAtDateText)</td>
+                <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.ManagementId)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.Category)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.Purpose)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.ModelNumber)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.SerialNumber)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.HostName)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.Location)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.UserName)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.Status)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.PurchaseDate)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.CreatedAt)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceDtoHeader.UpdatedAt)</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Devices)
+            {
+                <tr>
+                    <td><a asp-controller="Device" asp-action="Details" asp-route-id="@item.Id">@item.ManagementId</a></td>
+                    <td>@Html.DisplayFor(modelItem => item.Category)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Purpose)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ModelNumber)</td>
+                    <td>@Html.DisplayFor(modelItem => item.SerialNumber)</td>
+                    <td>@Html.DisplayFor(modelItem => item.HostName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Location)</td>
+                    <td>@Html.DisplayFor(modelItem => item.UserName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                    <td>@Html.DisplayFor(modelItem => item.PurchaseDateText)</td>
+                    <td>@Html.DisplayFor(modelItem => item.CreatedAtDateText)</td>
+                    <td>@Html.DisplayFor(modelItem => item.UpdatedAtDateText)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 @*ページング表示 *@
 <nav aria-label="Page navigation" class="mt-3" data-ajax-url="@Url.Action("GetPagedList", "Device")">

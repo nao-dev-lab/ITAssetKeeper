@@ -1,13 +1,15 @@
-/* site.css */
-
+﻿/* site.css */
 .main-content {
-    margin-left: 230px; /* �T�C�h�o�[�Ɠ����� */
+    margin-left: 230px; /* サイドバーと同じ幅 */
     width: calc(100% - 230px);
     padding: 20px;
     box-sizing: border-box;
+    max-width: 1200px; /* 最大幅を指定（好みで1170 / 1100でもOK） */
+    margin-right: auto; /* 左右中央寄せ */
+    margin-left: 240px; /* サイドバーとの距離 */
 }
 
-/* �T�C�h�o�[�S�� */
+/* サイドバー全体 */
 .sidebar {
     width: 220px;
     background: #EFE8FF;
@@ -18,7 +20,7 @@
     top: 0;
 }
 
-/* �^�C�g�� */
+/* タイトル */
 .sidebar-title {
     font-size: 20px;
     font-weight: bold;
@@ -28,28 +30,39 @@
 }
 
 
-/* 2�J�������C�A�E�g */
+/* 2カラムレイアウト */
 .layout-wrapper {
     display: flex;
     min-height: 100vh;
 }
 
-/* �R���e���c�� */
+/* コンテンツ側 */
 .layout-content {
     flex-grow: 1;
     padding: 20px;
     margin-left: 0;
 }
 
-/* --- �ڍ׌����{�^�� --- */
-/* �A�C�R�� */
+/* コンテンツ全体のタイトルバー */
+.contents-header-bar {
+    background-color: #F1EDFF;
+    color: #520DC2;
+    padding: 24px 20px;
+    font-size: 24px;
+    font-weight: 700;
+    border-radius: 0; /* 角丸なし */
+    margin-bottom: 24px;
+}
+
+/* --- 詳細検索ボタン --- */
+/* アイコン */
 .detail-search-icon {
     width: 16px;
     height: 16px;
     object-fit: contain;
 }
 
-/* �t�H�[�J�X�g�����S�ɏ��� */
+/* フォーカス枠を完全に消す */
 .detail-search-btn:focus,
 .detail-search-btn:focus-visible,
 .detail-search-btn:active {
@@ -57,9 +70,9 @@
     box-shadow: none !important;
 }
 
-/* �ڍ׌����F�ʏ�(�������) */
+/* 詳細検索：通常(閉じた状態) */
 .detail-search-btn {
-    background-color: #7749F8; /* ���C���� */
+    background-color: #7749F8; /* メイン紫 */
     color: #fff;
     border: none;
     padding: 6px 14px;
@@ -73,14 +86,14 @@
     transition: all 0.15s ease;
 }
 
-/* �z�o�[ */
+/* ホバー */
 .detail-search-btn:hover {
     color: #FFFFFF;
     background-color: #8A62F9;
     box-shadow: 0 6px 12px rgba(0,0,0,0.15);
 }
 
-/* �ڍ׌����F�J���Ă鎞�̃{�^�� */
+/* 詳細検索：開いてる時のボタン */
 .detail-search-btn.open {
     background-color: #686D72 !important;
 }
@@ -88,5 +101,134 @@
 .detail-search-btn.open:hover {
     background-color: #72777C !important;
 }
+
+/* ==============================
+   テーブル全体(機器一覧・履歴一覧)
+============================== */
+/* テーブル全体を横スクロール対応 */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 1.5rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background-color: #fff;
+    padding: 6px;
+}
+
+/* 折り返し防止 */
+.nowrap-table {
+    white-space: nowrap;
+}
+
+/* Table 基本デザイン改善 */
+.nowrap-table th,
+.nowrap-table td {
+    vertical-align: middle;
+}
+
+/* --- データ表示 --- */
+/* 改行を有効 */
+.white-space-pre-wrap {
+    white-space: pre-wrap;
+}
+
+/* 一覧表示で一定以上の長さの場合は省略 */
+.text-ellipsis {
+    max-width: 200px; /* 最大長 */
+    white-space: nowrap; /* 改行せず 1 行で表示 */
+    overflow: hidden; /* はみ出し部分を隠す */
+    text-overflow: ellipsis; /* 省略記号 … を表示 */
+    position: relative;
+}
+
+/* ==============================
+   フリーワード検索ボックス
+============================== */
+/* 入れ物（枠） */
+.freeword-box {
+    border: 1px solid #7749F8;
+    background-color: #F9F5FF;
+    padding: 18px 20px;
+    border-radius: 10px;
+    width: 100%; /* 横いっぱい */
+}
+
+/* 「フリーワード：」ラベル */
+.freeword-label {
+    color: #520DC2;
+    font-weight: 600;
+    font-size: 16px;
+    white-space: nowrap; /* 折り返さない */
+    flex: 0 0 80px; /* 横幅固定 */
+}
+
+/* ラベル・テキスト・×・検索ボタンを横並びに*/
+.freeword-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+/* テキストボックス：内部に×を置くため relative */
+.freeword-input-wrapper {
+    position: relative;
+    flex-grow: 1; /* 横に伸びる */
+    min-width: 0; /* flex のオーバーフロー防止 */
+}
+
+/* テキストボックス 通常時 */
+.freeword-input {
+    width: 100%;
+    padding: 8px 36px 8px 12px; /* 右側に×のスペース確保 */
+    border: 1px solid #7749F8;
+    border-radius: 6px;
+    background-color: #fff;
+    box-sizing: border-box;
+    transition: box-shadow 0.2s ease, border-color 0.1s ease;
+}
+
+/* テキストボックス フォーカス時 */
+.freeword-input:focus {
+    outline: none;
+    border-color: #7749F8; /* 枠は維持 */
+    box-shadow: 0 0 0 4px #E3D3FD; /* 外側だけ光らせる */
+}
+
+/* ×ボタン（入力クリア） */
+.freeword-clear {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #868686;
+    cursor: pointer;
+}
+
+.freeword-clear:hover {
+    color: #555;
+}
+
+/* 検索ボタン */
+.freeword-search-btn {
+    background-color: #E3DBFA;
+    color: #6610F2;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.freeword-search-btn:hover {
+    background-color: #D8D0FA;
+}
+
 
 

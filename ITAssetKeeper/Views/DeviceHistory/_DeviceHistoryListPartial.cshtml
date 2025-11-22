@@ -1,34 +1,58 @@
 ﻿@model ITAssetKeeper.Models.ViewModels.DeviceHistory.DeviceHistoryViewModel
 
 @* テーブル表示 *@
-<table class="table">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.DeviceHistoryDtoHeader.HistoryId)</th>
-            <th>@Html.DisplayNameFor(model => model.DeviceHistoryDtoHeader.ManagementId)</th>
-            <th>@Html.DisplayNameFor(model => model.DeviceHistoryDtoHeader.ChangeField)</th>
-            <th>@Html.DisplayNameFor(model => model.DeviceHistoryDtoHeader.BeforeValue)</th>
-            <th>@Html.DisplayNameFor(model => model.DeviceHistoryDtoHeader.AfterValue)</th>
-            <th>@Html.DisplayNameFor(model => model.DeviceHistoryDtoHeader.UpdatedBy)</th>
-            <th>@Html.DisplayNameFor(model => model.DeviceHistoryDtoHeader.UpdatedAt)</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.DeviceHistories)
-        {
+<div class="table-wrapper">
+    <table class="table table-hover table-bordered nowrap-table">
+        <thead>
             <tr>
-                <td><a asp-controller="DeviceHistory" asp-action="Details" asp-route-id="@item.Id" 
-                    class="history-detail-link" data-id="@item.Id">@item.HistoryId</a></td>
-                <td>@Html.DisplayFor(modelItem => item.ManagementId)</td>
-                <td>@Html.DisplayFor(modelItem => item.ChangeField)</td>
-                <td>@Html.DisplayFor(modelItem => item.BeforeValue)</td>
-                <td>@Html.DisplayFor(modelItem => item.AfterValue)</td>
-                <td>@Html.DisplayFor(modelItem => item.UpdatedBy)</td>
-                <td>@Html.DisplayFor(modelItem => item.UpdatedAtText)</td>
+                <th>@Html.DisplayNameFor(model => model.DeviceHistoryDtoHeader.HistoryId)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceHistoryDtoHeader.ManagementId)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceHistoryDtoHeader.ChangeField)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceHistoryDtoHeader.BeforeValue)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceHistoryDtoHeader.AfterValue)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceHistoryDtoHeader.UpdatedBy)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceHistoryDtoHeader.UpdatedAt)</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model.DeviceHistories)
+            {
+                <tr>
+                    <td>
+                        <a asp-controller="DeviceHistory" asp-action="Details" asp-route-id="@item.Id" 
+                        class="history-detail-link" data-id="@item.Id">
+                        @item.HistoryId</a>
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ManagementId)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ChangeField)
+                    </td>
+
+                    <td class="text-ellipsis">
+                        @Html.DisplayFor(modelItem => item.BeforeValue)
+                    </td>
+
+                    <td class="text-ellipsis">
+                        @Html.DisplayFor(modelItem => item.AfterValue)
+                    </td>
+
+                    <td class="text-ellipsis">
+                        @Html.DisplayFor(modelItem => item.UpdatedBy)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UpdatedAtText)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 @*ページング表示 *@
 <nav aria-label="Page navigation" class="mt-3" data-ajax-url="@Url.Action("GetPagedList", "DeviceHistory")">

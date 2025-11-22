@@ -4,15 +4,26 @@
     ViewData["Title"] = "Dashboard - Admin";
 }
 
+@* ダッシュボードタイトルバー *@
+<div class="dashboard-header-bar mb-4">
+    ダッシュボード
+</div>
+
 <div class="container mt-4">
      @* 1行目：1列（テーブル入りカード）*@
-    <div class="row mb-3">
+    <div class="row mb-4">
         <div class="col-12">
-            <div class="card">
+            <div class="card dashboard-card">
+
+                @* カードヘッダー*@
+                <div class="card-header dashboard-card-header">
+                    最近追加された機器一覧(5件)
+                </div>
+
+                @* カードボディー*@
                 <div class="card-body">
-                    <h5 class="card-title">最近追加された機器一覧(5件)</h5>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-sm">
+                    <div class="table-responsive table-wrapper">
+                        <table class="table table-hover table-bordered nowrap-table">
                             <thead class="table-light">
                                 <tr>
                                     <th>@Html.DisplayNameFor(model => model.RecentlyHeader.CreatedAt)</th>
@@ -54,9 +65,12 @@
      @* 2行目：2列（グラフ入りカード）*@
     <div class="row">
         <div class="col-md-6 mb-3">
-            <div class="card h-100">
+            <div class="card h-100 dashboard-card">
+                <div class="card-header dashboard-card-header">
+                    過去7日間の更新履歴件数
+                </div>
+
                 <div class="card-body">
-                    <h5 class="card-title">過去7日間の更新履歴件数</h5>
                      @* 描画した棒グラフを表示*@
                      @* Listの中身が空じゃなければグラフを描画する*@
                     @if (Model.HistoryLast7Days?.Any() == true)
@@ -75,9 +89,11 @@
             </div>
         </div>
         <div class="col-md-6 mb-3">
-            <div class="card h-100">
+            <div class="card h-100 dashboard-card">
+                <div class="card-header dashboard-card-header">
+                    状態別の台数集計
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">状態別の台数集計</h5>
                      @* 描画したドーナツ型グラフを表示*@
                      @* Listの中身が空ではない&いずれかに1以上あればグラフを描画する*@
                     @{

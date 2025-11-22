@@ -4,7 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>機器情報 一覧</h1>
+@* タイトルバー *@
+<div class="contents-header-bar mb-4">
+    機器情報 一覧
+</div>
 
 @* グローバル hidden(ページ全体で simple/detail の状態を保持)> *@
 <input type="hidden" id="activeSearchType" value="@Model.ActiveSearchType" />
@@ -33,13 +36,31 @@
 
 @* 検索フォーム *@
  <div class="row">
-     <div class="col-md-4">
+     <div class="col-md-12">
         <form id="searchFormSimple" asp-controller="Device" asp-action="Index" method="get">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
             @* フリーワード検索 *@
             <div class="form-group">
-                <label asp-for="FreeText" class="control-label"></label>
-                <input asp-for="FreeText" class="form-control" placeholder="検索する文字を入力" />
+                <div class="freeword-box mb-3">
+                    <div class="freeword-row">
+                        
+                        @* ラベル *@
+                        <label class="freeword-label">フリーワード：</label>
+
+                        @* 入力欄 *@
+                        <div class="freeword-input-wrapper">
+                            @* 検索ボックス *@
+                            <input asp-for="FreeText" class="freeword-input" placeholder="検索する文字を入力" />
+
+                            @* ×クリアボタン *@
+                            <button type="button" class="freeword-clear">×</button>
+                        </div>
+
+                        @* 検索ボタン：フォーム内容送信 *@
+                        <button type="submit" class="freeword-search-btn">検索</button>
+                    </div>
+                </div>
             </div>
 
             @* ソートの選択項目(Hidden で送る) *@
@@ -49,11 +70,8 @@
             @* ソート時に確定済の条件でソートされるようhiddenに取得しておく *@
             <input type="hidden" id="confirmed_FreeText" name="FreeText" value="@Model.FreeText" />
 
-            @* フォーム内容送信 *@
-            <div class="form-group">
-                <input type="hidden" name="activeSearchType" value="simple" />
-                <input type="submit" value="検索" class="btn btn-primary" />
-            </div>
+            @* フリーワード検索されたことをhiddenで渡す *@
+            <input type="hidden" name="activeSearchType" value="simple" />
         </form>
      </div>
 </div>
