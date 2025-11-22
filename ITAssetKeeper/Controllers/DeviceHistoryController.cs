@@ -20,10 +20,13 @@ public class DeviceHistoryController : Controller
     // GET: DeviceHistory/Index
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> Index(DeviceHistoryViewModel model)
+    public async Task<IActionResult> Index(DeviceHistoryViewModel model, string activeSearchType = "simple")
     {
         // 検索メソッド実行、結果を取得
         var vm = await _deviceHistoryService.SearchHistoriesAsync(model);
+
+        // 使用された検索フォームを反映
+        model.ActiveSearchType = activeSearchType;
 
         // ビューに渡す
         return View(vm);

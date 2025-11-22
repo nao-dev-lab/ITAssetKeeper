@@ -19,10 +19,13 @@ public class DeviceController : Controller
     // GET: Device/Index
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> Index(DeviceListViewModel model)
+    public async Task<IActionResult> Index(DeviceListViewModel model, string activeSearchType = "simple")
     {
         // 検索メソッド実行、結果を取得
         var vm = await _deviceService.SearchDevicesAsync(model);
+
+        // 使用された検索フォームを反映
+        model.ActiveSearchType = activeSearchType;
 
         // ビューに渡す
         return View(vm);

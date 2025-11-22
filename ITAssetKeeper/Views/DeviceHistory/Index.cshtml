@@ -6,6 +6,9 @@
 
 <h1>更新履歴 一覧</h1>
 
+@* グローバル hidden(ページ全体で simple/detail の状態を保持)> *@
+<input type="hidden" id="activeSearchType" value="@Model.ActiveSearchType" />
+
 @* メッセージ表示 *@
 @if (TempData["ToastMessage"] != null)
 {
@@ -31,15 +34,24 @@
 @* 検索フォーム *@
 <div class="row">
     <div class="col-md-4">
-        <form id="searchForm" asp-controller="DeviceHistory" asp-action="Index" method="get">
+        <form id="searchFormSimple" asp-controller="DeviceHistory" asp-action="Index" method="get">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             @* フリーワード検索 *@
             <div class="form-group">
                 <label asp-for="FreeText" class="control-label"></label>
                 <input asp-for="FreeText" class="form-control" placeholder="検索する文字を入力" />
             </div>
+            
+            @* ソートの選択項目(Hidden で送る) *@
+            <input type="hidden" id="SortKeyValueHidden" name="SortKeyValue" value="@Model.SortKeyValue" />
+            <input type="hidden" id="SortOrderValueHidden" name="SortOrderValue" value="@Model.SortOrderValue" />
+
+            @* ソート時に確定済の条件でソートされるようhiddenに取得しておく *@
+            <input type="hidden" id="confirmed_FreeText" name="FreeText" value="@Model.FreeText" />
+
             @* フォーム内容送信 *@
             <div class="form-group">
+                <input type="hidden" name="activeSearchType" value="simple" />
                 <input type="submit" value="検索" class="btn btn-primary" />
             </div>
         </form>
@@ -64,7 +76,7 @@
 
         <div class="row">
             <div class="col-md-4">
-                <form id="searchForm" asp-controller="DeviceHistory" asp-action="Index" method="get">
+                <form id="searchFormDetail" asp-controller="DeviceHistory" asp-action="Index" method="get">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                     @* 履歴ID(HistoryId) *@
@@ -119,9 +131,22 @@
                     <input type="hidden" id="SortKeyValueHidden" name="SortKeyValue" value="@Model.SortKeyValue" />
                     <input type="hidden" id="SortOrderValueHidden" name="SortOrderValue" value="@Model.SortOrderValue" />
 
+                    @* ソート時に確定済の条件でソートされるようhiddenに取得しておく *@
+                    <input type="hidden" id="confirmed_HistoryId" name="HistoryId" value="@Model.HistoryId" />
+                    <input type="hidden" id="confirmed_ManagementId" name="ManagementId" value="@Model.ManagementId" />
+                    <input type="hidden" id="confirmed_SelectedChangeField" name="SelectedChangeField" value="@Model.SelectedChangeField" />
+                    <input type="hidden" id="confirmed_BeforeValue" name="BeforeValue" value="@Model.BeforeValue" />
+                    <input type="hidden" id="confirmed_AfterValue" name="AfterValue" value="@Model.AfterValue" />
+                    <input type="hidden" id="confirmed_UpdatedDateFrom" name="UpdatedDateFrom" value="@Model.UpdatedDateFrom" />
+                    <input type="hidden" id="confirmed_UpdatedDateTo" name="UpdatedDateTo" value="@Model.UpdatedDateTo" />
+
+                    @* 入力内容クリアボタン *@
+                    <button type="button" class="btn btn-secondary" onclick="clearForm();">クリア</button>
+
                     @* フォーム内容送信 *@
                     <div class="form-group">
-                        <input type="submit" value="検索" class="btn btn-primary" />
+                        <input type="hidden" name="activeSearchType" value="detail" />
+                        <input type="submit" value="詳細検索" class="btn btn-primary" />
                     </div>
                 </form>
             </div>
@@ -188,4 +213,5 @@
 @section Scripts {
     <script src="~/js/index.js"></script>
     <script src="~/js/history.js"></script>
+    <script src="~/js/formclear.js"></script>
 }

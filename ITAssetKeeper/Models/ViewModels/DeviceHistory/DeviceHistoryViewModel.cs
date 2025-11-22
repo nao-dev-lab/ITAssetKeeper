@@ -55,6 +55,9 @@ public class DeviceHistoryViewModel
     // 検索フォーム折り畳み判別用
     public bool IsSearchExecuted { get; set; }
 
+    // どちらの検索フォームを使用しているかの判別用
+    public string ActiveSearchType { get; set; } = "simple";
+
     // 検索フォームに項目が入って検索されたかをチェック
     public bool HasAnyFilter =>
     !string.IsNullOrWhiteSpace(HistoryId)

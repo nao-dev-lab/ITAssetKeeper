@@ -6,6 +6,9 @@
 
 <h1>機器情報 一覧</h1>
 
+@* グローバル hidden(ページ全体で simple/detail の状態を保持)> *@
+<input type="hidden" id="activeSearchType" value="@Model.ActiveSearchType" />
+
 @* メッセージ表示 *@
 @if (TempData["ToastMessage"] != null)
 {
@@ -31,15 +34,24 @@
 @* 検索フォーム *@
  <div class="row">
      <div class="col-md-4">
-        <form id="searchForm" asp-controller="Device" asp-action="Index" method="get">
+        <form id="searchFormSimple" asp-controller="Device" asp-action="Index" method="get">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             @* フリーワード検索 *@
             <div class="form-group">
                 <label asp-for="FreeText" class="control-label"></label>
                 <input asp-for="FreeText" class="form-control" placeholder="検索する文字を入力" />
             </div>
+
+            @* ソートの選択項目(Hidden で送る) *@
+            <input type="hidden" id="SortKeyValueHidden" name="SortKeyValue" value="@Model.SortKeyValue" />
+            <input type="hidden" id="SortOrderValueHidden" name="SortOrderValue" value="@Model.SortOrderValue" />
+
+            @* ソート時に確定済の条件でソートされるようhiddenに取得しておく *@
+            <input type="hidden" id="confirmed_FreeText" name="FreeText" value="@Model.FreeText" />
+
             @* フォーム内容送信 *@
             <div class="form-group">
+                <input type="hidden" name="activeSearchType" value="simple" />
                 <input type="submit" value="検索" class="btn btn-primary" />
             </div>
         </form>
@@ -64,7 +76,7 @@
 
         <div class="row">
             <div class="col-md-4">
-                <form id="searchForm" asp-controller="Device" asp-action="Index" method="get">
+                <form id="searchFormDetail" asp-controller="Device" asp-action="Index" method="get">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             
                     @* 機器管理ID(ManagementId) *@
@@ -88,31 +100,31 @@
                     @* 型番(ModelNumber) *@
                     <div class="form-group">
                         <label asp-for="ModelNumber" class="control-label"></label>
-                        <input asp-for="ModelNumber" class="form-control" />
+                        <input asp-for="ModelNumber" class="form-control"  />
                     </div>
 
                     @* 製造番号(SerialNumber) *@
                     <div class="form-group">
                         <label asp-for="SerialNumber" class="control-label"></label>
-                        <input asp-for="SerialNumber" class="form-control" />
+                        <input asp-for="SerialNumber" class="form-control"  />
                     </div>
 
                     @* ホスト名(HostName) *@
                     <div class="form-group">
                         <label asp-for="HostName" class="control-label"></label>
-                        <input asp-for="HostName" class="form-control" />
+                        <input asp-for="HostName" class="form-control"  />
                     </div>
 
                     @* 設置場所(Location) *@
                     <div class="form-group">
                         <label asp-for="Location" class="control-label"></label>
-                        <input asp-for="Location" class="form-control" />
+                        <input asp-for="Location" class="form-control"  />
                     </div>
 
                     @* 使用者(UserName) *@
                     <div class="form-group">
                         <label asp-for="UserName" class="control-label"></label>
-                        <input asp-for="UserName" class="form-control" />
+                        <input asp-for="UserName" class="form-control"  />
                     </div>
 
                     @* 状態(Status) *@
@@ -161,9 +173,30 @@
                     <input type="hidden" id="SortKeyValueHidden" name="SortKeyValue" value="@Model.SortKeyValue" />
                     <input type="hidden" id="SortOrderValueHidden" name="SortOrderValue" value="@Model.SortOrderValue" />
 
+                    @* ソート時に確定済の条件でソートされるようhiddenに取得しておく *@
+                    <input type="hidden" id="confirmed_ManagementId" name="ManagementId" value="@Model.ManagementId" />
+                    <input type="hidden" id="confirmed_SelectedCategory" name="SelectedCategory" value="@Model.SelectedCategory" />
+                    <input type="hidden" id="confirmed_SelectedPurpose" name="SelectedPurpose" value="@Model.SelectedPurpose" />
+                    <input type="hidden" id="confirmed_ModelNumber" name="ModelNumber" value="@Model.ModelNumber" />
+                    <input type="hidden" id="confirmed_SerialNumber" name="SerialNumber" value="@Model.SerialNumber" />
+                    <input type="hidden" id="confirmed_HostName" name="HostName" value="@Model.HostName" />
+                    <input type="hidden" id="confirmed_Location" name="Location" value="@Model.Location" />
+                    <input type="hidden" id="confirmed_UserName" name="UserName" value="@Model.UserName" />
+                    <input type="hidden" id="confirmed_SelectedStatus" name="SelectedStatus" value="@Model.SelectedStatus" />
+                    <input type="hidden" id="confirmed_PurchaseDateFrom" name="PurchaseDateFrom" value="@Model.PurchaseDateFrom" />
+                    <input type="hidden" id="confirmed_PurchaseDateTo" name="PurchaseDateTo" value="@Model.PurchaseDateTo" />
+                    <input type="hidden" id="confirmed_CreatedDateFrom" name="CreatedDateFrom" value="@Model.CreatedDateFrom" />
+                    <input type="hidden" id="confirmed_CreatedDateTo" name="CreatedDateTo" value="@Model.CreatedDateTo" />
+                    <input type="hidden" id="confirmed_UpdatedDateFrom" name="UpdatedDateFrom" value="@Model.UpdatedDateFrom" />
+                    <input type="hidden" id="confirmed_UpdatedDateTo" name="UpdatedDateTo" value="@Model.UpdatedDateTo" />
+
+                    @* 入力内容クリアボタン *@
+                    <button type="button" class="btn btn-secondary" onclick="clearForm();">クリア</button>
+
                     @* フォーム内容送信 *@
                     <div class="form-group">
-                        <input type="submit" value="検索" class="btn btn-primary" />
+                        <input type="hidden" name="activeSearchType" value="detail" />
+                        <input type="submit" value="詳細検索" class="btn btn-primary" />
                     </div>
                 </form>
             </div>
@@ -201,4 +234,5 @@
 @* jsファイルを読み込む *@
 @section Scripts {
     <script src="~/js/index.js"></script>
+    <script src="~/js/formclear.js"></script>
 }

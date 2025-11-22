@@ -38,6 +38,7 @@
 <div class="row">
     <div class="col-md-4">
         <form id="CreateForm" asp-controller="Device" asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             
             @* 機器管理ID(ManagementId) *@
