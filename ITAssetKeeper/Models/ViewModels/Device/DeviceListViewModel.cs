@@ -113,7 +113,7 @@ public class DeviceListViewModel
     [Display(Name = "並び替え基準")]
     public SelectList? SortKeyList { get; set; }
 
-    [Display(Name = "並び替え")]
+    [Display(Name = "並び替え順")]
     public SelectList? SortOrderList { get; set; }
 
     // --- ページング ---

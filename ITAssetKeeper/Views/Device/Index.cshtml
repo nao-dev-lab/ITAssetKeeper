@@ -35,16 +35,16 @@
 }
 
 @* 検索フォーム *@
- <div class="row">
-     <div class="col-md-12">
+<div class="row">
+    <div class="col-md-12">
         <form id="searchFormSimple" asp-controller="Device" asp-action="Index" method="get">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            
+
             @* フリーワード検索 *@
             <div class="form-group">
                 <div class="freeword-box mb-3">
                     <div class="freeword-row">
-                        
+
                         @* ラベル *@
                         <label class="freeword-label">フリーワード：</label>
 
@@ -73,172 +73,208 @@
             @* フリーワード検索されたことをhiddenで渡す *@
             <input type="hidden" name="activeSearchType" value="simple" />
         </form>
-     </div>
+    </div>
 </div>
 
 @* 詳細検索フォーム 折り畳みボタン *@
-<button id="toggleSearchBtn"
-        class="btn detail-search-btn mb-3"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#searchCollapse"
-        data-is-search="@Model.HasAnyFilter.ToString().ToLower()">
+<div class="detail-toggle-box"
+     id="toggleSearchBtn"
+     data-bs-toggle="collapse"
+     data-is-search="@Model.IsSearchExecuted.ToString().ToLower()"
+     data-has-filter="@Model.HasAnyFilter.ToString().ToLower()"
+     data-bs-target="#searchCollapse">
+    <img src="~/img/arrow_down.png" class="detail-toggle-icon" />
+    <span class="detail-toggle-text">詳細検索</span>
+</div>
 
-    <img src="~/img/arrow_down.png" class="detail-search-icon" />
-    詳細検索
-</button>
-
-@* 詳細検索フォーム *@
+@* 詳細検索フォーム (開いている時)*@
 <div class="collapse @(Model.HasAnyFilter ? "show" : "")" id="searchCollapse">
-    <div class="card card-body mb-3">
 
-        <div class="row">
-            <div class="col-md-4">
-                <form id="searchFormDetail" asp-controller="Device" asp-action="Index" method="get">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            
-                    @* 機器管理ID(ManagementId) *@
-                    <div class="form-group">
-                        <label asp-for="ManagementId" class="control-label"></label>
-                        <input asp-for="ManagementId" class="form-control" />
-                    </div>
+    <div class="detail-search-box mt-0">
 
-                    @* 種別(Category) *@
-                    <div class="form-group">
-                        <label asp-for="CategoryItems" class="control-label"></label>
-                        @Html.DropDownListFor(model => model.SelectedCategory, Model.CategoryItems, "全て", new { @class = "form-control" })
-                    </div>
-
-                    @* 用途(Purpose) *@
-                    <div class="form-group">
-                        <label asp-for="PurposeItems" class="control-label"></label>
-                        @Html.DropDownListFor(model => model.SelectedPurpose, Model.PurposeItems, "全て", new { @class = "form-control" })
-                    </div>
-
-                    @* 型番(ModelNumber) *@
-                    <div class="form-group">
-                        <label asp-for="ModelNumber" class="control-label"></label>
-                        <input asp-for="ModelNumber" class="form-control"  />
-                    </div>
-
-                    @* 製造番号(SerialNumber) *@
-                    <div class="form-group">
-                        <label asp-for="SerialNumber" class="control-label"></label>
-                        <input asp-for="SerialNumber" class="form-control"  />
-                    </div>
-
-                    @* ホスト名(HostName) *@
-                    <div class="form-group">
-                        <label asp-for="HostName" class="control-label"></label>
-                        <input asp-for="HostName" class="form-control"  />
-                    </div>
-
-                    @* 設置場所(Location) *@
-                    <div class="form-group">
-                        <label asp-for="Location" class="control-label"></label>
-                        <input asp-for="Location" class="form-control"  />
-                    </div>
-
-                    @* 使用者(UserName) *@
-                    <div class="form-group">
-                        <label asp-for="UserName" class="control-label"></label>
-                        <input asp-for="UserName" class="form-control"  />
-                    </div>
-
-                    @* 状態(Status) *@
-                    <div class="form-group">
-                        <label asp-for="StatusItems" class="control-label"></label>
-                        @Html.DropDownListFor(model => model.SelectedStatus, Model.StatusItems, "全て", new { @class = "form-control" })
-                    </div>
-
-                    @* 購入日:開始(PurchaseDateFrom) *@
-                    <div class="form-group">
-                        <label asp-for="PurchaseDateFrom" class="control-label"></label>
-                        <input asp-for="PurchaseDateFrom" class="form-control" type="date" />
-                    </div>
-
-                    @* 購入日:終了(PurchaseDateTo) *@
-                    <div class="form-group">
-                        <label asp-for="PurchaseDateTo" class="control-label"></label>
-                        <input asp-for="PurchaseDateTo" class="form-control" type="date" />
-                    </div>
-
-                    @* 登録日:開始(CreatedDateFrom) *@
-                    <div class="form-group">
-                        <label asp-for="CreatedDateFrom" class="control-label"></label>
-                        <input asp-for="CreatedDateFrom" class="form-control" type="date" />
-                    </div>
-
-                    @* 登録日:終了(CreatedDateTo) *@
-                    <div class="form-group">
-                        <label asp-for="CreatedDateTo" class="control-label"></label>
-                        <input asp-for="CreatedDateTo" class="form-control" type="date" />
-                    </div>
-
-                    @* 更新日:開始(UpdatedDateFrom) *@
-                    <div class="form-group">
-                        <label asp-for="UpdatedDateFrom" class="control-label"></label>
-                        <input asp-for="UpdatedDateFrom" class="form-control" type="date" />
-                    </div>
-
-                    @* 更新日:終了(UpdatedDateTo) *@
-                    <div class="form-group">
-                        <label asp-for="UpdatedDateTo" class="control-label"></label>
-                        <input asp-for="UpdatedDateTo" class="form-control" type="date" />
-                    </div>
-
-                    @* ソートの選択項目(Hidden で送る) *@
-                    <input type="hidden" id="SortKeyValueHidden" name="SortKeyValue" value="@Model.SortKeyValue" />
-                    <input type="hidden" id="SortOrderValueHidden" name="SortOrderValue" value="@Model.SortOrderValue" />
-
-                    @* ソート時に確定済の条件でソートされるようhiddenに取得しておく *@
-                    <input type="hidden" id="confirmed_ManagementId" name="ManagementId" value="@Model.ManagementId" />
-                    <input type="hidden" id="confirmed_SelectedCategory" name="SelectedCategory" value="@Model.SelectedCategory" />
-                    <input type="hidden" id="confirmed_SelectedPurpose" name="SelectedPurpose" value="@Model.SelectedPurpose" />
-                    <input type="hidden" id="confirmed_ModelNumber" name="ModelNumber" value="@Model.ModelNumber" />
-                    <input type="hidden" id="confirmed_SerialNumber" name="SerialNumber" value="@Model.SerialNumber" />
-                    <input type="hidden" id="confirmed_HostName" name="HostName" value="@Model.HostName" />
-                    <input type="hidden" id="confirmed_Location" name="Location" value="@Model.Location" />
-                    <input type="hidden" id="confirmed_UserName" name="UserName" value="@Model.UserName" />
-                    <input type="hidden" id="confirmed_SelectedStatus" name="SelectedStatus" value="@Model.SelectedStatus" />
-                    <input type="hidden" id="confirmed_PurchaseDateFrom" name="PurchaseDateFrom" value="@Model.PurchaseDateFrom" />
-                    <input type="hidden" id="confirmed_PurchaseDateTo" name="PurchaseDateTo" value="@Model.PurchaseDateTo" />
-                    <input type="hidden" id="confirmed_CreatedDateFrom" name="CreatedDateFrom" value="@Model.CreatedDateFrom" />
-                    <input type="hidden" id="confirmed_CreatedDateTo" name="CreatedDateTo" value="@Model.CreatedDateTo" />
-                    <input type="hidden" id="confirmed_UpdatedDateFrom" name="UpdatedDateFrom" value="@Model.UpdatedDateFrom" />
-                    <input type="hidden" id="confirmed_UpdatedDateTo" name="UpdatedDateTo" value="@Model.UpdatedDateTo" />
-
-                    @* 入力内容クリアボタン *@
-                    <button type="button" class="btn btn-secondary" onclick="clearForm();">クリア</button>
-
-                    @* フォーム内容送信 *@
-                    <div class="form-group">
-                        <input type="hidden" name="activeSearchType" value="detail" />
-                        <input type="submit" value="詳細検索" class="btn btn-primary" />
-                    </div>
-                </form>
-            </div>
+        @* 入力内容クリアボタン *@
+        <div class="detail-clear-form-area">
+            <button type="button" class="detail-clear-form-btn" onclick="clearForm();">
+                入力内容をクリア
+            </button>
         </div>
+
+        @* 詳細検索フォーム *@
+        <form id="searchFormDetail" asp-controller="Device" asp-action="Index" method="get">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            @* 1行目：3列*@
+            <div class="detail-grid grid-3col">
+                @* 機器管理ID(ManagementId) *@
+                <div class="form-group">
+                    <label asp-for="ManagementId" class="custom-label"></label>
+                    <div class="custom-input-wrapper">
+                        <input asp-for="ManagementId" class="custom-input" />
+                        <button type="button" class="custom-clear-btn">×</button>
+                    </div>
+                </div>
+
+                @* 種別(Category) *@
+                <div class="form-group">
+                    <label asp-for="CategoryItems" class="custom-label"></label>
+                    @Html.DropDownListFor(model => model.SelectedCategory, Model.CategoryItems, "-- 全て --", new { @class = "custom-dropdown" })
+                </div>
+
+                @* 用途(Purpose) *@
+                <div class="form-group">
+                    <label asp-for="PurposeItems" class="custom-label"></label>
+                    @Html.DropDownListFor(model => model.SelectedPurpose, Model.PurposeItems, "-- 全て --", new { @class = "custom-dropdown" })
+                </div>
+            </div>
+
+            @* 2行目：3列*@
+            <div class="detail-grid grid-3col">
+                @* 型番(ModelNumber) *@
+                <div class="form-group">
+                    <label asp-for="ModelNumber" class="custom-label"></label>
+                    <div class="custom-input-wrapper">
+                        <input asp-for="ModelNumber" class="custom-input" />
+                        <button type="button" class="custom-clear-btn">×</button>
+                    </div>
+                </div>
+
+                @* 製造番号(SerialNumber) *@
+                <div class="form-group">
+                    <label asp-for="SerialNumber" class="custom-label"></label>
+                    <div class="custom-input-wrapper">
+                        <input asp-for="SerialNumber" class="custom-input" />
+                        <button type="button" class="custom-clear-btn">×</button>
+                    </div>
+                </div>
+
+                @* ホスト名(HostName) *@
+                <div class="form-group">
+                    <label asp-for="HostName" class="custom-label"></label>
+                    <div class="custom-input-wrapper">
+                        <input asp-for="HostName" class="custom-input" />
+                        <button type="button" class="custom-clear-btn">×</button>
+                    </div>
+                </div>
+            </div>
+
+            @* 3行目：3列*@
+            <div class="detail-grid grid-3col">
+                @* 設置場所(Location) *@
+                <div class="form-group">
+                    <label asp-for="Location" class="custom-label"></label>
+                    <div class="custom-input-wrapper">
+                        <input asp-for="Location" class="custom-input" />
+                        <button type="button" class="custom-clear-btn">×</button>
+                    </div>
+                </div>
+
+                @* 使用者(UserName) *@
+                <div class="form-group">
+                    <label asp-for="UserName" class="custom-label"></label>
+                    <div class="custom-input-wrapper">
+                        <input asp-for="UserName" class="custom-input" />
+                        <button type="button" class="custom-clear-btn">×</button>
+                    </div>
+                </div>
+
+                @* 状態(Status) *@
+                <div class="form-group">
+                    <label asp-for="StatusItems" class="custom-label"></label>
+                    @Html.DropDownListFor(model => model.SelectedStatus, Model.StatusItems, "-- 全て --", new { @class = "custom-dropdown" })
+                </div>
+
+            </div>
+
+            @* 4行目：1列*@
+            <div class="detail-grid grid-1col">
+                @* 購入日(PurchaseDate) *@
+                <div class="form-group date-range-row">
+                    <label asp-for="PurchaseDate" class="custom-label"></label>
+                    <div class="date-range">
+                        <input asp-for="PurchaseDateFrom" type="date" class="custom-input" />
+                        <span class="date-range-separator">〜</span>
+                        <input asp-for="PurchaseDateTo" type="date" class="custom-input" />
+                    </div>
+                </div>
+            </div>
+
+            @* 5行目：1列*@
+            <div class="detail-grid grid-1col">
+                @* 登録日(CreatedAt) *@
+                <div class="form-group date-range-row">
+                    <label asp-for="CreatedAt" class="custom-label"></label>
+                    <div class="date-range">
+                        <input asp-for="CreatedDateFrom" type="date" class="custom-input" />
+                        <span class="date-range-separator">〜</span>
+                        <input asp-for="CreatedDateTo" type="date" class="custom-input" />
+                    </div>
+                </div>
+            </div>
+
+            @* 6行目：1列*@
+            <div class="detail-grid grid-1col">
+                @* 更新日 *@
+                <div class="form-group">
+                    <label asp-for="UpdatedAt" class="custom-label"></label>
+                    <div class="date-range">
+                        <input asp-for="UpdatedDateFrom" type="date" class="custom-input" />
+                        <span class="date-range-separator">〜</span>
+                        <input asp-for="UpdatedDateTo" type="date" class="custom-input" />
+                    </div>
+                </div>
+            </div>
+
+            @* 詳細検索ボタン(フォーム内容送信) *@
+            <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+                <input type="hidden" name="activeSearchType" value="detail" />
+                <button type="submit" class="detail-submit-btn">詳細検索</button>
+            </div>
+
+            @* ソートの選択項目(Hidden で送る) *@
+            <input type="hidden" id="SortKeyValueHidden" name="SortKeyValue" value="@Model.SortKeyValue" />
+            <input type="hidden" id="SortOrderValueHidden" name="SortOrderValue" value="@Model.SortOrderValue" />
+
+            @* ソート時に確定済の条件でソートされるようhiddenに取得しておく *@
+            <input type="hidden" id="confirmed_ManagementId" name="ManagementId" value="@Model.ManagementId" />
+            <input type="hidden" id="confirmed_SelectedCategory" name="SelectedCategory" value="@Model.SelectedCategory" />
+            <input type="hidden" id="confirmed_SelectedPurpose" name="SelectedPurpose" value="@Model.SelectedPurpose" />
+            <input type="hidden" id="confirmed_ModelNumber" name="ModelNumber" value="@Model.ModelNumber" />
+            <input type="hidden" id="confirmed_SerialNumber" name="SerialNumber" value="@Model.SerialNumber" />
+            <input type="hidden" id="confirmed_HostName" name="HostName" value="@Model.HostName" />
+            <input type="hidden" id="confirmed_Location" name="Location" value="@Model.Location" />
+            <input type="hidden" id="confirmed_UserName" name="UserName" value="@Model.UserName" />
+            <input type="hidden" id="confirmed_SelectedStatus" name="SelectedStatus" value="@Model.SelectedStatus" />
+            <input type="hidden" id="confirmed_PurchaseDateFrom" name="PurchaseDateFrom" value="@Model.PurchaseDateFrom" />
+            <input type="hidden" id="confirmed_PurchaseDateTo" name="PurchaseDateTo" value="@Model.PurchaseDateTo" />
+            <input type="hidden" id="confirmed_CreatedDateFrom" name="CreatedDateFrom" value="@Model.CreatedDateFrom" />
+            <input type="hidden" id="confirmed_CreatedDateTo" name="CreatedDateTo" value="@Model.CreatedDateTo" />
+            <input type="hidden" id="confirmed_UpdatedDateFrom" name="UpdatedDateFrom" value="@Model.UpdatedDateFrom" />
+            <input type="hidden" id="confirmed_UpdatedDateTo" name="UpdatedDateTo" value="@Model.UpdatedDateTo" />
+
+        </form>
+
     </div>
 </div>
 
 
 @* 並び替え選択 *@
 <form id="sortForm" data-ajax-url="@Url.Action("GetSortedList","Device")">
-    <div id="sortArea">
+    <div class="sort-area-wrapper">
 
         @* ソート基準 *@
-        <div class="form-group">
-            <label asp-for="SortKeyList" class="control-label"></label>
+        <div class="sort-box">
+            <label asp-for="SortKeyList" class="sort-label"></label>
+            <span class="sort-separator">：</span>
             @Html.DropDownListFor(model => model.SortKeyValue, Model.SortKeyList,
-                new { @class = "form-control", id = "SortKeyValue" })
+            new { @class = "form-control custom-dropdown", id = "SortKeyValue" })
         </div>
 
         @* 昇順 or 降順 *@
-        <div class="form-group">
-            <label asp-for="SortOrderList" class="control-label"></label>
+        <div class="sort-box">
+            <label asp-for="SortOrderList" class="sort-label"></label>
+            <span class="sort-separator">：</span>
             @Html.DropDownListFor(model => model.SortOrderValue, Model.SortOrderList,
-                new { @class = "form-control", id = "SortOrderValue" })
+                        new { @class = "form-control custom-dropdown", id = "SortOrderValue" })
         </div>
     </div>
 </form>
@@ -253,4 +289,5 @@
 @section Scripts {
     <script src="~/js/index.js"></script>
     <script src="~/js/formclear.js"></script>
+    <script src="~/js/dropdownToggle.js"></script>
 }

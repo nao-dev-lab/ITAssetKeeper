@@ -46,75 +46,92 @@
             
             @* 機器管理ID(ManagementId) *@
             <div class="form-group">
-                <label asp-for="ManagementId" class="control-label"></label>
-                <p>※登録後に自動で採番されます</p>
+                <label asp-for="ManagementId" class="custom-label"></label>
+                <span>※登録後に自動で採番されます</span>
             </div>
 
             @* 種別(Category) *@
             <div class="form-group">
-                <label asp-for="CategoryItems" class="control-label"></label>
-                @Html.DropDownListFor(model => model.SelectedCategory, Model.CategoryItems, "-- 未選択 --", new { @class = "form-control" })
+                <label asp-for="CategoryItems" class="custom-label"></label>
+                @Html.DropDownListFor(model => model.SelectedCategory, Model.CategoryItems, "-- 未選択 --", new { @class = "custom-dropdown" })
                 <span asp-validation-for="SelectedCategory" class="text-danger"></span>
             </div>
 
             @* 用途(Purpose) *@
             <div class="form-group">
-                <label asp-for="PurposeItems" class="control-label"></label>
-                @Html.DropDownListFor(model => model.SelectedPurpose, Model.PurposeItems, "-- 未選択 --", new { @class = "form-control" })
+                <label asp-for="PurposeItems" class="custom-label"></label>
+                @Html.DropDownListFor(model => model.SelectedPurpose, Model.PurposeItems, "-- 未選択 --", new { @class = "custom-dropdown" })
                 <span asp-validation-for="SelectedPurpose" class="text-danger"></span>
             </div>
 
             @* 型番(ModelNumber) *@
             <div class="form-group">
-                <label asp-for="ModelNumber" class="control-label"></label>
-                <input asp-for="ModelNumber" class="form-control" />
+                <label asp-for="ModelNumber" class="custom-label"></label>
+                <div class="custom-input-wrapper">
+                    <input asp-for="ModelNumber" class="custom-input" />
+                    <button type="button" class="custom-clear-btn">×</button>
+                </div>
                 <span asp-validation-for="ModelNumber" class="text-danger"></span>
             </div>
 
             @* 製造番号(SerialNumber) *@
             <div class="form-group">
-                <label asp-for="SerialNumber" class="control-label"></label>
-                <input asp-for="SerialNumber" class="form-control" />
+                <label asp-for="SerialNumber" class="custom-label"></label>
+                <div class="custom-input-wrapper">
+                    <input asp-for="SerialNumber" class="custom-input" />
+                    <button type="button" class="custom-clear-btn">×</button>
+                </div>
                 <span asp-validation-for="SerialNumber" class="text-danger"></span>
             </div>
 
             @* ホスト名(HostName) *@
             <div class="form-group">
-                <label asp-for="HostName" class="control-label"></label>
-                <input asp-for="HostName" class="form-control" />
+                <label asp-for="HostName" class="custom-label"></label>
+                <div class="custom-input-wrapper">
+                    <input asp-for="HostName" class="custom-input" />
+                    <button type="button" class="custom-clear-btn">×</button>
+                </div>
             </div>
 
             @* 設置場所(Location) *@
             <div class="form-group">
-                <label asp-for="Location" class="control-label"></label>
-                <input asp-for="Location" class="form-control" />
+                <label asp-for="Location" class="custom-label"></label>
+                <div class="custom-input-wrapper">
+                    <input asp-for="Location" class="custom-input" />
+                    <button type="button" class="custom-clear-btn">×</button>
+                </div>
                 <span asp-validation-for="Location" class="text-danger"></span>
             </div>
 
             @* 使用者(UserName) *@
             <div class="form-group">
-                <label asp-for="UserName" class="control-label"></label>
-                <input asp-for="UserName" class="form-control" />
+                <label asp-for="UserName" class="custom-label"></label>
+                <div class="custom-input-wrapper">
+                    <input asp-for="UserName" class="custom-input" />
+                    <button type="button" class="custom-clear-btn">×</button>
+                </div>
             </div>
 
             @* 状態(Status) *@
             <div class="form-group">
-                <label asp-for="StatusItems" class="control-label"></label>
-                @Html.DropDownListFor(model => model.SelectedStatus, Model.StatusItems, "-- 未選択 --", new { @class = "form-control" })
+                <label asp-for="StatusItems" class="custom-label"></label>
+                @Html.DropDownListFor(model => model.SelectedStatus, Model.StatusItems, "-- 未選択 --", new { @class = "custom-dropdown" })
                 <span asp-validation-for="SelectedStatus" class="text-danger"></span>
             </div>
 
             @* 購入日(PurchaseDate) *@
             <div class="form-group">
-                <label asp-for="PurchaseDate" class="control-label"></label>
-                <input asp-for="PurchaseDate" class="form-control" type="date" />
+                <label asp-for="PurchaseDate" class="custom-label"></label>
+                <div class="custom-input-wrapper">
+                    <input asp-for="PurchaseDate" class="custom-input" type="date" />
+                </div>
                 <span asp-validation-for="PurchaseDate" class="text-danger"></span>
             </div>
 
             @* メモ欄(Memo) *@
             <div class="form-group">
-                <label asp-for="Memo" class="control-label"></label>
-                <textarea asp-for="Memo" class="form-control"></textarea>
+                <label asp-for="Memo" class="custom-label"></label>
+                <textarea asp-for="Memo" class="custom-textarea"></textarea>
             </div>
 
             @* フォーム送信 *@
@@ -124,3 +141,9 @@
         </form>
     </div>
 </div>
+
+@* jsファイルを読み込む *@
+@section Scripts {
+    <script src="~/js/formclear.js"></script>
+    <script src="~/js/dropdownToggle.js"></script>
+}

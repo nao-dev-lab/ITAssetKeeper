@@ -50,57 +50,78 @@
     padding: 24px 20px;
     font-size: 24px;
     font-weight: 700;
-    border-radius: 0; /* 角丸なし */
+    border-radius: 0 !important;
     margin-bottom: 24px;
 }
 
-/* --- 詳細検索ボタン --- */
-/* アイコン */
-.detail-search-icon {
-    width: 16px;
-    height: 16px;
-    object-fit: contain;
-}
 
-/* フォーカス枠を完全に消す */
-.detail-search-btn:focus,
-.detail-search-btn:focus-visible,
-.detail-search-btn:active {
-    outline: none !important;
-    box-shadow: none !important;
-}
-
-/* 詳細検索：通常(閉じた状態) */
-.detail-search-btn {
-    background-color: #7749F8; /* メイン紫 */
-    color: #fff;
-    border: none;
-    padding: 6px 14px;
-    border-radius: 6px;
+/* ==============================
+   共通コントロール用
+============================== */
+/* 共通：ラベル */
+.custom-label {
+    color: #520DC2;
     font-weight: 600;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    transition: all 0.15s ease;
+    margin-bottom: 6px;
+    display: inline-block;
 }
 
-/* ホバー */
-.detail-search-btn:hover {
-    color: #FFFFFF;
-    background-color: #8A62F9;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+/* 共通：input テキストボックス */
+.custom-input-wrapper {
+    position: relative;
+    flex-grow: 1;
 }
 
-/* 詳細検索：開いてる時のボタン */
-.detail-search-btn.open {
-    background-color: #686D72 !important;
+.custom-input {
+    width: 100%;
+    padding: 6px 36px 6px 12px;
+    border: 1px solid #D4D6D8;
+    border-radius: 8px;
+    background-color: #fff;
+    box-sizing: border-box;
+    transition: box-shadow 0.2s ease, border-color 0.1s ease;
 }
 
-.detail-search-btn.open:hover {
-    background-color: #72777C !important;
+.custom-input:focus {
+    outline: none;
+    border-color: #7749F8;
+    box-shadow: 0 0 0 4px #E3D3FD;
 }
+
+/* 共通：×クリアボタン (テキストボックス内) */
+.custom-clear-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #868686;
+    cursor: pointer;
+}
+
+.custom-clear-btn:hover {
+    color: #555;
+}
+
+/* 共通：テキストエリア */
+.custom-textarea {
+    width: 100%;
+    padding: 6px 36px 6px 12px;
+    border: 1px solid #D4D6D8;
+    border-radius: 8px;
+    background-color: #fff;
+    box-sizing: border-box;
+    transition: box-shadow 0.2s ease, border-color 0.1s ease;
+}
+
+.custom-textarea:focus {
+    outline: none;
+    border-color: #7749F8;
+    box-shadow: 0 0 0 4px #E3D3FD;
+}
+
 
 /* ==============================
    テーブル全体(機器一覧・履歴一覧)
@@ -143,6 +164,7 @@
     position: relative;
 }
 
+
 /* ==============================
    フリーワード検索ボックス
 ============================== */
@@ -150,16 +172,16 @@
 .freeword-box {
     border: 1px solid #7749F8;
     background-color: #F9F5FF;
-    padding: 18px 20px;
-    border-radius: 10px;
-    width: 100%; /* 横いっぱい */
+    padding: 8px 20px;
+    border-radius: 0 !important;
+    width: 100%;
 }
 
 /* 「フリーワード：」ラベル */
 .freeword-label {
     color: #520DC2;
     font-weight: 600;
-    font-size: 16px;
+    font-size: 15px;
     white-space: nowrap; /* 折り返さない */
     flex: 0 0 80px; /* 横幅固定 */
 }
@@ -182,9 +204,9 @@
 /* テキストボックス 通常時 */
 .freeword-input {
     width: 100%;
-    padding: 8px 36px 8px 12px; /* 右側に×のスペース確保 */
-    border: 1px solid #7749F8;
-    border-radius: 6px;
+    padding: 6px 36px 6px 12px; /* 右側に×のスペース確保 */
+    border: 1px solid #D4D6D8;
+    border-radius: 8px;
     background-color: #fff;
     box-sizing: border-box;
     transition: box-shadow 0.2s ease, border-color 0.1s ease;
@@ -220,7 +242,7 @@
     color: #6610F2;
     padding: 8px 16px;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
@@ -230,5 +252,288 @@
     background-color: #D8D0FA;
 }
 
+
+/* ==============================
+   詳細検索ボックス
+============================== */
+/* 詳細検索トグル(閉/開)の上部ボックス */
+.detail-toggle-box {
+    border: 1px solid #7749F8;
+    background-color: #FFFFFF;
+    padding: 10px 16px;
+    border-radius: 0 !important;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    user-select: none;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px; /* ラベルと入力欄の間 */
+    margin-bottom: 14px;
+}
+
+/* アイコン */
+.detail-toggle-icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+}
+
+/* テキスト */
+.detail-toggle-text {
+    color: #520DC2;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+/* 詳細検索フォーム部分の外枠 */
+.detail-search-box {
+    border: 1px solid #7749F8;
+    background-color: #F9F5FF;
+    padding: 20px;
+    border-radius: 0 !important;
+    margin-top: 8px;
+}
+
+/* 詳細検索フォーム 全体 */
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 基本3列 */
+    column-gap: 24px; /* 横間 */
+    row-gap: 32px; 
+    width: 100%;
+}
+
+/* 行ごとにカラム数を変更 */
+.grid-3col { grid-template-columns: repeat(3, 1fr); }
+.grid-2col { grid-template-columns: repeat(2, 1fr); }
+.grid-1col { grid-template-columns: 1fr; }
+
+/* クリアボタン */
+.detail-clear-form-area {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 12px;
+}
+
+/* 検索ボタン */
+.form-submit-area {
+    grid-column: 3 / 4;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+/* 入力内容をクリア・詳細検索ボタン */
+.detail-submit-btn,
+.detail-clear-form-btn {
+    background-color: #E3DBFA;
+    color: #6610F2;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.detail-submit-btn:hover,
+.detail-clear-form-btn:hover {
+    background-color: #D8D0FA;
+}
+
+/* 日付入力 の横幅 */
+.detail-input[type="date"] {
+    width: 180px;
+    min-width: 140px;
+    max-width: 240px;
+    position: relative;
+    padding-right: 36px;
+}
+
+/* DatePicker のカレンダーアイコン位置を右へ寄せる */
+.detail-input[type="date"]::-webkit-calendar-picker-indicator {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    opacity: 1;
+}
+
+/* 日付の横並びコンテナ */
+.date-range-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* 日付2つを横に並べて右寄せ */
+.date-range {
+    display: flex;
+    justify-content: flex-start; /* 右寄せ */
+    align-items: center;
+    gap: 10px;
+}
+
+/* 「〜」のデザイン */
+.date-range-separator {
+    font-size: 18px;
+    color: #7749F8;
+}
+
+/* ドロップダウンリスト用の矢印の SVG 生成（現在の色 #868686） */
+:root {
+    --dropdown-chevron-down: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23868686' class='bi bi-chevron-down' viewBox='0 0 16 16'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+    --dropdown-chevron-up: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23868686' class='bi bi-chevron-up' viewBox='0 0 16 16'%3e%3cpath fill-rule='evenodd' d='M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z'/%3e%3c/svg%3e");
+}
+
+/* ドロップダウンリスト */
+.custom-dropdown {
+    width: 100%;
+    padding: 6px 36px 6px 12px;
+    border: 1px solid #D4D6D8;
+    border-radius: 8px;
+    background-color: #fff;
+    box-sizing: border-box;
+    transition: box-shadow 0.2s ease, border-color 0.1s ease;
+    /* ドロップダウンの矢印 */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: var(--dropdown-chevron-down);
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 14px;
+}
+
+.custom-dropdown:focus {
+    outline: none;
+    border-color: #7749F8;
+    box-shadow: 0 0 0 4px #E3D3FD;
+}
+
+/* 展開中 */
+.custom-dropdown.open {
+    outline: none;
+    border-color: #7749F8;
+    box-shadow: 0 0 0 4px #E3D3FD;
+    background-image: var(--dropdown-chevron-up);
+}
+
+/* IE/Edge 対策で右側に余白確保 */
+.custom-dropdown::-ms-expand {
+    display: none;
+}
+
+/* 並び替えエリア（横並び） */
+.sort-box {
+    display: flex;
+    align-items: center;
+    gap: 6px; /* ラベル,ドロップダウン間の余白 */
+    margin-top: 28px;
+}
+
+/* 並び替えエリア全体を横方向にまとめる */
+.sort-area-wrapper {
+    display: flex;
+    justify-content: flex-start;
+    gap: 40px; /* 並び替え基準 と 並び替え順 の余白 */
+    margin: 20px 0;
+}
+
+/* ドロップダウンの共通スタイル */
+.sort-label {
+    color: #520DC2;
+    font-weight: 600;
+    font-size: 15px;
+    white-space: nowrap;
+}
+
+.sort-separator {
+    font-size: 16px;
+    color: #7749F8;
+    text-align: left;
+    margin-right: 4px;
+}
+
+
+/* ==============================
+   ページング処理
+============================== */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;               /* ボタン間隔 */
+    margin-top: 24px;
+    flex-wrap: wrap;
+}
+
+/* すべての page-item/page-link に共通 */
+.pagination .page-item .page-link {
+    padding: 6px 16px;
+    min-width: 40px;
+    height: 38px;
+
+    border-radius: 8px;
+    border: 1px solid #E0E0E0;
+    background-color: #FFFFFF;
+
+    color: #520DC2;
+    font-weight: 600;
+    text-decoration: none;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+/*　前へ / 次へ ボタン */
+.pagination .prev-next {
+    background-color: #F1E9FE;
+    border: 1px solid #E0CEFF;
+    color: #7749F8;
+    font-weight: 600;
+}
+
+.pagination .page-item .page-link:hover {
+    background-color: #EFE2FF;
+}
+
+/* アクティブ（現在ページ） */
+.pagination .active .page-link {
+    background-color: #7749F8;
+    color: #fff;
+}
+
+.pagination .active .page-link:hover {
+    background-color: #9D7BFF;
+    color: #fff;
+}
+
+/* Bootstrap のデフォルトの青枠を消す */
+.pagination .page-link:focus {
+    box-shadow: none !important;
+}
+
+/* 無効状態(前へが使えない時など) */
+.pagination .page-item.disabled .page-link {
+    opacity: 0.4;
+    cursor: default;
+    pointer-events: none;
+}
+
+
+/* ==============================
+   機器登録
+============================== */
 
 

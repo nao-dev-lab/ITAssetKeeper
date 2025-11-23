@@ -48,9 +48,6 @@
         @if (Model.HasPreviousPage)
         {
             <li class="page-item">
-                <a class="page-link paging-link" data-page="1">« 最初</a>
-            </li>
-            <li class="page-item">
                 <a class="page-link paging-link" data-page="@(Model.PageNumber - 1)">‹ 前へ</a>
             </li>
         }
@@ -66,9 +63,6 @@
         {
             <li class="page-item">
                 <a class="page-link paging-link" data-page="@(Model.PageNumber + 1)">次へ ›</a>
-            </li>
-            <li class="page-item">
-                <a class="page-link paging-link" data-page="@Model.TotalPages">最後 »</a>
             </li>
         }
 

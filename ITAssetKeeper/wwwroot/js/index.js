@@ -100,33 +100,53 @@
 
 
     // --- 詳細検索 開閉ボタン ---
-    const btn = document.getElementById("toggleSearchBtn");
+    // 上部の「閉じる / 詳細検索」バー（開閉用）
+    const toggleBtn = document.getElementById("toggleSearchBtn");
     const collapseEl = document.getElementById("searchCollapse");
 
-    if (btn && collapseEl) {
+    if (toggleBtn && collapseEl) {
 
-        // 開いたとき
-        collapseEl.addEventListener("shown.bs.collapse", () => {
-            btn.innerHTML = `<img src="/img/arrow_up.png" class="detail-search-icon" /> 閉じる`;
-            btn.classList.add("open");
-        });
+        // ViewModel側から2つの状態を取得
+        const isSearchExecuted = toggleBtn.getAttribute("data-is-search") === "true";
+        const hasAnyFilter = toggleBtn.getAttribute("data-has-filter") === "true";
 
-        // 閉じたとき
-        collapseEl.addEventListener("hidden.bs.collapse", () => {
-            btn.innerHTML = `<img src="/img/arrow_down.png" class="detail-search-icon" /> 詳細検索`;
-            btn.classList.remove("open");
-        });
-
-        // 検索済みなら最初から閉じる状態をセット
-        const isSearchExecuted = btn.getAttribute("data-is-search") === "true";
-        if (isSearchExecuted) {
-            // collapse が既に show の場合もあるので強制更新
-            btn.innerHTML = `<img src="/img/arrow_up.png" class="detail-search-icon" /> 閉じる`;
-            btn.classList.add("open");
+        // 初期展開状態の制御
+        // ・初回：閉じる
+        // ・検索実行済み かつ フィルタ入力あり → 開く
+        if (isSearchExecuted && hasAnyFilter) {
+            collapseEl.classList.add("show");
+            setToggleOpen();
+        } else {
+            collapseEl.classList.remove("show");
+            setToggleClosed();
         }
+
+        // --- Bootstrap のイベントフック ---
+        // 開いた時
+        collapseEl.addEventListener("shown.bs.collapse", () => {
+            setToggleOpen();
+        });
+
+        // 閉じた時
+        collapseEl.addEventListener("hidden.bs.collapse", () => {
+            setToggleClosed();
+        });
+    }
+
+    // トグルボタン UI：開いた時
+    function setToggleOpen() {
+        toggleBtn.innerHTML =
+            `<img src="/img/arrow_up.png" class="detail-toggle-icon"> <span class="detail-toggle-text">閉じる</span>`;
+        toggleBtn.classList.add("open");
+    }
+
+    // トグルボタン UI：閉じた時
+    function setToggleClosed() {
+        toggleBtn.innerHTML =
+            `<img src="/img/arrow_down.png" class="detail-toggle-icon"> <span class="detail-toggle-text">詳細検索</span>`;
+        toggleBtn.classList.remove("open");
     }
 });
-
 
 // confirmed hidden をすべて集める
 function collectConfirmedConditions() {

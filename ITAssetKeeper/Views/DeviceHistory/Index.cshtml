@@ -36,15 +36,33 @@
 
 @* 検索フォーム *@
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-12">
         <form id="searchFormSimple" asp-controller="DeviceHistory" asp-action="Index" method="get">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             @* フリーワード検索 *@
             <div class="form-group">
-                <label asp-for="FreeText" class="control-label"></label>
-                <input asp-for="FreeText" class="form-control" placeholder="検索する文字を入力" />
+                <div class="freeword-box mb-3">
+                    <div class="freeword-row">
+
+                        @* ラベル *@
+                        <label class="freeword-label">フリーワード：</label>
+
+                        @* 入力欄 *@
+                        <div class="freeword-input-wrapper">
+                            @* 検索ボックス *@
+                            <input asp-for="FreeText" class="freeword-input" placeholder="検索する文字を入力" />
+
+                            @* ×クリアボタン *@
+                            <button type="button" class="freeword-clear">×</button>
+                        </div>
+
+                        @* 検索ボタン：フォーム内容送信 *@
+                        <button type="submit" class="freeword-search-btn">検索</button>
+                    </div>
+                </div>
             </div>
-            
+
             @* ソートの選択項目(Hidden で送る) *@
             <input type="hidden" id="SortKeyValueHidden" name="SortKeyValue" value="@Model.SortKeyValue" />
             <input type="hidden" id="SortOrderValueHidden" name="SortOrderValue" value="@Model.SortOrderValue" />
@@ -52,128 +70,152 @@
             @* ソート時に確定済の条件でソートされるようhiddenに取得しておく *@
             <input type="hidden" id="confirmed_FreeText" name="FreeText" value="@Model.FreeText" />
 
-            @* フォーム内容送信 *@
-            <div class="form-group">
-                <input type="hidden" name="activeSearchType" value="simple" />
-                <input type="submit" value="検索" class="btn btn-primary" />
-            </div>
+            @* フリーワード検索されたことをhiddenで渡す *@
+            <input type="hidden" name="activeSearchType" value="simple" />
         </form>
     </div>
 </div>
 
-@* 検索フォーム 折り畳みボタン *@
-<button id="toggleSearchBtn"
-        class="btn detail-search-btn mb-3"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#searchCollapse"
-        data-is-search="@Model.HasAnyFilter.ToString().ToLower()">
+@* 詳細検索フォーム 折り畳みボタン *@
+<div class="detail-toggle-box"
+     id="toggleSearchBtn"
+     data-bs-toggle="collapse"
+     data-is-search="@Model.IsSearchExecuted.ToString().ToLower()"
+     data-has-filter="@Model.HasAnyFilter.ToString().ToLower()"
+     data-bs-target="#searchCollapse">
+    <img src="~/img/arrow_down.png" class="detail-toggle-icon" />
+    <span class="detail-toggle-text">詳細検索</span>
+</div>
 
-    <img src="~/img/arrow_down.png" class="detail-search-icon" />
-    詳細検索
-</button>
-
-@* 検索フォーム *@
+@* 詳細検索フォーム (開いている時)*@
 <div class="collapse @(Model.HasAnyFilter ? "show" : "")" id="searchCollapse">
-    <div class="card card-body mb-3">
 
-        <div class="row">
-            <div class="col-md-4">
-                <form id="searchFormDetail" asp-controller="DeviceHistory" asp-action="Index" method="get">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="detail-search-box mt-0">
 
-                    @* 履歴ID(HistoryId) *@
-                    <div class="form-group">
-                        <label asp-for="HistoryId" class="control-label"></label>
-                        <input asp-for="HistoryId" class="form-control" />
-                    </div>
-
-                    @* 機器管理ID(ManagementId) *@
-                    <div class="form-group">
-                        <label asp-for="ManagementId" class="control-label"></label>
-                        <input asp-for="ManagementId" class="form-control" />
-                    </div>
-
-                    @* 更新項目(ChangeField) *@
-                    <div class="form-group">
-                        <label asp-for="ChangeFieldItems" class="control-label"></label>
-                        @Html.DropDownListFor(model => model.SelectedChangeField, Model.ChangeFieldItems, "全て", new { @class = "form-control" })
-                    </div>
-
-                    @* 更新前の値(BeforeValue) *@
-                    <div class="form-group">
-                        <label asp-for="BeforeValue" class="control-label"></label>
-                        <input asp-for="BeforeValue" class="form-control" />
-                    </div>
-
-                    @* 更新後の値(AfterValue) *@
-                    <div class="form-group">
-                        <label asp-for="AfterValue" class="control-label"></label>
-                        <input asp-for="AfterValue" class="form-control" />
-                    </div>
-
-                    @* 更新者(UpdatedBy) *@
-                    <div class="form-group">
-                        <label asp-for="UpdatedBy" class="control-label"></label>
-                        <input asp-for="UpdatedBy" class="form-control" />
-                    </div>
-
-                    @* 更新日:開始(UpdatedDateFrom) *@
-                    <div class="form-group">
-                        <label asp-for="UpdatedDateFrom" class="control-label"></label>
-                        <input asp-for="UpdatedDateFrom" class="form-control" type="date" />
-                    </div>
-
-                    @* 更新日:終了(UpdatedDateTo) *@
-                    <div class="form-group">
-                        <label asp-for="UpdatedDateTo" class="control-label"></label>
-                        <input asp-for="UpdatedDateTo" class="form-control" type="date" />
-                    </div>
-
-                    @* ソートの選択項目(Hidden で送る) *@
-                    <input type="hidden" id="SortKeyValueHidden" name="SortKeyValue" value="@Model.SortKeyValue" />
-                    <input type="hidden" id="SortOrderValueHidden" name="SortOrderValue" value="@Model.SortOrderValue" />
-
-                    @* ソート時に確定済の条件でソートされるようhiddenに取得しておく *@
-                    <input type="hidden" id="confirmed_HistoryId" name="HistoryId" value="@Model.HistoryId" />
-                    <input type="hidden" id="confirmed_ManagementId" name="ManagementId" value="@Model.ManagementId" />
-                    <input type="hidden" id="confirmed_SelectedChangeField" name="SelectedChangeField" value="@Model.SelectedChangeField" />
-                    <input type="hidden" id="confirmed_BeforeValue" name="BeforeValue" value="@Model.BeforeValue" />
-                    <input type="hidden" id="confirmed_AfterValue" name="AfterValue" value="@Model.AfterValue" />
-                    <input type="hidden" id="confirmed_UpdatedDateFrom" name="UpdatedDateFrom" value="@Model.UpdatedDateFrom" />
-                    <input type="hidden" id="confirmed_UpdatedDateTo" name="UpdatedDateTo" value="@Model.UpdatedDateTo" />
-
-                    @* 入力内容クリアボタン *@
-                    <button type="button" class="btn btn-secondary" onclick="clearForm();">クリア</button>
-
-                    @* フォーム内容送信 *@
-                    <div class="form-group">
-                        <input type="hidden" name="activeSearchType" value="detail" />
-                        <input type="submit" value="詳細検索" class="btn btn-primary" />
-                    </div>
-                </form>
-            </div>
+        @* 入力内容クリアボタン *@
+        <div class="detail-clear-form-area">
+            <button type="button" class="detail-clear-form-btn" onclick="clearForm();">
+                入力内容をクリア
+            </button>
         </div>
+
+        @* 詳細検索フォーム *@
+        <form id="searchFormDetail" asp-controller="DeviceHistory" asp-action="Index" method="get">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            @* 1行目：3列*@
+            <div class="detail-grid grid-3col">
+                @* 履歴ID(HistoryId) *@
+                <div class="form-group">
+                    <label asp-for="HistoryId" class="custom-label"></label>
+                    <div class="custom-input-wrapper">
+                        <input asp-for="HistoryId" class="custom-input" />
+                        <button type="button" class="custom-clear-btn">×</button>
+                    </div>
+                </div>
+
+                @* 機器管理ID(ManagementId) *@
+                <div class="form-group">
+                    <label asp-for="ManagementId" class="custom-label"></label>
+                    <div class="custom-input-wrapper">
+                        <input asp-for="ManagementId" class="custom-input" />
+                        <button type="button" class="custom-clear-btn">×</button>
+                    </div>
+                </div>
+
+                @* 更新項目(ChangeField) *@
+                <div class="form-group">
+                    <label asp-for="ChangeFieldItems" class="custom-label"></label>
+                    @Html.DropDownListFor(model => model.SelectedChangeField, Model.ChangeFieldItems, "-- 全て --", new { @class = "custom-dropdown" })
+                </div>
+            </div>
+
+            @* 2行目：3列*@
+            <div class="detail-grid grid-3col">
+                @* 更新者(UpdatedBy) *@
+                <div class="form-group">
+                    <label asp-for="UpdatedBy" class="custom-label"></label>
+                    <div class="custom-input-wrapper">
+                        <input asp-for="UpdatedBy" class="custom-input" />
+                        <button type="button" class="custom-clear-btn">×</button>
+                    </div>
+                </div>
+
+                @* 更新前の値(BeforeValue) *@
+                <div class="form-group">
+                    <label asp-for="BeforeValue" class="custom-label"></label>
+                    <div class="custom-input-wrapper">
+                        <input asp-for="BeforeValue" class="custom-input" />
+                        <button type="button" class="custom-clear-btn">×</button>
+                    </div>
+                </div>
+
+                @* 更新後の値(AfterValue) *@
+                <div class="form-group">
+                    <label asp-for="AfterValue" class="custom-label"></label>
+                    <div class="custom-input-wrapper">
+                        <input asp-for="AfterValue" class="custom-input" />
+                        <button type="button" class="custom-clear-btn">×</button>
+                    </div>
+                </div>
+            </div>
+
+            @* 3行目：1列*@
+            <div class="detail-grid grid-1col">
+                @* 更新日(UpdatedAt) *@
+                <div class="form-group date-range-row">
+                    <label asp-for="UpdatedAt" class="custom-label"></label>
+                    <div class="date-range">
+                        <input asp-for="UpdatedDateFrom" type="date" class="custom-input" />
+                        <span class="date-range-separator">〜</span>
+                        <input asp-for="UpdatedDateTo" type="date" class="custom-input" />
+                    </div>
+                </div>
+            </div>
+
+            @* 詳細検索ボタン(フォーム内容送信) *@
+            <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+                <input type="hidden" name="activeSearchType" value="detail" />
+                <button type="submit" class="detail-submit-btn">詳細検索</button>
+            </div>
+
+            @* ソートの選択項目(Hidden で送る) *@
+            <input type="hidden" id="SortKeyValueHidden" name="SortKeyValue" value="@Model.SortKeyValue" />
+            <input type="hidden" id="SortOrderValueHidden" name="SortOrderValue" value="@Model.SortOrderValue" />
+
+            @* ソート時に確定済の条件でソートされるようhiddenに取得しておく *@
+            <input type="hidden" id="confirmed_HistoryId" name="HistoryId" value="@Model.HistoryId" />
+            <input type="hidden" id="confirmed_ManagementId" name="ManagementId" value="@Model.ManagementId" />
+            <input type="hidden" id="confirmed_SelectedChangeField" name="SelectedChangeField" value="@Model.SelectedChangeField" />
+            <input type="hidden" id="confirmed_BeforeValue" name="BeforeValue" value="@Model.BeforeValue" />
+            <input type="hidden" id="confirmed_AfterValue" name="AfterValue" value="@Model.AfterValue" />
+            <input type="hidden" id="confirmed_UpdatedDateFrom" name="UpdatedDateFrom" value="@Model.UpdatedDateFrom" />
+            <input type="hidden" id="confirmed_UpdatedDateTo" name="UpdatedDateTo" value="@Model.UpdatedDateTo" />
+
+        </form>
     </div>
 </div>
 
 
+
 @* 並び替え選択 *@
 <form id="sortForm" data-ajax-url="@Url.Action("GetSortedList","DeviceHistory")">
-    <div id="sortArea">
+    <div class="sort-area-wrapper">
 
         @* ソート基準 *@
-        <div class="form-group">
-            <label asp-for="SortKeyList" class="control-label"></label>
+        <div class="sort-box">
+            <label asp-for="SortKeyList" class="sort-label"></label>
+            <span class="sort-separator">：</span>
             @Html.DropDownListFor(model => model.SortKeyValue, Model.SortKeyList,
-            new { @class = "form-control", id = "SortKeyValue" })
+            new { @class = "form-control custom-dropdown", id = "SortKeyValue" })
         </div>
 
         @* 昇順 or 降順 *@
-        <div class="form-group">
-            <label asp-for="SortOrderList" class="control-label"></label>
+        <div class="sort-box">
+            <label asp-for="SortOrderList" class="sort-label"></label>
+            <span class="sort-separator">：</span>
             @Html.DropDownListFor(model => model.SortOrderValue, Model.SortOrderList,
-                        new { @class = "form-control", id = "SortOrderValue" })
+                        new { @class = "form-control custom-dropdown", id = "SortOrderValue" })
         </div>
     </div>
 </form>
@@ -217,4 +259,5 @@
     <script src="~/js/index.js"></script>
     <script src="~/js/history.js"></script>
     <script src="~/js/formclear.js"></script>
+    <script src="~/js/dropdownToggle.js"></script>
 }

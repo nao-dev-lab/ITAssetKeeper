@@ -10,11 +10,11 @@ public class JapaneseIdentityErrorDescriber : IdentityErrorDescriber
     public override IdentityError PasswordMismatch() { return new IdentityError { Code = nameof(PasswordMismatch), Description = "パスワードが間違っています。" }; }
     public override IdentityError InvalidToken() { return new IdentityError { Code = nameof(InvalidToken), Description = "無効なトークンです。" }; }
     public override IdentityError LoginAlreadyAssociated() { return new IdentityError { Code = nameof(LoginAlreadyAssociated), Description = "このログイン名を持つユーザーは既に存在します。" }; }
-    public override IdentityError InvalidUserName(string userName) { return new IdentityError { Code = nameof(InvalidUserName), Description = $"ユーザー名 '{userName}' は無効です。英数字のみ使用できます。" }; }
-    public override IdentityError InvalidEmail(string email) { return new IdentityError { Code = nameof(InvalidEmail), Description = $"メールアドレス '{email}' は無効です。" }; }
+    public override IdentityError InvalidUserName(string? userName) { return new IdentityError { Code = nameof(InvalidUserName), Description = $"ユーザー名 '{userName}' は無効です。英数字のみ使用できます。" }; }
+    public override IdentityError InvalidEmail(string? email) { return new IdentityError { Code = nameof(InvalidEmail), Description = $"メールアドレス '{email}' は無効です。" }; }
     public override IdentityError DuplicateUserName(string userName) { return new IdentityError { Code = nameof(DuplicateUserName), Description = $"ユーザー名 '{userName}' は既に使用されています。" }; }
     public override IdentityError DuplicateEmail(string email) { return new IdentityError { Code = nameof(DuplicateEmail), Description = $"メールアドレス '{email}' は既に使用されています。" }; }
-    public override IdentityError InvalidRoleName(string role) { return new IdentityError { Code = nameof(InvalidRoleName), Description = $"ロール名 '{role}' は無効です。" }; }
+    public override IdentityError InvalidRoleName(string? role) { return new IdentityError { Code = nameof(InvalidRoleName), Description = $"ロール名 '{role}' は無効です。" }; }
     public override IdentityError DuplicateRoleName(string role) { return new IdentityError { Code = nameof(DuplicateRoleName), Description = $"ロール名 '{role}' は既に使用されています。" }; }
     public override IdentityError UserAlreadyHasPassword() { return new IdentityError { Code = nameof(UserAlreadyHasPassword), Description = "ユーザーは既にパスワードを設定済みです。" }; }
     public override IdentityError UserLockoutNotEnabled() { return new IdentityError { Code = nameof(UserLockoutNotEnabled), Description = "このユーザーに対してロックアウトは有効化されていません。" }; }

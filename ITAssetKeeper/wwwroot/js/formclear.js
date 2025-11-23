@@ -1,19 +1,29 @@
-﻿// --- 検索フォーム 入力内容クリア ---
-//window.clearFreeWord = function () {
-//    const text = document.querySelector(".freeword-input");
-//    if (text) {
-//        text.value = "";
-//    }
-//};
+﻿// --- 全ての「×」ボタンで入力値をクリア --- //
 document.addEventListener("DOMContentLoaded", () => {
-    const clearBtn = document.querySelector(".freeword-clear");
-    const input = document.querySelector(".freeword-input");
 
-    if (clearBtn) {
-        clearBtn.addEventListener("click", () => {
-            input.value = "";
+    // freeword (上部の検索)
+    const freewordClear = document.querySelector(".freeword-clear");
+    const freewordInput = document.querySelector(".freeword-input");
+
+    if (freewordClear && freewordInput) {
+        freewordClear.addEventListener("click", () => {
+            freewordInput.value = "";
         });
     }
+
+    // custom-clear-btn（他テキストボックス用：×ボタンすべて）
+    document.querySelectorAll(".custom-clear-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+
+            // クリア対象の input を探す（ボタンの兄弟要素）
+            const wrapper = btn.closest(".custom-input-wrapper");
+            const input = wrapper?.querySelector(".custom-input");
+
+            if (input) {
+                input.value = "";
+            }
+        });
+    });
 });
 
 // --- 詳細検索フォーム 入力内容クリア ---
