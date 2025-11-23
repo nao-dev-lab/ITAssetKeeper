@@ -77,24 +77,24 @@
 </div>
 
 @* 詳細検索フォーム 折り畳みボタン *@
-<div class="detail-toggle-box"
+<div class="search-detail-toggle-box"
      id="toggleSearchBtn"
      data-bs-toggle="collapse"
      data-is-search="@Model.IsSearchExecuted.ToString().ToLower()"
      data-has-filter="@Model.HasAnyFilter.ToString().ToLower()"
      data-bs-target="#searchCollapse">
-    <img src="~/img/arrow_down.png" class="detail-toggle-icon" />
-    <span class="detail-toggle-text">詳細検索</span>
+    <img src="~/img/arrow_down.png" class="search-detail-toggle-icon" />
+    <span class="search-detail-toggle-text">詳細検索</span>
 </div>
 
 @* 詳細検索フォーム (開いている時)*@
 <div class="collapse @(Model.HasAnyFilter ? "show" : "")" id="searchCollapse">
 
-    <div class="detail-search-box mt-0">
+    <div class="search-detail-box mt-0">
 
         @* 入力内容クリアボタン *@
-        <div class="detail-clear-form-area">
-            <button type="button" class="detail-clear-form-btn" onclick="clearForm();">
+        <div class="search-detail-clear-form-area">
+            <button type="button" class="search-detail-clear-form-btn" onclick="clearForm();">
                 入力内容をクリア
             </button>
         </div>
@@ -104,12 +104,12 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             @* 1行目：3列*@
-            <div class="detail-grid grid-3col">
+            <div class="search-detail-grid grid-3col">
                 @* 履歴ID(HistoryId) *@
                 <div class="form-group">
                     <label asp-for="HistoryId" class="custom-label"></label>
-                    <div class="custom-input-wrapper">
-                        <input asp-for="HistoryId" class="custom-input" />
+                    <div class="search-detail-input-wrapper">
+                        <input asp-for="HistoryId" class="search-detail-input" />
                         <button type="button" class="custom-clear-btn">×</button>
                     </div>
                 </div>
@@ -117,8 +117,8 @@
                 @* 機器管理ID(ManagementId) *@
                 <div class="form-group">
                     <label asp-for="ManagementId" class="custom-label"></label>
-                    <div class="custom-input-wrapper">
-                        <input asp-for="ManagementId" class="custom-input" />
+                    <div class="search-detail-input-wrapper">
+                        <input asp-for="ManagementId" class="search-detail-input" />
                         <button type="button" class="custom-clear-btn">×</button>
                     </div>
                 </div>
@@ -131,12 +131,12 @@
             </div>
 
             @* 2行目：3列*@
-            <div class="detail-grid grid-3col">
+            <div class="search-detail-grid grid-3col">
                 @* 更新者(UpdatedBy) *@
                 <div class="form-group">
                     <label asp-for="UpdatedBy" class="custom-label"></label>
-                    <div class="custom-input-wrapper">
-                        <input asp-for="UpdatedBy" class="custom-input" />
+                    <div class="search-detail-input-wrapper">
+                        <input asp-for="UpdatedBy" class="search-detail-input" />
                         <button type="button" class="custom-clear-btn">×</button>
                     </div>
                 </div>
@@ -144,8 +144,8 @@
                 @* 更新前の値(BeforeValue) *@
                 <div class="form-group">
                     <label asp-for="BeforeValue" class="custom-label"></label>
-                    <div class="custom-input-wrapper">
-                        <input asp-for="BeforeValue" class="custom-input" />
+                    <div class="search-detail-input-wrapper">
+                        <input asp-for="BeforeValue" class="search-detail-input" />
                         <button type="button" class="custom-clear-btn">×</button>
                     </div>
                 </div>
@@ -153,22 +153,22 @@
                 @* 更新後の値(AfterValue) *@
                 <div class="form-group">
                     <label asp-for="AfterValue" class="custom-label"></label>
-                    <div class="custom-input-wrapper">
-                        <input asp-for="AfterValue" class="custom-input" />
+                    <div class="search-detail-input-wrapper">
+                        <input asp-for="AfterValue" class="search-detail-input" />
                         <button type="button" class="custom-clear-btn">×</button>
                     </div>
                 </div>
             </div>
 
             @* 3行目：1列*@
-            <div class="detail-grid grid-1col">
+            <div class="search-detail-grid grid-1col">
                 @* 更新日(UpdatedAt) *@
                 <div class="form-group date-range-row">
                     <label asp-for="UpdatedAt" class="custom-label"></label>
                     <div class="date-range">
-                        <input asp-for="UpdatedDateFrom" type="date" class="custom-input" />
+                        <input asp-for="UpdatedDateFrom" type="date" class="search-detail-input" />
                         <span class="date-range-separator">〜</span>
-                        <input asp-for="UpdatedDateTo" type="date" class="custom-input" />
+                        <input asp-for="UpdatedDateTo" type="date" class="search-detail-input" />
                     </div>
                 </div>
             </div>
@@ -176,7 +176,7 @@
             @* 詳細検索ボタン(フォーム内容送信) *@
             <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
                 <input type="hidden" name="activeSearchType" value="detail" />
-                <button type="submit" class="detail-submit-btn">詳細検索</button>
+                <button type="submit" class="search-detail-submit-btn">詳細検索</button>
             </div>
 
             @* ソートの選択項目(Hidden で送る) *@

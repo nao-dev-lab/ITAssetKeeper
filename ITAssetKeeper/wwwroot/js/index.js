@@ -136,14 +136,14 @@
     // トグルボタン UI：開いた時
     function setToggleOpen() {
         toggleBtn.innerHTML =
-            `<img src="/img/arrow_up.png" class="detail-toggle-icon"> <span class="detail-toggle-text">閉じる</span>`;
+            `<img src="/img/arrow_up.png" class="search-detail-toggle-icon"> <span class="search-detail-toggle-text">閉じる</span>`;
         toggleBtn.classList.add("open");
     }
 
     // トグルボタン UI：閉じた時
     function setToggleClosed() {
         toggleBtn.innerHTML =
-            `<img src="/img/arrow_down.png" class="detail-toggle-icon"> <span class="detail-toggle-text">詳細検索</span>`;
+            `<img src="/img/arrow_down.png" class="search-detail-toggle-icon"> <span class="search-detail-toggle-text">詳細検索</span>`;
         toggleBtn.classList.remove("open");
     }
 });

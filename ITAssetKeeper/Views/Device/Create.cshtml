@@ -31,25 +31,28 @@
     </div>
 }
 
-
-<div>
-    @* キャンセルを押したら内容を破棄してリロード *@
-    <a asp-controller="Device" asp-action="Create">キャンセル</a>
+@* キャンセルボタン *@
+<div class="create-cancel-area">
+    <a asp-controller="Device" asp-action="Create" class="create-cancel-btn">キャンセル</a>
 </div>
 
 @* 機器登録フォーム *@
-<div class="row">
-    <div class="col-md-4">
-        <form id="CreateForm" asp-controller="Device" asp-action="Create" method="post">
-            @Html.AntiForgeryToken()
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            
+<div class="form-box">
+    <form id="CreateForm" asp-controller="Device" asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        @* 1行目：1列 *@
+        <div class="create-grid grid-1col">
             @* 機器管理ID(ManagementId) *@
             <div class="form-group">
                 <label asp-for="ManagementId" class="custom-label"></label>
-                <span>※登録後に自動で採番されます</span>
+                <span class="create-note">※登録後に自動で採番されます</span>
             </div>
+        </div>
 
+        @* 2行目：3列 *@
+        <div class="create-grid grid-3col">
             @* 種別(Category) *@
             <div class="form-group">
                 <label asp-for="CategoryItems" class="custom-label"></label>
@@ -62,6 +65,28 @@
                 <label asp-for="PurposeItems" class="custom-label"></label>
                 @Html.DropDownListFor(model => model.SelectedPurpose, Model.PurposeItems, "-- 未選択 --", new { @class = "custom-dropdown" })
                 <span asp-validation-for="SelectedPurpose" class="text-danger"></span>
+            </div>
+
+            @* ホスト名(HostName) *@
+            <div class="form-group">
+                <label asp-for="HostName" class="custom-label"></label>
+                <div class="custom-input-wrapper">
+                    <input asp-for="HostName" class="custom-input" />
+                    <button type="button" class="custom-clear-btn">×</button>
+                </div>
+            </div>
+        </div>
+
+        @* 3行目：3列 *@
+        <div class="create-grid grid-3col">
+            @* 設置場所(Location) *@
+            <div class="form-group">
+                <label asp-for="Location" class="custom-label"></label>
+                <div class="custom-input-wrapper">
+                    <input asp-for="Location" class="custom-input" placeholder="IDで入力 (例: F3A2I11)"/>
+                    <button type="button" class="custom-clear-btn">×</button>
+                </div>
+                <span asp-validation-for="Location" class="text-danger"></span>
             </div>
 
             @* 型番(ModelNumber) *@
@@ -83,40 +108,17 @@
                 </div>
                 <span asp-validation-for="SerialNumber" class="text-danger"></span>
             </div>
+        </div>
 
-            @* ホスト名(HostName) *@
-            <div class="form-group">
-                <label asp-for="HostName" class="custom-label"></label>
-                <div class="custom-input-wrapper">
-                    <input asp-for="HostName" class="custom-input" />
-                    <button type="button" class="custom-clear-btn">×</button>
-                </div>
-            </div>
-
-            @* 設置場所(Location) *@
-            <div class="form-group">
-                <label asp-for="Location" class="custom-label"></label>
-                <div class="custom-input-wrapper">
-                    <input asp-for="Location" class="custom-input" />
-                    <button type="button" class="custom-clear-btn">×</button>
-                </div>
-                <span asp-validation-for="Location" class="text-danger"></span>
-            </div>
-
+        @* 4行目：3列 *@
+        <div class="create-grid grid-3col">
             @* 使用者(UserName) *@
             <div class="form-group">
                 <label asp-for="UserName" class="custom-label"></label>
                 <div class="custom-input-wrapper">
-                    <input asp-for="UserName" class="custom-input" />
+                    <input asp-for="UserName" class="custom-input" placeholder="例: taro.yamada"/>
                     <button type="button" class="custom-clear-btn">×</button>
                 </div>
-            </div>
-
-            @* 状態(Status) *@
-            <div class="form-group">
-                <label asp-for="StatusItems" class="custom-label"></label>
-                @Html.DropDownListFor(model => model.SelectedStatus, Model.StatusItems, "-- 未選択 --", new { @class = "custom-dropdown" })
-                <span asp-validation-for="SelectedStatus" class="text-danger"></span>
             </div>
 
             @* 購入日(PurchaseDate) *@
@@ -128,19 +130,30 @@
                 <span asp-validation-for="PurchaseDate" class="text-danger"></span>
             </div>
 
+            @* 状態(Status) *@
+            <div class="form-group">
+                <label asp-for="StatusItems" class="custom-label"></label>
+                @Html.DropDownListFor(model => model.SelectedStatus, Model.StatusItems, "-- 未選択 --", new { @class = "custom-dropdown" })
+                <span asp-validation-for="SelectedStatus" class="text-danger"></span>
+            </div>
+        </div>
+        
+        @* 5行目：1列 *@
+        <div class="create-grid grid-1col">
             @* メモ欄(Memo) *@
             <div class="form-group">
                 <label asp-for="Memo" class="custom-label"></label>
-                <textarea asp-for="Memo" class="custom-textarea"></textarea>
+                <textarea asp-for="Memo" class="custom-textarea" placeholder="自由記述欄"></textarea>
             </div>
+        </div>
 
-            @* フォーム送信 *@
-            <div class="form-group">
-                <input type="submit" value="登録" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+        @* 登録ボタン：フォーム送信 *@
+        <div class="create-submit-area">
+            <input type="submit" value="登録" class="create-submit-btn" />
+        </div>
+    </form>
 </div>
+
 
 @* jsファイルを読み込む *@
 @section Scripts {
