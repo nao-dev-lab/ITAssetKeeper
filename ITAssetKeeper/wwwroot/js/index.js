@@ -70,7 +70,6 @@
 
         var page = $(this).data("page");
         const confirmedData = collectConfirmedConditions();
-        //var form = getActiveForm();
 
         // ページング処理をしてもソートの設定を引き継ぐようにする
         var sortKey = $("#SortKeyValue").val();
@@ -166,8 +165,8 @@ function collectConfirmedConditions() {
     });
 
     // activeSearchType も送る
-    const type = $("#activeSearchType").val();
-    query += `&activeSearchType=${type}`;
+    //const type = $("#activeSearchType").val();
+    //query += `&activeSearchType=${type}`;
 
     return query;
 }

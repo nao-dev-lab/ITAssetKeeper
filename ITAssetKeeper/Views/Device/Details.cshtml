@@ -1,7 +1,7 @@
 ﻿@model ITAssetKeeper.Models.ViewModels.Device.DeviceDto
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "機器情報";
 }
 
 @* タイトルバー *@
@@ -209,8 +209,8 @@
 
             @* モーダルフッター *@
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary me-auto" data-bs-dismiss="modal">キャンセル</button>
-                <button type="button" id="btnDeleteExec" class="btn btn-danger">削除</button>
+                <button type="button" class="modal-close-btn me-auto" data-bs-dismiss="modal">キャンセル</button>
+                <button type="button" id="btnDeleteExec" class="modal-negative-btn">削除</button>
             </div>
 
         </div>

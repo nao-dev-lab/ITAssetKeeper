@@ -256,4 +256,11 @@ public class AccountController : Controller
     {
         return View();
     }
+
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult ForgotPassword()
+    {
+        return View();
+    }
 }

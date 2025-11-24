@@ -58,6 +58,13 @@
 /* ==============================
    共通コントロール用
 ============================== */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px; /* ラベルと入力欄の間 */
+    margin-bottom: 14px;
+}
+
 /* 共通：ラベル */
 .custom-label {
     color: #520DC2;
@@ -90,6 +97,43 @@
     outline: none;
     border-color: #7749F8;
     box-shadow: 0 0 0 4px #E3D3FD;
+}
+
+/* 読み取り専用（readonly） */
+.custom-input:read-only,
+.custom-textarea:read-only {
+    background-color: #F3F3F3;
+    border-color: #CCCCCC;
+    cursor: default;
+    color: #555;
+}
+
+/* 無効化（disabled） */
+.custom-input:disabled,
+.custom-textarea:disabled,
+.custom-dropdown:disabled {
+    background-color: #EDEDED;
+    border-color: #C9C9C9;
+    color: #999;
+    cursor: not-allowed;
+}
+
+/* 無効状態のときフォーカス影を消す */
+.custom-input:disabled:focus,
+.custom-textarea:disabled:focus,
+.custom-dropdown:disabled:focus,
+.custom-input:read-only:focus,
+.custom-textarea:read-only:focus {
+    box-shadow: none;
+    border-color: #C9C9C9;
+}
+
+.custom-dropdown:disabled {
+    background-color: #EDEDED;
+    border-color: #C9C9C9;
+    color: #999;
+    cursor: not-allowed;
+    background-image: none;
 }
 
 /* 共通：×クリアボタン (テキストボックス内) */
@@ -182,6 +226,77 @@
 .custom-dropdown::-ms-expand {
     display: none;
 }
+
+
+/* ==============================
+   共通：
+   機器登録 & 機器詳細 & 機器情報編集
+============================== */
+/* 外枠 */
+.form-box {
+    border: 1px solid #7749F8;
+    background-color: #F9F5FF;
+    padding: 24px 28px;
+}
+
+/* キャンセルボタン（右上） */
+.form-cancel-area {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+}
+
+/* 行ごとのグリッド */
+.form-grid {
+    display: grid;
+    width: 100%;
+    column-gap: 28px;
+    row-gap: 28px;
+    margin-bottom: 10px;
+}
+
+/* 登録・編集ボタン（左下） */
+.form-submit-area {
+    margin-top: 20px;
+}
+
+.form-submit-btn {
+    background-color: #28A745;
+    color: #fff;
+    padding: 10px 30px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.form-submit-btn:hover {
+    background-color: #2E9766;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.22);
+}
+
+/* キャンセルボタン（右上） */
+.form-cancel-btn {
+    background-color: #7749F8;
+    color: #fff;
+    padding: 6px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.2s ease;
+}
+
+.form-cancel-btn:hover {
+    opacity: 0.85;
+    color: #fff;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.25);
+}
+
 
 /* ==============================
    テーブル全体(機器一覧・履歴一覧)
@@ -330,13 +445,6 @@
     user-select: none;
 }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 2px; /* ラベルと入力欄の間 */
-    margin-bottom: 14px;
-}
-
 /* アイコン */
 .search-detail-toggle-icon {
     width: 18px;
@@ -378,12 +486,12 @@
 }
 
 /* 検索ボタン */
-.form-submit-area {
+/*.form-submit-area {
     grid-column: 3 / 4;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-}
+}*/
 
 /* 入力内容をクリア・詳細検索ボタン */
 .search-detail-submit-btn {
@@ -577,27 +685,16 @@
 
 
 /* ==============================
-   機器登録 & 機器詳細：共通
-============================== */
-/* 外枠 */
-.form-box {
-    border: 1px solid #7749F8;
-    background-color: #F9F5FF;
-    padding: 24px 28px;
-}
-
-
-/* ==============================
    機器登録(Device/Create)
 ============================== */
 /* キャンセルボタン（右上） */
-.create-cancel-area {
+/*.create-cancel-area {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 8px;
-}
+}*/
 
-.create-cancel-btn {
+/*.create-cancel-btn {
     background-color: #7749F8;
     color: #fff;
     padding: 6px 18px;
@@ -610,7 +707,7 @@
 .create-cancel-btn:hover {
     opacity: 0.85;
     color: #fff;
-}
+}*/
 
 /* 自動採番メッセージ */
 .create-note {
@@ -620,16 +717,16 @@
 }
 
 /* 行ごとのグリッド */
-.create-grid {
+/*.create-grid {
     display: grid;
     width: 100%;
     column-gap: 28px;
     row-gap: 28px;
     margin-bottom: 10px;
-}
+}*/
 
 /* 登録ボタン（左下） */
-.create-submit-area {
+/*.create-submit-area {
     margin-top: 20px;
 }
 
@@ -646,7 +743,7 @@
 
 .create-submit-btn:hover {
     background-color: #2E9A58;
-}
+}*/
 
 
 /* ==============================
@@ -676,11 +773,14 @@
     font-size: 14px;
     font-weight: 600;
     text-decoration: none;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.2s ease;
 }
 
 .btn-back:hover { 
-    opacity: 0.85;
+    opacity: 0.9;
     color: #fff;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.25);
 }
 
 /* メモ欄 */
@@ -712,12 +812,17 @@
     font-weight: 700;
     font-size: 15px;
     cursor: pointer;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.2s ease, background-color 0.2s ease;
 }
-.btn-edit:hover { background-color: #2E9A58; }
+.btn-edit:hover {
+    background-color: #2E9A58;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.22);
+}
 
 /* 削除ボタン */
 .btn-delete {
-    background-color: #CE6444;
+    background-color: #D4552F;
     color: #fff !important;
     padding: 10px 26px;
     border-radius: 8px;
@@ -725,7 +830,10 @@
     font-weight: 700;
     font-size: 15px;
     cursor: pointer;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.2s ease, background-color 0.2s ease;
 }
 .btn-delete:hover {
-    background-color: #B45134;
+    background-color: #BA411C;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.22);
 }

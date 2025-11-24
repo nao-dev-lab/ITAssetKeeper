@@ -1,7 +1,7 @@
 ﻿@model ITAssetKeeper.Models.ViewModels.Device.DeviceListViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "機器情報 一覧";
 }
 
 @* タイトルバー *@
@@ -224,9 +224,11 @@
                 </div>
             </div>
 
+            @* 詳細検索されたことをhiddenで渡す *@
+            <input type="hidden" name="activeSearchType" value="detail" />
+
             @* 詳細検索ボタン(フォーム内容送信) *@
             <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
-                <input type="hidden" name="activeSearchType" value="detail" />
                 <button type="submit" class="search-detail-submit-btn">詳細検索</button>
             </div>
 

@@ -75,6 +75,12 @@
     width: 100%;
 }
 
+.auth-input:focus {
+    outline: none;
+    border-color: #7749F8;
+    box-shadow: 0 0 0 4px #E3D3FD;
+}
+
 .auth-password-wrapper .eye-icon {
     cursor: pointer;
 }

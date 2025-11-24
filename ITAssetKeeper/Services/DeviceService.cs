@@ -331,7 +331,6 @@ public class DeviceService : IDeviceService
             // 受け取ったビューモデルからEntity 作成
             var entity = new Device
             {
-                //ManagementId = GenerateManagementId(),
                 ManagementId = await GenerateManagementIdAsync(),
                 Category = model.SelectedCategory,
                 Purpose = model.SelectedPurpose,
@@ -342,7 +341,7 @@ public class DeviceService : IDeviceService
                 UserName = model.UserName,
                 Status = model.SelectedStatus,
                 Memo = model.Memo,
-                PurchaseDate = model.PurchaseDate
+                PurchaseDate = model.PurchaseDate!.Value
             };
 
             // Device を追加
@@ -597,7 +596,7 @@ public class DeviceService : IDeviceService
                 entity.UserName = model.UserName;
                 entity.Status = model.SelectedStatus;
                 entity.Memo = model.Memo;
-                entity.PurchaseDate = model.PurchaseDate;
+                entity.PurchaseDate = model.PurchaseDate!.Value;
             }
             else
             {

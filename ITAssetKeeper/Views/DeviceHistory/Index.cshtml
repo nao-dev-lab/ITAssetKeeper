@@ -1,7 +1,7 @@
 ﻿@model ITAssetKeeper.Models.ViewModels.DeviceHistory.DeviceHistoryViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "更新履歴 一覧";
 }
 
 @* タイトルバー *@
@@ -173,9 +173,11 @@
                 </div>
             </div>
 
+            @* 詳細検索されたことをhiddenで渡す *@
+            <input type="hidden" name="activeSearchType" value="detail" />
+
             @* 詳細検索ボタン(フォーム内容送信) *@
             <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
-                <input type="hidden" name="activeSearchType" value="detail" />
                 <button type="submit" class="search-detail-submit-btn">詳細検索</button>
             </div>
 
@@ -189,6 +191,7 @@
             <input type="hidden" id="confirmed_SelectedChangeField" name="SelectedChangeField" value="@Model.SelectedChangeField" />
             <input type="hidden" id="confirmed_BeforeValue" name="BeforeValue" value="@Model.BeforeValue" />
             <input type="hidden" id="confirmed_AfterValue" name="AfterValue" value="@Model.AfterValue" />
+            <input type="hidden" id="confirmed_UpdatedBy" name="UpdatedBy" value="@Model.UpdatedBy" />
             <input type="hidden" id="confirmed_UpdatedDateFrom" name="UpdatedDateFrom" value="@Model.UpdatedDateFrom" />
             <input type="hidden" id="confirmed_UpdatedDateTo" name="UpdatedDateTo" value="@Model.UpdatedDateTo" />
 
@@ -247,7 +250,7 @@
 
             @* モーダルフッター *@
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+                <button type="button" class="modal-close-btn" data-bs-dismiss="modal">閉じる</button>
             </div>
         </div>
     </div>

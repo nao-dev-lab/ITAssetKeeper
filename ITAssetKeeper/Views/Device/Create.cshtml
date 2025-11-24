@@ -1,7 +1,7 @@
 ﻿@model ITAssetKeeper.Models.ViewModels.Device.DeviceCreateViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "機器情報 登録";
 }
 
 @* タイトルバー *@
@@ -32,8 +32,8 @@
 }
 
 @* キャンセルボタン *@
-<div class="create-cancel-area">
-    <a asp-controller="Device" asp-action="Create" class="create-cancel-btn">キャンセル</a>
+<div class="form-cancel-area">
+    <a asp-controller="Device" asp-action="Create" class="form-cancel-btn">キャンセル</a>
 </div>
 
 @* 機器登録フォーム *@
@@ -43,7 +43,7 @@
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         @* 1行目：1列 *@
-        <div class="create-grid grid-1col">
+        <div class="form-grid grid-1col">
             @* 機器管理ID(ManagementId) *@
             <div class="form-group">
                 <label asp-for="ManagementId" class="custom-label"></label>
@@ -52,7 +52,7 @@
         </div>
 
         @* 2行目：3列 *@
-        <div class="create-grid grid-3col">
+        <div class="form-grid grid-3col">
             @* 種別(Category) *@
             <div class="form-group">
                 <label asp-for="CategoryItems" class="custom-label"></label>
@@ -78,7 +78,7 @@
         </div>
 
         @* 3行目：3列 *@
-        <div class="create-grid grid-3col">
+        <div class="form-grid grid-3col">
             @* 設置場所(Location) *@
             <div class="form-group">
                 <label asp-for="Location" class="custom-label"></label>
@@ -111,7 +111,7 @@
         </div>
 
         @* 4行目：3列 *@
-        <div class="create-grid grid-3col">
+        <div class="form-grid grid-3col">
             @* 使用者(UserName) *@
             <div class="form-group">
                 <label asp-for="UserName" class="custom-label"></label>
@@ -139,7 +139,7 @@
         </div>
         
         @* 5行目：1列 *@
-        <div class="create-grid grid-1col">
+        <div class="form-grid grid-1col">
             @* メモ欄(Memo) *@
             <div class="form-group">
                 <label asp-for="Memo" class="custom-label"></label>
@@ -148,8 +148,8 @@
         </div>
 
         @* 登録ボタン：フォーム送信 *@
-        <div class="create-submit-area">
-            <input type="submit" value="登録" class="create-submit-btn" />
+        <div class="form-submit-area">
+            <input type="submit" value="登録" class="form-submit-btn" />
         </div>
     </form>
 </div>

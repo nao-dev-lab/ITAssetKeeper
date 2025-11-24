@@ -18,12 +18,12 @@
                 <p>ログアウト してよろしいですか？</p>
             </div>
 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary me-auto" data-bs-dismiss="modal">キャンセル</button>
+            <div class="modal-footer justify-content-between">
                 <form asp-action="Logout" asp-controller="Account" method="post">
                     @Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-danger">ログアウト</button>
+                    <button type="submit" class="modal-negative-btn me-auto">ログアウト</button>
                 </form>
+                <button type="button" class="modal-close-btn" data-bs-dismiss="modal">キャンセル</button>
             </div>
 
         </div>

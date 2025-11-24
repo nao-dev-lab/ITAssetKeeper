@@ -62,5 +62,5 @@ public class DeviceCreateViewModel
     [Required(ErrorMessage = "日付の選択が必要です")]
     [DataType(DataType.Date)]
     [Display(Name = "購入日")]
-    public DateTime PurchaseDate { get; set; }
+    public DateTime? PurchaseDate { get; set; }
 }

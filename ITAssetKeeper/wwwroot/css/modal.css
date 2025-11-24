@@ -9,7 +9,7 @@
 
 /* モーダルヘッダー アイコン */
 .modal-icon {
-    width: 22px; /* 大きさは必要に応じて変更 */
+    width: 22px;
     height: 22px;
     margin-right: 6px; /* 文字との間隔 */
     object-fit: contain; /* ゆがみ防止 */
@@ -46,3 +46,76 @@
     max-width: 600px;
     width: 95%;
 }
+
+/* 閉じるボタン */
+.modal-close-btn {
+    background-color: #6C757D;
+    color: #fff;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.1s ease;
+}
+
+.modal-close-btn:hover {
+    background-color: #8996A1;
+    color: #fff;
+}
+
+/* 水色ボタン */
+.modal-info-btn {
+    background-color: #17A2B8;
+    color: #fff;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.1s ease;
+}
+
+.modal-info-btn:hover {
+    background-color: #36B8CD;
+    color: #fff;
+}
+
+/* 緑ボタン */
+.modal-positive-btn {
+    background-color: #28A745;
+    color: #fff;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.modal-positive-btn:hover {
+    background-color: #2E9766;
+    color: #fff;
+}
+
+/* 赤ボタン */
+.modal-negative-btn {
+    background-color: #D4552F;
+    color: #fff;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.modal-negative-btn:hover {
+    background-color: #BA411C;
+    color: #fff;
+}
+
