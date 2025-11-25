@@ -1,0 +1,278 @@
+﻿/* ==============================
+   共通 UI コンポーネント
+============================== */
+
+/* form-group */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px; /* ラベルと入力欄の間 */
+    margin-bottom: 14px;
+}
+
+/* 行ごとにカラム数 */
+.grid-3col {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-2col {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-1col {
+    grid-template-columns: 1fr;
+}
+
+/* ラベル */
+.custom-label {
+    color: #520DC2;
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: inline-block;
+}
+
+/* input wrapper */
+.custom-input-wrapper {
+    display: flex;
+    position: relative;
+    align-items: center;
+    height: 40px;
+}
+
+/* input 共通 */
+.custom-input {
+    width: 100%;
+    height: 100%;
+    padding: 6px 36px 6px 12px;
+    border: 1px solid #D4D6D8;
+    border-radius: 8px;
+    background-color: #fff;
+    box-sizing: border-box;
+    transition: box-shadow 0.2s ease, border-color 0.1s ease;
+}
+
+.custom-input:focus {
+    outline: none;
+    border-color: #7749F8;
+    box-shadow: 0 0 0 4px #E3D3FD;
+}
+
+/* DatePicker のカレンダーアイコン位置を右へ寄せる */
+.custom-input[type="date"]::-webkit-calendar-picker-indicator {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    opacity: 1;
+}
+
+/* ドロップダウンリスト用の矢印の SVG 生成（現在の色 #868686） */
+:root {
+    --dropdown-chevron-down: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23868686' class='bi bi-chevron-down' viewBox='0 0 16 16'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+    --dropdown-chevron-up: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23868686' class='bi bi-chevron-up' viewBox='0 0 16 16'%3e%3cpath fill-rule='evenodd' d='M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z'/%3e%3c/svg%3e");
+}
+
+/* ドロップダウンリスト */
+.custom-dropdown {
+    width: 100%;
+    padding: 6px 36px 6px 12px;
+    border: 1px solid #D4D6D8;
+    border-radius: 8px;
+    background-color: #fff;
+    box-sizing: border-box;
+    transition: box-shadow 0.2s ease, border-color 0.1s ease;
+    /* ドロップダウンの矢印 */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: var(--dropdown-chevron-down);
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 14px;
+}
+
+.custom-dropdown:focus {
+    outline: none;
+    border-color: #7749F8;
+    box-shadow: 0 0 0 4px #E3D3FD;
+}
+
+/* 展開中 */
+.custom-dropdown.open {
+    outline: none;
+    border-color: #7749F8;
+    box-shadow: 0 0 0 4px #E3D3FD;
+    background-image: var(--dropdown-chevron-up);
+}
+
+/* IE/Edge 対策で右側に余白確保 */
+.custom-dropdown::-ms-expand {
+    display: none;
+}
+
+/* 読み取り専用 */
+.custom-input:read-only,
+.custom-textarea:read-only {
+    background-color: #F3F3F3;
+    border-color: #CCCCCC;
+    cursor: default;
+    color: #555;
+}
+
+/* disabled */
+.custom-input:disabled,
+.custom-textarea:disabled,
+.custom-dropdown:disabled {
+    background-color: #EDEDED;
+    border-color: #C9C9C9;
+    color: #999;
+    cursor: not-allowed;
+}
+
+.custom-dropdown:disabled {
+    background-image: none;
+}
+
+/* 無効状態のときフォーカス影を消す */
+.custom-input:disabled:focus,
+.custom-textarea:disabled:focus,
+.custom-dropdown:disabled:focus,
+.custom-input:read-only:focus,
+.custom-textarea:read-only:focus {
+    box-shadow: none;
+    border-color: #C9C9C9;
+}
+
+/* textarea */
+.custom-textarea {
+    width: 100%;
+    padding: 8px 36px 8px 12px;
+    border: 1px solid #D4D6D8;
+    border-radius: 8px;
+    background-color: #fff;
+    box-sizing: border-box;
+    transition: box-shadow 0.2s ease, border-color 0.1s ease;
+}
+
+.custom-textarea:focus {
+    outline: none;
+    border-color: #7749F8;
+    box-shadow: 0 0 0 4px #E3D3FD;
+}
+
+/* ×クリアボタン */
+.custom-clear-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #868686;
+    cursor: pointer;
+}
+
+.custom-clear-btn:hover {
+    color: #555;
+}
+
+/* テーブル wrapper */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 1.5rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background-color: #fff;
+    padding: 6px;
+}
+
+/* 折り返し防止 */
+.nowrap-table {
+    white-space: nowrap;
+}
+
+/* 改行を有効 */
+.white-space-pre-wrap {
+    white-space: pre-wrap;
+}
+
+.nowrap-table th,
+.nowrap-table td {
+    vertical-align: middle;
+}
+
+/* テーブルヘッダー */
+table.table thead th {
+    background-color: #7749F8 !important;
+    color: #ffffff;
+}
+
+/* テーブルの色分け行 */
+table.table tbody tr:nth-child(even) {
+    background-color: #EBE5FC;
+}
+
+/* 省略テキスト */
+.text-ellipsis {
+    max-width: 200px; /* 最大長 */
+    white-space: nowrap; /* 改行せず 1 行で表示 */
+    overflow: hidden; /* はみ出し部分を隠す */
+    text-overflow: ellipsis; /* 省略記号 … を表示 */
+    position: relative;
+}
+
+/* ページング */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; /* ボタン間隔 */
+    margin-top: 24px;
+    flex-wrap: wrap;
+}
+
+/* すべての page-item/page-link に共通 */
+.pagination .page-item .page-link {
+    padding: 6px 16px;
+    min-width: 40px;
+    height: 38px;
+
+    border-radius: 8px;
+    border: 1px solid #E0E0E0;
+    background-color: #FFFFFF;
+
+    color: #520DC2;
+    font-weight: 600;
+    text-decoration: none;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.pagination .page-item .page-link:hover {
+    background-color: #EFE2FF;
+}
+
+/* アクティブ（現在ページ） */
+.pagination .active .page-link {
+    background-color: #7749F8;
+    color: #fff;
+}
+
+/* 無効状態(前へが使えない時など) */
+.pagination .page-item.disabled .page-link {
+    opacity: 0.4;
+    cursor: default;
+    pointer-events: none;
+}
+
+/* Bootstrap のデフォルトの青枠を消す */
+.pagination .page-link:focus {
+    box-shadow: none !important;
+}

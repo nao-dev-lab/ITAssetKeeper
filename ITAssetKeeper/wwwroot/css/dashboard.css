@@ -29,28 +29,10 @@
 }
 
 /* ダッシュボード カード Title */
-/*.card .card-title {
-    background-color: #7749F8;
-    color: #ffffff;
-    padding: 8px 12px;
-    border-radius: 6px;
-    margin: -0.75rem -0.75rem 1rem -0.75rem;
-}*/
 .card .card-title {
     background: none !important;
     color: inherit !important;
     padding: 0 !important;
     margin: 0 0 12px 0 !important;
     border-radius: 0 !important;
-}
-
-/* テーブルヘッダー */
-table.table thead th {
-    background-color: #7749F8 !important;
-    color: #ffffff;
-}
-
-/* テーブルの色分け行 */
-table.table tbody tr:nth-child(even) {
-    background-color: #EBE5FC;
 }

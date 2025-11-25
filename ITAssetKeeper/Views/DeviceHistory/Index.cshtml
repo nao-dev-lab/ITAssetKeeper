@@ -9,9 +9,6 @@
     更新履歴 一覧
 </div>
 
-@* グローバル hidden(ページ全体で simple/detail の状態を保持)> *@
-<input type="hidden" id="activeSearchType" value="@Model.ActiveSearchType" />
-
 @* メッセージ表示 *@
 @if (TempData["ToastMessage"] != null)
 {
@@ -94,7 +91,7 @@
 
         @* 入力内容クリアボタン *@
         <div class="search-detail-clear-form-area">
-            <button type="button" class="search-detail-clear-form-btn" onclick="clearForm();">
+            <button type="button" class="search-detail-clear-form-btn">
                 入力内容をクリア
             </button>
         </div>
@@ -257,10 +254,15 @@
 </div>
 
 
-@* jsファイルを読み込む *@
+@* JS *@
 @section Scripts {
-    <script src="~/js/index.js"></script>
-    <script src="~/js/history.js"></script>
-    <script src="~/js/formclear.js"></script>
-    <script src="~/js/dropdownToggle.js"></script>
+    <script src="~/js/common/list-common.js"></script>
+    <script src="~/js/history/history-detail-modal.js"></script>
+    <script src="~/js/common/formclear.js"></script>
+    <script src="~/js/common/dropdown-toggle.js"></script>
+}
+
+@* CSS *@
+@section Styles {
+    <link rel="stylesheet" href="~/css/search.css" asp-append-version="true" />
 }

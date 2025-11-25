@@ -17,13 +17,16 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
+    @* CSS *@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/dashboard.css" />
-    <link rel="stylesheet" href="~/css/sidebar.css" />
-    <link rel="stylesheet" href="~/css/modal.css" />
-    <link rel="stylesheet" href="~/css/toast.css" />
+    @* <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> *@
+    <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/components.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/sidebar.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/modal.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/toast.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ITAssetKeeper.styles.css" asp-append-version="true" />
+    @RenderSection("Styles", required: false)
 </head>
 
 <body>
@@ -64,15 +67,15 @@
         </div>
     </div>
 
-    @* JSの読み込み *@
+    @* JS *@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/toast.js"></script>
+    <script src="~/js/common/site.js" asp-append-version="true"></script>
+    <script src="~/js/common/toast.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 
-    <script src="~/js/layout.js"></script>
+    <script src="~/js/common/sidebar-modals.js"></script>
 </body>
 </html>

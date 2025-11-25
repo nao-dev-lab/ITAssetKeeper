@@ -1,0 +1,59 @@
+﻿/* ==============================
+   Layout（サイドバー・メイン）
+============================== */
+
+/* メインコンテンツ */
+.main-content {
+    margin-left: 230px;
+    width: calc(100% - 230px);
+    padding: 20px;
+    box-sizing: border-box;
+    max-width: 1200px;
+    margin-right: auto; /* 左右中央寄せ */
+    margin-left: 240px; /* サイドバーとの距離 */
+}
+
+/* サイドバー */
+.sidebar {
+    width: 220px;
+    background: #EFE8FF;
+    min-height: 100vh;
+    padding: 20px 10px;
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+/* サイドバーのタイトル */
+.sidebar-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #6A32E5;
+    display: block;
+    margin-bottom: 30px;
+}
+
+/* 2カラムレイアウト */
+.layout-wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* コンテンツ側 */
+.layout-content {
+    flex-grow: 1;
+    padding: 20px;
+    margin-left: 0;
+}
+
+/* ページタイトルバー */
+.contents-header-bar {
+    background-color: #F1EDFF;
+    color: #520DC2;
+    padding: 24px 20px;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    border-radius: 0 !important;
+}
+

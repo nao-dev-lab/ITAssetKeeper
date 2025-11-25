@@ -1,0 +1,175 @@
+﻿/* ==============================
+   Device（Create / Edit / Details）
+============================== */
+
+/* フォーム外枠 */
+.form-box {
+    border: 1px solid #7749F8;
+    background-color: #F9F5FF;
+    padding: 24px 28px;
+}
+
+/* キャンセル */
+.form-cancel-area {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+}
+
+.form-cancel-btn {
+    background-color: #7749F8;
+    color: #fff;
+    padding: 6px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.2s ease;
+}
+
+.form-cancel-btn:hover {
+    opacity: 0.85;
+    color: #fff;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* form grid */
+.form-grid {
+    display: grid;
+    width: 100%;
+    column-gap: 28px;
+    row-gap: 28px;
+    margin-bottom: 10px;
+}
+
+/* 登録・編集ボタン(左下) */
+.form-submit-area {
+    margin-top: 20px;
+}
+
+.form-submit-btn {
+    background-color: #28A745;
+    color: #fff;
+    padding: 10px 30px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.form-submit-btn:hover {
+    background-color: #2E9766;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.22);
+}
+
+
+/* ==============================
+   Create
+============================== */
+/* 自動採番メッセージ */
+.create-note {
+    color: #C20D86;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+/* ==============================
+   Details
+============================== */
+.details-grid {
+    display: grid;
+    column-gap: 28px;
+    row-gap: 28px;
+}
+
+.memo-box {
+    border: 1px solid #F1EDFF;
+    background-color: #FFFFFF;
+    padding: 10px 14px;
+    border-radius: 8px;
+    height: 120px; /* 高さ固定 */
+    overflow-y: auto; /* スクロール */
+    white-space: pre-wrap;
+}
+
+/* 戻るボタン */
+.details-back-area {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+}
+
+.btn-back {
+    background-color: #7749F8;
+    color: #fff;
+    padding: 6px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.2s ease;
+}
+
+.btn-back:hover { 
+    opacity: 0.9;
+    color: #fff;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* 操作ボタンエリア(編集 左 / 削除 右) */
+.details-footer {
+    display: flex;
+    justify-content: space-between; /* 左右端 */
+    align-items: center;
+    margin-top: 8px !important;
+}
+
+/* 編集ボタン */
+.btn-edit {
+    background-color: #3BB46A;
+    color: #fff !important;
+    padding: 10px 26px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-edit:hover {
+    background-color: #2E9A58;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.22);
+}
+
+/* 削除ボタン */
+.btn-delete {
+    background-color: #D4552F;
+    color: #fff !important;
+    padding: 10px 26px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-delete:hover {
+    background-color: #BA411C;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.22);
+}
+
+/* ==============================
+   Edit
+============================== */
+.edit-managemendId {
+    max-width: 215px;
+}

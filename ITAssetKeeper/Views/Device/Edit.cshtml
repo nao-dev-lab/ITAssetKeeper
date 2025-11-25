@@ -49,7 +49,7 @@
             <div class="form-group">
                 <label asp-for="ManagementId" class="custom-label"></label>
                 @Html.TextBoxFor(m => m.ManagementId,
-                            new { @class = "custom-input", @readonly = "readonly" })
+                            new { @class = "custom-input edit-managemendId", @readonly = "readonly" })
             </div>
         </div>
 
@@ -164,8 +164,13 @@
     </form>
 </div>
 
-@* jsファイルを読み込む *@
+@* JS *@
 @section Scripts {
-    <script src="~/js/device-edit.js"></script>
-    <script src="~/js/dropdownToggle.js"></script>
+    <script src="~/js/device/device-edit-permissions.js"></script>
+    <script src="~/js/common/dropdown-toggle.js"></script>
+}
+
+@* CSS *@
+@section Styles {
+    <link rel="stylesheet" href="~/css/device.css" asp-append-version="true" />
 }

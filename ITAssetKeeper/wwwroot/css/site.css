@@ -837,3 +837,10 @@
     background-color: #BA411C;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.22);
 }
+
+/* ==============================
+   機器情報 編集(Device/Edit)
+============================== */
+.edit-managemendId {
+    max-width: 215px;
+}
