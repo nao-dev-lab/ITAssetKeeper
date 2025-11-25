@@ -78,7 +78,7 @@ public class DeviceHistoryViewModel
 
     // --- ページング ---
     public int PageNumber { get; set; } = 1; // 現在のページ番号
-    public int PageSize { get; set; } = 10; // 1ページに表示するサイズ
+    public int PageSize { get; set; } = 15; // 1ページに表示するサイズ
     public int TotalCount { get; set; }     // トータルページ数
 
     // --- ページング用計算プロパティ ---

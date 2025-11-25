@@ -73,6 +73,7 @@
 
 /* ドロップダウンリスト */
 .custom-dropdown {
+    font-size: 15px;
     width: 100%;
     padding: 6px 36px 6px 12px;
     border: 1px solid #D4D6D8;
@@ -201,6 +202,7 @@
 .nowrap-table th,
 .nowrap-table td {
     vertical-align: middle;
+    padding: 10px;
 }
 
 /* テーブルヘッダー */
@@ -262,6 +264,11 @@ table.table tbody tr:nth-child(even) {
 /* アクティブ（現在ページ） */
 .pagination .active .page-link {
     background-color: #7749F8;
+    color: #fff;
+}
+
+.pagination .active .page-link:hover {
+    background-color: #9D7BFF;
     color: #fff;
 }
 
