@@ -8,8 +8,13 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // DB接続処理
+// 接続リトライを有効にする
 builder.Services.AddDbContext<ITAssetKeeperDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ?? 
+        throw new InvalidOperationException("Connection string 'DefaultConnection' not found."),
+        sqlOptions => sqlOptions.EnableRetryOnFailure()
+    )
+);
 
 // Identityサービスの登録、エラー文の日本語変換処理も追加
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -70,8 +75,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    //pattern: "{controller=Home}/{action=Index}/{id?}");
-    //pattern: "{controller=Account}/{action=Login}/{id?}");
     pattern: "{controller=Device}/{action=Index}/{id?}");
 
 // Seed Adminの作成

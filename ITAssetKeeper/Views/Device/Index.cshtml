@@ -114,13 +114,13 @@
                 @* 種別(Category) *@
                 <div class="form-group">
                     <label asp-for="CategoryItems" class="custom-label"></label>
-                    @Html.DropDownListFor(model => model.SelectedCategory, Model.CategoryItems, "-- 全て --", new { @class = "custom-dropdown" })
+                    @Html.DropDownListFor(model => model.SelectedCategory, Model.CategoryItems, "-- すべて --", new { @class = "custom-dropdown" })
                 </div>
 
                 @* 用途(Purpose) *@
                 <div class="form-group">
                     <label asp-for="PurposeItems" class="custom-label"></label>
-                    @Html.DropDownListFor(model => model.SelectedPurpose, Model.PurposeItems, "-- 全て --", new { @class = "custom-dropdown" })
+                    @Html.DropDownListFor(model => model.SelectedPurpose, Model.PurposeItems, "-- すべて --", new { @class = "custom-dropdown" })
                 </div>
             </div>
 
@@ -177,7 +177,7 @@
                 @* 状態(Status) *@
                 <div class="form-group">
                     <label asp-for="StatusItems" class="custom-label"></label>
-                    @Html.DropDownListFor(model => model.SelectedStatus, Model.StatusItems, "-- 全て --", new { @class = "custom-dropdown" })
+                    @Html.DropDownListFor(model => model.SelectedStatus, Model.StatusItems, "-- すべて --", new { @class = "custom-dropdown" })
                 </div>
 
             </div>
