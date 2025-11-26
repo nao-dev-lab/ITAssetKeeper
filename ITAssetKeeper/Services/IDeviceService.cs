@@ -1,6 +1,7 @@
 ﻿using ITAssetKeeper.Models.Entities;
 using ITAssetKeeper.Models.Enums;
 using ITAssetKeeper.Models.ViewModels.Device;
+using System.Security.Claims;
 
 namespace ITAssetKeeper.Services;
 
@@ -10,7 +11,7 @@ public interface IDeviceService
     // --- Index ---
 
     // Index用 統合メソッド
-    Task<DeviceListViewModel> SearchDevicesAsync(DeviceListViewModel condition);
+    Task<DeviceListViewModel> SearchDevicesAsync(DeviceListViewModel condition, ClaimsPrincipal user);
 
 
     //////////////////////////////////////////

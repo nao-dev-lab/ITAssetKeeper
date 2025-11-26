@@ -11,6 +11,16 @@ public class DeviceConstants
     // 機器管理IDの数字の桁数
     public static readonly int DEVICE_ID_NUM_DIGIT_COUNT = 6;
 
+    // Editor, Viewerには表示しない種別の配列
+    public static readonly DeviceCategory[] HIDE_CATEGORIES =
+    [
+        DeviceCategory.Switch_L2,
+        DeviceCategory.Switch_L3,
+        DeviceCategory.Router_Core,
+        DeviceCategory.Server,
+        DeviceCategory.Firewall
+    ];
+
     // Deviceの各カラムに対応するdintionary
     public static readonly Dictionary<DeviceColumns, Expression<Func<Device, object>>> SORT_KEY_SELECTORS =
     new()

@@ -22,7 +22,7 @@ public class DeviceController : Controller
     public async Task<IActionResult> Index(DeviceListViewModel model)
     {
         // 検索メソッド実行、結果を取得
-        var vm = await _deviceService.SearchDevicesAsync(model);
+        var vm = await _deviceService.SearchDevicesAsync(model, User);
 
         // 詳細検索で何か値が入れられたかをチェックし、プロパティにセット
         vm.IsSearchExecuted = vm.HasAnyFilter;
@@ -42,7 +42,7 @@ public class DeviceController : Controller
         model.SortOrderValue = sortOrder;
 
         // 結果を取得
-        var vm = await _deviceService.SearchDevicesAsync(model);
+        var vm = await _deviceService.SearchDevicesAsync(model, User);
 
         // 部分ビューに渡す
         return PartialView("_DeviceListPartial", vm);
@@ -55,7 +55,7 @@ public class DeviceController : Controller
     public async Task<IActionResult> GetPagedList(DeviceListViewModel model)
     {
         // 結果を取得
-        var vm = await _deviceService.SearchDevicesAsync(model);
+        var vm = await _deviceService.SearchDevicesAsync(model, User);
 
         // 部分ビューに渡す
         return PartialView("_DeviceListPartial", vm);

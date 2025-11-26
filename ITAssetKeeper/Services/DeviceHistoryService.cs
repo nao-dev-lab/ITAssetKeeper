@@ -257,7 +257,7 @@ public class DeviceHistoryService : IDeviceHistoryService
 
         // 履歴テーブルにレコードを追加
         _context.DeviceHistories.Add(history);
-        await _context.SaveChangesAsync();
+        //await _context.SaveChangesAsync();
     }
 
     // 更新時の履歴作成
@@ -288,7 +288,7 @@ public class DeviceHistoryService : IDeviceHistoryService
             _context.DeviceHistories.Add(history);
         }
         // まとめて保存
-        await _context.SaveChangesAsync();
+        //await _context.SaveChangesAsync();
     }
 
     // 削除時の履歴作成
@@ -308,7 +308,7 @@ public class DeviceHistoryService : IDeviceHistoryService
 
         // 履歴テーブルにレコードを追加
         _context.DeviceHistories.Add(history);
-        await _context.SaveChangesAsync();
+        //await _context.SaveChangesAsync();
     }
 
     // HistoryId を生成して返す

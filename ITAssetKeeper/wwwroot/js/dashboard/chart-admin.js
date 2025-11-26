@@ -1,4 +1,6 @@
-﻿document.addEventListener("DOMContentLoaded", function () {
+﻿// --- Adminダッシュボードのチャート描画 ---
+
+document.addEventListener("DOMContentLoaded", function () {
 
     // --- 過去7日間の更新履歴（棒グラフ） ---
     const historyCanvas = document.getElementById("historyCountChart");

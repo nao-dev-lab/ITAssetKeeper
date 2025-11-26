@@ -52,6 +52,7 @@ builder.Services.AddScoped<IDeviceDiffService, DeviceDiffService>();
 builder.Services.AddScoped<IDeviceHistorySequenceService, DeviceHistorySequenceService>();
 builder.Services.AddScoped<IDeviceSequenceService, DeviceSequenceService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

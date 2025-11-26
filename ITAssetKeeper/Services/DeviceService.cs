@@ -9,7 +9,10 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Data;
 using System.Linq;
+using System.Security.Claims;
 using System.Transactions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace ITAssetKeeper.Services;
 
@@ -18,24 +21,40 @@ public class DeviceService : IDeviceService
     private readonly ITAssetKeeperDbContext _context;
     private readonly IDeviceHistoryService _deviceHistoryService;
     private readonly IDeviceSequenceService _deviceSequenceService;
+    private readonly IUserRoleService _userRoleService;
 
     public DeviceService(
         ITAssetKeeperDbContext context,
         IDeviceHistoryService deviceHistoryService,
-        IDeviceSequenceService deviceSequenceService)
+        IDeviceSequenceService deviceSequenceService,
+        IUserRoleService userRoleService)
     {
         _context = context;
         _deviceHistoryService = deviceHistoryService;
         _deviceSequenceService = deviceSequenceService;
+        _userRoleService = userRoleService;
     }
 
     ///////////////////////////////////////////////////
     // -- Index --
     // 検索 & 一覧表示
-    public async Task<DeviceListViewModel> SearchDevicesAsync(DeviceListViewModel condition)
+    public async Task<DeviceListViewModel> SearchDevicesAsync(DeviceListViewModel condition, ClaimsPrincipal user)
     {
-        // Deviceテーブルから全てのデータを取得する
+        // Deviceテーブルから全てのデータを取得
         IQueryable<Device> query = _context.Devices;
+
+        // ユーザーのRoleを取得
+        var role = await _userRoleService.GetUserRoleAsync(user);
+
+        // Roleに応じてDeviceテーブルから取得する内容を変更
+        // Admin:すべて表示
+        // それ以外:インフラに関わる機器は除外して表示
+        if (role != Roles.Admin)
+        {
+            // Deviceテーブルからインフラに関わる機器は除外して取得
+            var hideCategoryList = DeviceConstants.HIDE_CATEGORIES.Select(c => c.ToString()).ToList();
+            query = query.Where(x => !hideCategoryList.Contains(x.Category));
+        }
 
         if (!string.IsNullOrWhiteSpace(condition.FreeText))
         {
@@ -61,7 +80,7 @@ public class DeviceService : IDeviceService
         var devices = await query.ToListAsync();
 
         // ビューモデルに詰めて、呼び出し元に返す
-        return ToViewModel(condition, devices);
+        return ToViewModel(condition, devices, role);
     }
 
     // フリーワード検索用フィルタリング
@@ -264,17 +283,27 @@ public class DeviceService : IDeviceService
     }
 
     // ViewModel 変換(結果を DeviceListViewModel に詰める)
-    private DeviceListViewModel ToViewModel(DeviceListViewModel condition, List<Device> devices)
+    private DeviceListViewModel ToViewModel(DeviceListViewModel condition, List<Device> devices, Roles? role)
     {
         // プルダウン用のデータを定数から取得
-        EnumDisplayHelper.SetEnumSelectList<DeviceCategory>(condition, selectList => condition.CategoryItems = selectList);
         EnumDisplayHelper.SetEnumSelectList<DevicePurpose>(condition, selectList => condition.PurposeItems = selectList);
         EnumDisplayHelper.SetEnumSelectList<SortOrders>(condition, selectList => condition.SortOrderList = selectList);
         EnumDisplayHelper.SetEnumSelectList<DeviceColumns>(condition, selectList => condition.SortKeyList = selectList);
+        EnumDisplayHelper.SetEnumSelectList<DeviceStatus>(condition, selectList => condition.StatusItems = selectList);
 
-        // DeviceStatus は Deleted を除外して取得する
-        EnumDisplayHelper.SetEnumSelectList<DeviceStatus>(condition, selectList => 
-            condition.StatusItems = new SelectList(EnumDisplayHelper.EnumToDictionary(false, DeviceStatus.Deleted),"Key", "Value"));
+        // DeviceCategoryのみ、Role別でプルダウン用データを変更
+        // Admin：すべて、それ以外：インフラに関わる機器を除外したもの
+        if (role == Roles.Admin)
+        {
+            EnumDisplayHelper.SetEnumSelectList<DeviceCategory>(condition, selectList => condition.CategoryItems = selectList);
+        }
+        else
+        {
+            EnumDisplayHelper.SetEnumSelectList<DeviceCategory>(condition, selectList =>
+            condition.CategoryItems = new SelectList(
+                EnumDisplayHelper.EnumToDictionary(
+                    false, (DeviceConstants.HIDE_CATEGORIES)), "Key", "Value"));
+        }
 
         // 検索結果の一覧表示のデータをDTO型で詰める
         condition.Devices = devices
@@ -311,10 +340,7 @@ public class DeviceService : IDeviceService
         // ビューモデルに、ドロップダウン用のSelectListをセット
         EnumDisplayHelper.SetEnumSelectList<DeviceCategory>(model, selectList => model.CategoryItems = selectList);
         EnumDisplayHelper.SetEnumSelectList<DevicePurpose>(model, selectList => model.PurposeItems = selectList);
-
-        // DeviceStatus は Deleted を除外して取得する
-        EnumDisplayHelper.SetEnumSelectList<DeviceStatus>(model, selectList =>
-            model.StatusItems = new SelectList(EnumDisplayHelper.EnumToDictionary(false, DeviceStatus.Deleted), "Key", "Value"));
+        EnumDisplayHelper.SetEnumSelectList<DeviceStatus>(model, selectList => model.StatusItems = selectList);
         
         // 購入日に今日の日付をセット
         model.PurchaseDate = DateTime.Now;
@@ -326,8 +352,11 @@ public class DeviceService : IDeviceService
     public async Task<int> RegisterNewDeviceAsync(DeviceCreateViewModel model, string userName)
     {
         // トランザクション処理
-        using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+        var strategy = _context.Database.CreateExecutionStrategy();
+        return await strategy.ExecuteAsync(async () =>
         {
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+
             // 受け取ったビューモデルからEntity 作成
             var entity = new Device
             {
@@ -347,18 +376,18 @@ public class DeviceService : IDeviceService
             // Device を追加
             _context.Devices.Add(entity);
 
-            // DeviceのDBへの登録処理を実施
-            var result =  await _context.SaveChangesAsync();
-
-            // 新規登録に関する履歴レコードを追加
+            // 新規登録に関する履歴を追加
             await _deviceHistoryService.AddCreateHistoryAsync(entity, userName);
 
+            // DBへの登録処理を実施
+            var result = await _context.SaveChangesAsync();
+
             // Commitする
-            scope.Complete();
+            await transaction.CommitAsync();
 
             // 結果の状態エントリの数を返す
             return result;
-        }
+        });
     }
 
     // ManagementId を生成して返す
@@ -455,10 +484,7 @@ public class DeviceService : IDeviceService
         // ビューモデルに、ドロップダウン用のSelectListをセット
         EnumDisplayHelper.SetEnumSelectList<DeviceCategory>(model, selectList => model.CategoryItems = selectList);
         EnumDisplayHelper.SetEnumSelectList<DevicePurpose>(model, selectList => model.PurposeItems = selectList);
-
-        // DeviceStatus は Deleted を除外して取得する
-        EnumDisplayHelper.SetEnumSelectList<DeviceStatus>(model, selectList =>
-            model.StatusItems = new SelectList(EnumDisplayHelper.EnumToDictionary(false, DeviceStatus.Deleted), "Key", "Value"));
+        EnumDisplayHelper.SetEnumSelectList<DeviceStatus>(model, selectList => model.StatusItems = selectList);
 
         // ビューモデルを返す
         return model;
@@ -527,10 +553,7 @@ public class DeviceService : IDeviceService
         // ビューモデルに、ドロップダウン用のSelectListをセット
         EnumDisplayHelper.SetEnumSelectList<DeviceCategory>(model, selectList => model.CategoryItems = selectList);
         EnumDisplayHelper.SetEnumSelectList<DevicePurpose>(model, selectList => model.PurposeItems = selectList);
-
-        // DeviceStatus は Deleted を除外して取得する
-        EnumDisplayHelper.SetEnumSelectList<DeviceStatus>(model, selectList =>
-            model.StatusItems = new SelectList(EnumDisplayHelper.EnumToDictionary(false, DeviceStatus.Deleted), "Key", "Value"));
+        EnumDisplayHelper.SetEnumSelectList<DeviceStatus>(model, selectList => model.StatusItems = selectList);
 
         // ReadOnly制御再設定
         // Admin
@@ -581,8 +604,11 @@ public class DeviceService : IDeviceService
         }
 
         // トランザクション処理
-        using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+        var strategy = _context.Database.CreateExecutionStrategy();
+        return await strategy.ExecuteAsync(async () =>
         {
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+
             // Role判定
             // Role が Editor であれば Location と UserName のみ更新
             if (role == Roles.Admin)
@@ -604,18 +630,18 @@ public class DeviceService : IDeviceService
                 entity.UserName = model.UserName;
             }
 
-            // DBへの登録処理を実施、状態エントリの数を受け取る
-            var result = await _context.SaveChangesAsync();
-
             // 更新に関する履歴レコードを追加
             await _deviceHistoryService.AddUpdateHistoryAsync(before, entity, userName);
 
+            // DBへの登録処理を実施、状態エントリの数を受け取る
+            var result = await _context.SaveChangesAsync();
+
             // Commitする
-            scope.Complete();
+            await transaction.CommitAsync();
 
             // 結果の状態エントリの数を返す
             return result;
-        }
+        });
     }
 
 
@@ -672,23 +698,25 @@ public class DeviceService : IDeviceService
         }
 
         // トランザクション処理
-        using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+        var strategy = _context.Database.CreateExecutionStrategy();
+        return await strategy.ExecuteAsync(async () =>
         {
+            await using var transaction = await _context.Database.BeginTransactionAsync();
             // 削除フラグ と 削除実施者を更新する
             entity.IsDeleted = true;
             entity.DeletedBy = deletedBy;
 
-            // DBへの更新処理を実施、状態エントリの数を受け取る
-            var result = await _context.SaveChangesAsync();
-
             // 削除に関する履歴レコードを追加
             await _deviceHistoryService.AddDeleteHistoryAsync(before, entity, deletedBy);
 
+            // DBへの更新処理を実施、状態エントリの数を受け取る
+            var result = await _context.SaveChangesAsync();
+
             // Commitする
-            scope.Complete();
+            await transaction.CommitAsync();
 
             // 結果の状態エントリの数を返す
             return result;
-        }
+        });
     }
 }

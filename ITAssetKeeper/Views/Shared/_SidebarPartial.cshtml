@@ -68,20 +68,26 @@
         @if (isAdmin || isEditor)
         {
             <li>
-                <a asp-controller="Account" asp-action="GetList">
-                    <i class="bi bi-shield-lock"></i> ユーザー 一覧
-                </a>
-            </li>
+                <a asp-controller="Account" asp-action="UserList"
+                   class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Account"
+                                       && ViewContext.RouteData.Values["action"]?.ToString() == "UserList"
+                                       ? "active" : "")">
+                <i class="bi bi-shield-lock"></i> ユーザー 一覧
+            </a>
+        </li>
         }
 
         @* ユーザー登録 (Adminのみ) *@
         @if (isAdmin)
         {
             <li>
-                <a asp-controller="Account" asp-action="Create">
-                    <i class="bi bi-people"></i> ユーザー 登録
-                </a>
-            </li>
+                <a asp-controller="Account" asp-action="Create"
+                   class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Account"
+                                                      && ViewContext.RouteData.Values["action"]?.ToString() == "Create"
+                                   ? "active" : "")">
+                <i class="bi bi-people"></i> ユーザー 登録
+            </a>
+        </li>
         }
 
     </ul>

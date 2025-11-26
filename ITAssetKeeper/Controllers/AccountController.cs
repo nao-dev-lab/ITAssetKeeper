@@ -21,9 +21,9 @@ public class AccountController : Controller
 
     // コンストラクタ
     public AccountController(
-        ITAssetKeeperDbContext context,
         UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager, IAccountService accountService)
+        SignInManager<ApplicationUser> signInManager,
+        IAccountService accountService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -245,7 +245,7 @@ public class AccountController : Controller
 
     [HttpGet]
     [Authorize(Roles = "Admin, Editor")]
-    public IActionResult GetList()
+    public IActionResult UserList()
     {
         return View();
     }

@@ -1,4 +1,6 @@
-﻿// 履歴一覧の履歴IDがクリックされたら Ajax 実行
+﻿// --- 履歴詳細モーダル表示用 --- 
+
+// 履歴一覧の履歴IDがクリックされたら Ajax 実行
 $(document).on("click", ".history-detail-link", function (e) {
 
     // リンクのデフォルト動作をキャンセル
