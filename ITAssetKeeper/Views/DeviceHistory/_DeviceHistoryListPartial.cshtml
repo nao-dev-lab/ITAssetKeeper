@@ -1,22 +1,32 @@
-﻿@model ITAssetKeeper.Models.ViewModels.DeviceHistory.DeviceHistoryViewModel
+﻿@model ITAssetKeeper.Models.ViewModels.DeviceHistory.DeviceHistoryListViewModel
 
 @* テーブル表示 *@
 <div class="table-wrapper">
     <table class="table table-hover table-bordered nowrap-table">
         <thead>
             <tr>
-                <th>@Html.DisplayNameFor(model => model.DeviceHistoryDtoHeader.HistoryId)</th>
-                <th>@Html.DisplayNameFor(model => model.DeviceHistoryDtoHeader.ManagementId)</th>
-                <th>@Html.DisplayNameFor(model => model.DeviceHistoryDtoHeader.ChangeField)</th>
-                <th>@Html.DisplayNameFor(model => model.DeviceHistoryDtoHeader.BeforeValue)</th>
-                <th>@Html.DisplayNameFor(model => model.DeviceHistoryDtoHeader.AfterValue)</th>
-                <th>@Html.DisplayNameFor(model => model.DeviceHistoryDtoHeader.UpdatedBy)</th>
-                <th>@Html.DisplayNameFor(model => model.DeviceHistoryDtoHeader.UpdatedAt)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceHistoryListItemDtoHeader.HistoryId)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceHistoryListItemDtoHeader.ManagementId)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceHistoryListItemDtoHeader.ChangeType)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceHistoryListItemDtoHeader.UpdatedBy)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceHistoryListItemDtoHeader.UpdatedAt)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceHistoryListItemDtoHeader.CategoryAtHistory)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceHistoryListItemDtoHeader.PurposeAtHistory)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceHistoryListItemDtoHeader.ModelNumberAtHistory)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceHistoryListItemDtoHeader.SerialNumberAtHistory)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceHistoryListItemDtoHeader.HostNameAtHistory)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceHistoryListItemDtoHeader.LocationAtHistory)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceHistoryListItemDtoHeader.UserNameAtHistory)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceHistoryListItemDtoHeader.StatusAtHistory)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceHistoryListItemDtoHeader.MemoAtHistory)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceHistoryListItemDtoHeader.PurchaseDateAtHistory)</th>
+                <th>@Html.DisplayNameFor(model => model.DeviceHistoryListItemDtoHeader.CreatedAtHistory)</th>
+
             </tr>
         </thead>
 
         <tbody>
-            @foreach (var item in Model.DeviceHistories)
+            @foreach (var item in Model.Histories)
             {
                 <tr>
                     <td>
@@ -29,24 +39,64 @@
                         @Html.DisplayFor(modelItem => item.ManagementId)
                     </td>
 
+                    <td class="badge-td">
+                        <span class="change-badge @item.ChangeTypeClass">
+                            @Html.DisplayFor(modelItem => item.ChangeType)
+                        </span>
+                    </td>
+
                     <td>
-                        @Html.DisplayFor(modelItem => item.ChangeField)
-                    </td>
-
-                    <td class="text-ellipsis">
-                        @Html.DisplayFor(modelItem => item.BeforeValue)
-                    </td>
-
-                    <td class="text-ellipsis">
-                        @Html.DisplayFor(modelItem => item.AfterValue)
-                    </td>
-
-                    <td class="text-ellipsis">
                         @Html.DisplayFor(modelItem => item.UpdatedBy)
                     </td>
 
                     <td>
-                        @Html.DisplayFor(modelItem => item.UpdatedAtText)
+                        @Html.DisplayFor(modelItem => item.UpdatedAt)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CategoryAtHistory)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PurposeAtHistory)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ModelNumberAtHistory)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SerialNumberAtHistory)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.HostNameAtHistory)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LocationAtHistory)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserNameAtHistory)
+                    </td>
+
+                    <td class="badge-td">
+                        <span class="status-badge @item.StatusClass">
+                            @Html.DisplayFor(modelItem => item.StatusAtHistory)
+                        </span>
+                    </td>
+
+                    <td class="text-ellipsis">
+                        @Html.DisplayFor(modelItem => item.MemoAtHistory)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PurchaseDateAtHistory)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreatedAtHistory)
                     </td>
                 </tr>
             }

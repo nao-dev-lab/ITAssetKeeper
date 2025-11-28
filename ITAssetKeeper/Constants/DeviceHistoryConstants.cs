@@ -1,5 +1,6 @@
 ﻿using ITAssetKeeper.Models.Entities;
 using ITAssetKeeper.Models.Enums;
+using ITAssetKeeper.Models.ViewModels.DeviceHistory;
 using System.Linq.Expressions;
 
 namespace ITAssetKeeper.Constants;
@@ -16,11 +17,38 @@ public class DeviceHistoryConstants
     new()
     {
         { DeviceHistoryColumns.HistoryId, h => h.HistoryId },
-        { DeviceHistoryColumns.ManagementId, h => h.ManagementId },
-        { DeviceHistoryColumns.ChangeField, h => h.ChangeField },
-        { DeviceHistoryColumns.BeforeValue, h => h.BeforeValue },
-        { DeviceHistoryColumns.AfterValue, h => h.AfterValue },
+        { DeviceHistoryColumns.ChangeType, h => h.ChangeType },
         { DeviceHistoryColumns.UpdatedBy, h => h.UpdatedBy },
-        { DeviceHistoryColumns.UpdatedAt, h => h.UpdatedAt }
+        { DeviceHistoryColumns.UpdatedAt, h => h.UpdatedAt },
+        { DeviceHistoryColumns.ManagementIdAtHistory, h => h.ManagementIdAtHistory },
+        { DeviceHistoryColumns.CategoryAtHistory, h => h.CategoryAtHistory },
+        { DeviceHistoryColumns.PurposeAtHistory, h => h.PurposeAtHistory },
+        { DeviceHistoryColumns.ModelNumberAtHistory, h => h.ModelNumberAtHistory },
+        { DeviceHistoryColumns.SerialNumberAtHistory, h => h.SerialNumberAtHistory },
+        { DeviceHistoryColumns.HostNameAtHistory, h => h.HostNameAtHistory },
+        { DeviceHistoryColumns.LocationAtHistory, h => h.LocationAtHistory },
+        { DeviceHistoryColumns.UserNameAtHistory, h => h.UserNameAtHistory },
+        { DeviceHistoryColumns.StatusAtHistory, h => h.StatusAtHistory },
+        { DeviceHistoryColumns.PurchaseDateAtHistory, h => h.PurchaseDateAtHistory },
+        { DeviceHistoryColumns.CreatedAtHistory, h => h.CreatedAtHistory }
     };
+
+    // Snapshot取得対象
+    public static readonly string[] SNAPSHOT_TARGET_COLUMNS =
+    [
+        nameof(DeviceSnapshotDto.ManagementId),
+        nameof(DeviceSnapshotDto.Category),
+        nameof(DeviceSnapshotDto.Purpose),
+        nameof(DeviceSnapshotDto.ModelNumber),
+        nameof(DeviceSnapshotDto.SerialNumber),
+        nameof(DeviceSnapshotDto.HostName),
+        nameof(DeviceSnapshotDto.Location),
+        nameof(DeviceSnapshotDto.UserName),
+        nameof(DeviceSnapshotDto.Status),
+        nameof(DeviceSnapshotDto.Memo),
+        nameof(DeviceSnapshotDto.PurchaseDate),
+        nameof(DeviceSnapshotDto.CreatedAt),
+        nameof(DeviceSnapshotDto.DeletedAt),
+        nameof(DeviceSnapshotDto.DeletedBy)
+    ];
 }

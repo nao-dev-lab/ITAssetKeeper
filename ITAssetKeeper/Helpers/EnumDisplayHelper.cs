@@ -1,5 +1,6 @@
 ﻿using ITAssetKeeper.Constants;
 using ITAssetKeeper.Models.Enums;
+using ITAssetKeeper.Models.ViewModels.DeviceHistory;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
@@ -9,11 +10,11 @@ public class EnumDisplayHelper
 {
     // DB保存値(Enum or 特殊値)を表示用の文字列に変換
     public static string ResolveDisplayName<TEnum>(string value)
-    where TEnum : struct, Enum
+        where TEnum : struct, Enum
     {
         if (string.IsNullOrWhiteSpace(value))
         {
-            return string.Empty;
+            return "-";
         }
 
         // Enum に該当する場合、Display 名に変換

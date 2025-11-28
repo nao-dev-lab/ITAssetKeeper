@@ -1,0 +1,150 @@
+﻿/* Before, Afterの値表示 */
+.diff-before {
+    text-decoration: line-through;
+    color: #747173;
+    white-space: pre-wrap;
+}
+
+.diff-after {
+    color: #C20D86;
+    white-space: pre-wrap;
+}
+
+.diff-value {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+
+/* --- 戻るボタン --- */
+.history-details-back-area {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+}
+
+.history-details-btn-back {
+    background-color: #7749F8;
+    color: #fff;
+    padding: 6px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.2s ease;
+}
+
+.history-details-btn-back:hover { 
+    opacity: 0.9;
+    color: #fff;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* --- 共通セクション枠 --- */
+.history-section {
+    border: 1px solid #7749F8;
+    background-color: #FFFFFF;
+    margin-bottom: 24px;
+}
+
+/* セクションタイトル */
+.history-section-header {
+    padding: 10px 14px;
+    color: #520DC2;
+    font-weight: 600;
+    font-size: 15px;
+    border-bottom: 2px solid #7749F8;
+    background-color: #FFFFFF;
+}
+
+.history-section-body {
+    background-color: #F9F5FF;
+    padding: 20px;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+}
+
+/* 上部履歴情報の配置 */
+.history-info-body .history-row {
+    display: flex;
+    grid-template-columns: 180px 1fr;
+    padding: 8px 4px;
+    font-size: 15px;
+    align-items: center;
+}
+
+.history-info-body .history-row label {
+    width: 180px;
+    margin: 0;
+}
+
+/* 下部詳細の2カラムグリッド */
+.history-detail-body .history-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 28px;
+    row-gap: 22px;
+}
+
+/* 2 カラム */
+.history-grid-2col {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 28px;
+    row-gap: 28px;
+}
+
+/* 1 カラム */
+.history-grid-1col {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 28px;
+}
+
+.history-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+
+/* --- 更新された項目名に黄色マーカーを付ける --- */
+.changed-field {
+    background-color: #FFF6A0;
+    padding: 2px 4px;
+    border-radius: 4px;
+    display: inline-block;
+    width: auto;
+    max-width: fit-content;
+    box-sizing: content-box;
+}
+
+.deleted-item {
+    color: #C20D86;
+    font-weight: 500;
+}
+
+
+/* --- ChangeType による背景色変更 --- */
+/* 新規登録（柔らかいグリーン系） */
+.history-body-created {
+    background-color: #EFFFE8 !important;
+}
+
+/* 削除（薄いグレー系） */
+.history-body-deleted {
+    background-color: #E5E5E5 !important;
+}
+
+/* 通常更新（標準の F9F5FF） */
+.history-body-updated {
+    background-color: #F9F5FF !important;
+}
+
+.history-memo-box {
+    white-space: pre-wrap; /* ← 改行を反映 */
+    word-break: break-word; /* ← 長い文字も折り返し */
+}
+
+

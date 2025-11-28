@@ -62,4 +62,16 @@ public class DeviceDto
     public string UpdatedAtDateTimeText => UpdatedAt.ToString("yyyy/MM/dd HH:mm:ss");
     public string DeletedAtDateText => DeletedAt.ToString("yyyy/MM/dd");
     public string DeletedAtDateTimeText => DeletedAt.ToString("yyyy/MM/dd HH:mm:ss");
+
+    // バッジ用プロパティ
+    public string StatusClass =>
+        Status switch
+        {
+            "稼働中" => "badge-active",
+            "予備" => "badge-spare",
+            "故障" => "badge-broken",
+            "廃棄予定" => "badge-retiring",
+            "廃棄済" => "badge-retired",
+            _ => ""
+        };
 }

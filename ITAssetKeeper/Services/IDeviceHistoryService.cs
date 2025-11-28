@@ -1,7 +1,6 @@
 ﻿using ITAssetKeeper.Models.Entities;
-using ITAssetKeeper.Models.Enums;
-using ITAssetKeeper.Models.ViewModels.Device;
 using ITAssetKeeper.Models.ViewModels.DeviceHistory;
+using System.Security.Claims;
 
 namespace ITAssetKeeper.Services;
 
@@ -11,7 +10,7 @@ public interface IDeviceHistoryService
     // --- Index ---
 
     // Index用 統合メソッド：検索、ソート、ページング処理を実施
-    Task<DeviceHistoryViewModel> SearchHistoriesAsync(DeviceHistoryViewModel condition);
+    Task<DeviceHistoryListViewModel> SearchHistoriesAsync(DeviceHistoryListViewModel condition, ClaimsPrincipal user);
 
 
     //////////////////////////////////////////
@@ -36,5 +35,11 @@ public interface IDeviceHistoryService
     // --- Details ---
 
     // 履歴情報を ID から取得し、DTO型で返す
-    Task<DeviceHistoryDto?> GetHistoryDetailsByIdAsync(int id);
+    //Task<DeviceHistoryDto?> GetHistoryDetailsByIdAsync(int id);
+
+
+    //////////////////////////////////////////
+    // ★新しく構成しなおした方
+    // 履歴詳細(差分ロジック)
+    Task<DeviceHistoryDetailViewModel> BuildHistoryDetailAsync(int id);
 }

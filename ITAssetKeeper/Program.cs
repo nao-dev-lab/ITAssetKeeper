@@ -48,7 +48,6 @@ builder.Services.Configure<IdentityOptions>(options =>
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IDeviceService, DeviceService>();
 builder.Services.AddScoped<IDeviceHistoryService, DeviceHistoryService>();
-builder.Services.AddScoped<IDeviceDiffService, DeviceDiffService>();
 builder.Services.AddScoped<IDeviceHistorySequenceService, DeviceHistorySequenceService>();
 builder.Services.AddScoped<IDeviceSequenceService, DeviceSequenceService>();
 builder.Services.AddScoped<IAccountService, AccountService>();

@@ -30,7 +30,7 @@
     @await RenderSectionAsync("Scripts", required: false)
 
     @* Views 側が描画されてから toast.js が実行されるように RenderSectionAsyncの後に置く *@
-    <script src="~/js/toast.js"></script>
+    <script src="~/js/common/toast.js"></script>
 
     @* トーストUI *@
     <div class="toast-container position-fixed top-0 end-0 p-4">

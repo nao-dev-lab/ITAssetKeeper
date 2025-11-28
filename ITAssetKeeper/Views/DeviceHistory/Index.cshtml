@@ -1,4 +1,4 @@
-﻿@model ITAssetKeeper.Models.ViewModels.DeviceHistory.DeviceHistoryViewModel
+﻿@model ITAssetKeeper.Models.ViewModels.DeviceHistory.DeviceHistoryListViewModel
 
 @{
     ViewData["Title"] = "更新履歴 一覧";
@@ -120,10 +120,10 @@
                     </div>
                 </div>
 
-                @* 更新項目(ChangeField) *@
+                @* 更新種別(ChangeType) *@
                 <div class="form-group">
-                    <label asp-for="ChangeFieldItems" class="custom-label"></label>
-                    @Html.DropDownListFor(model => model.SelectedChangeField, Model.ChangeFieldItems, "-- 全て --", new { @class = "custom-dropdown" })
+                    <label asp-for="ChangeTypeItems" class="custom-label"></label>
+                    @Html.DropDownListFor(model => model.SelectedChangeType, Model.ChangeTypeItems, "-- 全て --", new { @class = "custom-dropdown" })
                 </div>
             </div>
 
@@ -138,26 +138,77 @@
                     </div>
                 </div>
 
-                @* 更新前の値(BeforeValue) *@
+                @* 種別(Category) *@
                 <div class="form-group">
-                    <label asp-for="BeforeValue" class="custom-label"></label>
+                    <label asp-for="CategoryAtHistoryItems" class="custom-label"></label>
+                    @Html.DropDownListFor(model => model.SelectedCategoryAtHistory, Model.CategoryAtHistoryItems, "-- すべて --", new { @class = "custom-dropdown" })
+                </div>
+
+                @* 用途(Purpose) *@
+                <div class="form-group">
+                    <label asp-for="PurposeAtHistoryItems" class="custom-label"></label>
+                    @Html.DropDownListFor(model => model.SelectedPurposeAtHistory, Model.PurposeAtHistoryItems, "-- すべて --", new { @class = "custom-dropdown" })
+                </div>
+            </div>
+
+            @* 3行目：3列*@
+            <div class="search-detail-grid grid-3col">
+                @* 型番(ModelNumber) *@
+                <div class="form-group">
+                    <label asp-for="ModelNumberAtHistory" class="custom-label"></label>
                     <div class="search-detail-input-wrapper">
-                        <input asp-for="BeforeValue" class="search-detail-input" />
+                        <input asp-for="ModelNumberAtHistory" class="search-detail-input" />
                         <button type="button" class="custom-clear-btn">×</button>
                     </div>
                 </div>
 
-                @* 更新後の値(AfterValue) *@
+                @* 製造番号(SerialNumber) *@
                 <div class="form-group">
-                    <label asp-for="AfterValue" class="custom-label"></label>
+                    <label asp-for="SerialNumberAtHistory" class="custom-label"></label>
                     <div class="search-detail-input-wrapper">
-                        <input asp-for="AfterValue" class="search-detail-input" />
+                        <input asp-for="SerialNumberAtHistory" class="search-detail-input" />
+                        <button type="button" class="custom-clear-btn">×</button>
+                    </div>
+                </div>
+
+                @* ホスト名(HostName) *@
+                <div class="form-group">
+                    <label asp-for="HostNameAtHistory" class="custom-label"></label>
+                    <div class="search-detail-input-wrapper">
+                        <input asp-for="HostNameAtHistory" class="search-detail-input" />
                         <button type="button" class="custom-clear-btn">×</button>
                     </div>
                 </div>
             </div>
 
-            @* 3行目：1列*@
+            @* 4行目：3列*@
+            <div class="search-detail-grid grid-3col">
+                @* 設置場所(Location) *@
+                <div class="form-group">
+                    <label asp-for="LocationAtHistory" class="custom-label"></label>
+                    <div class="search-detail-input-wrapper">
+                        <input asp-for="LocationAtHistory" class="search-detail-input" />
+                        <button type="button" class="custom-clear-btn">×</button>
+                    </div>
+                </div>
+
+                @* 使用者(UserName) *@
+                <div class="form-group">
+                    <label asp-for="UserNameAtHistory" class="custom-label"></label>
+                    <div class="search-detail-input-wrapper">
+                        <input asp-for="UserNameAtHistory" class="search-detail-input" />
+                        <button type="button" class="custom-clear-btn">×</button>
+                    </div>
+                </div>
+
+                @* 状態(Status) *@
+                <div class="form-group">
+                    <label asp-for="StatusAtHistoryItems" class="custom-label"></label>
+                    @Html.DropDownListFor(model => model.SelectedStatusAtHistory, Model.StatusAtHistoryItems, "-- すべて --", new { @class = "custom-dropdown" })
+                </div>
+            </div>
+
+            @* 5行目：1列*@
             <div class="search-detail-grid grid-1col">
                 @* 更新日(UpdatedAt) *@
                 <div class="form-group date-range-row">
@@ -166,6 +217,32 @@
                         <input asp-for="UpdatedDateFrom" type="date" class="search-detail-input" />
                         <span class="date-range-separator">〜</span>
                         <input asp-for="UpdatedDateTo" type="date" class="search-detail-input" />
+                    </div>
+                </div>
+            </div>
+
+            @* 6行目：1列*@
+            <div class="search-detail-grid grid-1col">
+                @* 購入日(PurchaseDate) *@
+                <div class="form-group date-range-row">
+                    <label asp-for="PurchaseDateAtHistory" class="custom-label"></label>
+                    <div class="date-range">
+                        <input asp-for="PurchaseDateFrom" type="date" class="search-detail-input" />
+                        <span class="date-range-separator">〜</span>
+                        <input asp-for="PurchaseDateTo" type="date" class="search-detail-input" />
+                    </div>
+                </div>
+            </div>
+
+            @* 7行目：1列*@
+            <div class="search-detail-grid grid-1col">
+                @* 登録日(CreatedAt) *@
+                <div class="form-group date-range-row">
+                    <label asp-for="CreatedAtHistory" class="custom-label"></label>
+                    <div class="date-range">
+                        <input asp-for="CreatedDateFrom" type="date" class="search-detail-input" />
+                        <span class="date-range-separator">〜</span>
+                        <input asp-for="CreatedDateTo" type="date" class="search-detail-input" />
                     </div>
                 </div>
             </div>
@@ -185,13 +262,27 @@
             @* ソート時に確定済の条件でソートされるようhiddenに取得しておく *@
             <input type="hidden" id="confirmed_HistoryId" name="HistoryId" value="@Model.HistoryId" />
             <input type="hidden" id="confirmed_ManagementId" name="ManagementId" value="@Model.ManagementId" />
-            <input type="hidden" id="confirmed_SelectedChangeField" name="SelectedChangeField" value="@Model.SelectedChangeField" />
-            <input type="hidden" id="confirmed_BeforeValue" name="BeforeValue" value="@Model.BeforeValue" />
-            <input type="hidden" id="confirmed_AfterValue" name="AfterValue" value="@Model.AfterValue" />
-            <input type="hidden" id="confirmed_UpdatedBy" name="UpdatedBy" value="@Model.UpdatedBy" />
+            <input type="hidden" id="confirmed_SelectedChangeType" name="SelectedChangeType" value="@Model.SelectedChangeType" />
+            
+            <input type="hidden" id="confirmed_SelectedCategoryAtHistory" name="SelectedCategoryAtHistory" value="@Model.SelectedCategoryAtHistory" />
+            <input type="hidden" id="confirmed_SelectedPurposeAtHistory" name="SelectedPurposeAtHistory" value="@Model.SelectedPurposeAtHistory" />
+            <input type="hidden" id="confirmed_ModelNumberAtHistory" name="ModelNumberAtHistory" value="@Model.ModelNumberAtHistory" />
+            <input type="hidden" id="confirmed_SerialNumberAtHistory" name="SerialNumberAtHistory" value="@Model.SerialNumberAtHistory" />
+            <input type="hidden" id="confirmed_HostNameAtHistory" name="HostNameAtHistory" value="@Model.HostNameAtHistory" />
+            <input type="hidden" id="confirmed_LocationAtHistory" name="LocationAtHistory" value="@Model.LocationAtHistory" />
+            <input type="hidden" id="confirmed_UserNameAtHistory" name="UserNameAtHistory" value="@Model.UserNameAtHistory" />
+            <input type="hidden" id="confirmed_SelectedStatusAtHistory" name="SelectedStatusAtHistory" value="@Model.SelectedStatusAtHistory" />
+
+            <input type="hidden" id="confirmed_UpdatedBy" name="UpdatedBy" value="@Model.UpdatedBy" />            
+            
             <input type="hidden" id="confirmed_UpdatedDateFrom" name="UpdatedDateFrom" value="@Model.UpdatedDateFrom" />
             <input type="hidden" id="confirmed_UpdatedDateTo" name="UpdatedDateTo" value="@Model.UpdatedDateTo" />
-
+            
+            <input type="hidden" id="confirmed_PurchaseDateFrom" name="PurchaseDateFrom" value="@Model.PurchaseDateFrom" />
+            <input type="hidden" id="confirmed_PurchaseDateTo" name="PurchaseDateTo" value="@Model.PurchaseDateTo" />
+            
+            <input type="hidden" id="confirmed_CreatedDateFrom" name="CreatedDateFrom" value="@Model.CreatedDateFrom" />
+            <input type="hidden" id="confirmed_CreatedDateTo" name="CreatedDateTo" value="@Model.CreatedDateTo" />
         </form>
     </div>
 </div>
@@ -226,38 +317,10 @@
 </div>
 
 
-@* モーダル：履歴情報表示用 *@
-<div class="modal fade" id="historyDetailModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-custom-width">
-        <div class="modal-content">
-
-            @* モーダルヘッダー *@
-            <div class="modal-header">
-                <h5 class="modal-title d-flex align-items-center gap-2">
-                    <img src="~/img/info.png" alt="infomation" class="modal-icon" />
-                    履歴情報
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-
-            @* モーダルbody *@
-            <div class="modal-body" id="historyDetailContainer">
-                @* ここに部分ビュー(_DeviceHistoryDetailPartial)を差し込む *@
-            </div>
-
-            @* モーダルフッター *@
-            <div class="modal-footer">
-                <button type="button" class="modal-close-btn" data-bs-dismiss="modal">閉じる</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 @* JS *@
 @section Scripts {
     <script src="~/js/common/list-common.js"></script>
-    <script src="~/js/history/history-detail-modal.js"></script>
     <script src="~/js/common/formclear.js"></script>
     <script src="~/js/common/dropdown-toggle.js"></script>
 }
@@ -265,4 +328,5 @@
 @* CSS *@
 @section Styles {
     <link rel="stylesheet" href="~/css/search.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/badge.css" asp-append-version="true" />
 }

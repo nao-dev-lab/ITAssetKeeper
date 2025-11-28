@@ -6,13 +6,8 @@ using ITAssetKeeper.Models.Enums;
 using ITAssetKeeper.Models.ViewModels.Device;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Data;
-using System.Linq;
 using System.Security.Claims;
-using System.Transactions;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace ITAssetKeeper.Services;
 
@@ -370,7 +365,8 @@ public class DeviceService : IDeviceService
                 UserName = model.UserName,
                 Status = model.SelectedStatus,
                 Memo = model.Memo,
-                PurchaseDate = model.PurchaseDate!.Value
+                PurchaseDate = model.PurchaseDate!.Value,
+                CreatedAt = DateTime.Now
             };
 
             // Device を追加
@@ -404,13 +400,16 @@ public class DeviceService : IDeviceService
     // ダミーデータ追加時などの整合性の担保
     public async Task SyncDeviceSequenceAsync()
     {
-        // 履歴テーブル内の最大 ManagementId を取得
-        var maxHistoryId = await _context.Devices
+        // DevicesテーブルからすべてのManagementIdを取得
+        // 削除済みデータも含める
+        var historyIdList = await _context.Devices
+            .IgnoreQueryFilters()
             .Select(h => h.ManagementId)
             .ToListAsync();
 
+        // ManagementId の数字部分の最大値を取得
         // "DE000001" → 数字部分 "000001" → 1 に変換
-        int maxNum = maxHistoryId
+        int maxNum = historyIdList
             .Select(id => int.Parse(id.Substring(DeviceConstants.DEVICE_ID_PREFIX.Length)))
             .DefaultIfEmpty(0)
             .Max();
@@ -610,7 +609,7 @@ public class DeviceService : IDeviceService
             await using var transaction = await _context.Database.BeginTransactionAsync();
 
             // Role判定
-            // Role が Editor であれば Location と UserName のみ更新
+            // Role が Editor であれば Location, UserName, UpdateAt のみ更新
             if (role == Roles.Admin)
             {
                 entity.Category = model.SelectedCategory;
@@ -623,11 +622,13 @@ public class DeviceService : IDeviceService
                 entity.Status = model.SelectedStatus;
                 entity.Memo = model.Memo;
                 entity.PurchaseDate = model.PurchaseDate!.Value;
+                entity.UpdatedAt = DateTime.Now;
             }
             else
             {
                 entity.Location = model.Location;
                 entity.UserName = model.UserName;
+                entity.UpdatedAt = DateTime.Now;
             }
 
             // 更新に関する履歴レコードを追加
@@ -702,9 +703,15 @@ public class DeviceService : IDeviceService
         return await strategy.ExecuteAsync(async () =>
         {
             await using var transaction = await _context.Database.BeginTransactionAsync();
+
+            // 現在日時を取得
+            var now = DateTime.Now;
+
             // 削除フラグ と 削除実施者を更新する
             entity.IsDeleted = true;
             entity.DeletedBy = deletedBy;
+            entity.UpdatedAt = now;
+            entity.DeletedAt = now;
 
             // 削除に関する履歴レコードを追加
             await _deviceHistoryService.AddDeleteHistoryAsync(before, entity, deletedBy);

@@ -1,0 +1,78 @@
+﻿/* テーブル内のbadgeを中央寄せ */
+.badge-td {
+    display: flex;
+    justify-content: center;
+}
+
+/* ==============================
+   状態バッジ
+============================== */
+/* --- Statusのバッジ  --- */
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    display: inline-block;
+}
+
+/* 稼働中バッジ：緑 */
+.badge-active {
+    background-color: #3BB46A;
+    padding: 3px 14px 3px;
+}
+
+/* 予備バッジ：青 */
+.badge-spare {
+    background-color: #666DFF;
+    padding: 3px 20px 3px;
+}
+
+/* 故障バッジ：オレンジ */
+.badge-broken {
+    background-color: #E87E33;
+    padding: 3px 20px 3px;
+}
+
+/* 廃棄予定バッジ：グレー */
+.badge-retiring {
+    background-color: #6A839C;
+}
+
+/* 廃棄済バッジ：黒 */
+.badge-retired {
+    background-color: #343A40;
+    padding: 3px 14px 3px;
+}
+
+
+/* ==============================
+   更新種別バッジ
+============================== */
+/* --- 更新種別のバッジ  --- */
+.change-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    display: inline-block;
+}
+
+/* 新規登録バッジ：緑 */
+.badge-created {
+    background-color: #3BB46A;
+}
+
+/* 更新バッジ：紫 */
+.badge-updated {
+    background-color: #7749F8;
+    padding: 3px 20px 3px;
+}
+
+/* 削除バッジ：赤 */
+.badge-deleted {
+    background-color: #D4552F;
+    padding: 3px 20px 3px;
+}

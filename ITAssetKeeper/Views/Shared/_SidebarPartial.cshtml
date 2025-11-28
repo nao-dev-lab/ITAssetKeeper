@@ -1,14 +1,16 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using ITAssetKeeper.Models.Entities
-@inject UserManager<ApplicationUser> UserManager
-@inject SignInManager<ApplicationUser> SignInManager
+@* @inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager *@
+@using ITAssetKeeper.Models.Enums
+@using ITAssetKeeper.Models.ViewModels.Shared
+@model SidebarViewModel
 
 @{
-    var user = await UserManager.GetUserAsync(User);
-    var roles = user != null ? await UserManager.GetRolesAsync(user) : new List<string>();
-    bool isAdmin = roles.Contains("Admin");
-    bool isEditor = roles.Contains("Editor");
-    bool isViewer = roles.Contains("Viewer");
+    // var user = await UserManager.GetUserAsync(User);
+    bool isAdmin = Model.Role == Roles.Admin;
+    bool isEditor = Model.Role == Roles.Editor;
+    bool isViewer = Model.Role == Roles.Viewer;
 }
 
 <div class="sidebar">
@@ -96,7 +98,7 @@
     <ul class="sidebar-footer">
         @* アカウント *@
         <li>
-            <a asp-controller="Account" asp-action="Profile" asp-route-username="@user.UserName"
+            <a asp-controller="Account" asp-action="Profile" asp-route-username="@Model.UserName"
                class="sidebar-footer-link" id="profileLink">
                 アカウント
             </a>

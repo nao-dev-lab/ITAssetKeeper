@@ -1,0 +1,251 @@
+﻿@model ITAssetKeeper.Models.ViewModels.DeviceHistory.DeviceHistoryDetailViewModel
+@using ITAssetKeeper.Models.Enums
+
+@{
+    ViewData["Title"] = "履歴詳細";
+}
+
+@* タイトルバー *@
+<div class="contents-header-bar mb-4">
+    機器情報（履歴）
+</div>
+
+@* メッセージ表示 *@
+@if (TempData["ToastMessage"] != null)
+{
+    <div id="toast-message"
+         data-message="@TempData["ToastMessage"]"
+         data-type="success"></div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-warning mt-3">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (TempData["FailureMessage"] != null)
+{
+    <div class="alert alert-danger mt-3">
+        @TempData["FailureMessage"]
+    </div>
+}
+
+@* 一覧に戻るボタン *@
+<div class="history-details-back-area">
+    <a asp-controller="DeviceHistory" asp-action="Index" class="history-details-btn-back">一覧へ戻る</a>
+</div>
+
+
+@* 履歴情報 *@
+<div class="history-section">
+    <div class="history-section-header">履歴情報</div>
+
+    <div class="history-section-body  history-info-body">
+        
+        @* 履歴ID *@
+        <div class="history-row">
+            <label class="custom-label">@Html.DisplayNameFor(m => m.HistoryId)</label>
+            <div>@Model.HistoryId</div>
+        </div>
+
+        @* 更新者 *@
+        <div class="history-row">
+            <label class="custom-label">@Html.DisplayNameFor(m => m.UpdatedBy)</label>
+            <div>@Model.UpdatedBy</div>
+        </div>
+
+        @* 更新日時 *@
+        <div class="history-row">
+            <label class="custom-label">@Html.DisplayNameFor(m => m.UpdatedAt)</label>
+            <div>@Model.UpdatedAtText</div>
+        </div>
+
+        @* 更新種別 *@
+        <div class="history-row">
+            <label class="custom-label">@Html.DisplayNameFor(m => m.ChangeType)</label>
+            <div>
+                <span class="change-badge @Model.ChangeTypeClass">
+                    @Model.ChangeType
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@* 履歴詳細(Snapshot + Diff) *@
+<div class="history-section mt-4">
+    @if (Model.ChangeType == "新規登録")
+    {
+        <div class="history-section-header">詳細 (新規登録時の情報)</div>
+    }
+    else if (Model.ChangeType == "削除")
+    {
+        <div class="history-section-header">詳細 (削除前の情報)</div>
+    }
+    else
+    {
+        <div class="history-section-header">詳細 (更新内容)</div>
+    }
+
+    @{
+        string changeClass = Model.ChangeType switch
+        {
+            "新規登録" => "history-body-created",
+            "削除" => "history-body-deleted",
+            _ => "history-body-updated"
+        };
+    }
+    <div class="history-section-body history-detail-body @changeClass">
+
+        @* Updatedのみ差分も表示 / 他はスナップショット表示 *@
+        @if (Model.ChangeType == "更新")
+        {
+            <div class="history-grid">
+
+                @foreach (var field in Model.Fields)
+                {
+                    @* 更新の場合、削除に関する項目は表示しない *@
+                    @if (field.FieldName == "DeletedBy" || field.FieldName == "DeletedAt")
+                    {
+                        continue;
+                    }
+
+                    <div class="history-item">
+                        <label class="custom-label @(field.IsChanged ? "changed-field" : "")">@field.DisplayFieldName</label>
+                        <div>
+                            @* 変更項目であれば、変更前後の値を表示 *@
+                            @if (field.IsChanged)
+                            {
+                                <change-value before="@field.BeforeValue" after="@field.AfterValue"></change-value>
+                            }
+                            else
+                            {
+                                @* 変更がない & Statusであればバッジで表示*@
+                                @if (field.FieldName == "Status")
+                                {
+                                    <span class="status-badge @field.StatusClass">
+                                        @field.AfterValue
+                                    </span>
+                                }
+                                else
+                                {
+                                    @field.AfterValue
+                                }
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="history-grid-2col">
+
+                @* 1段目：2列 *@
+                @* 機器管理ID(ManagementId) *@
+                <div class="history-item">
+                    <label class="custom-label">@Html.DisplayNameFor(m => m.DeviceSnapshotDtoHeader.ManagementId)</label>
+                    <div>@Model.AfterSnapshot.ManagementId</div>
+                </div>
+
+                @* 設置場所(Location) *@
+                <div class="history-item">
+                    <label class="custom-label">@Html.DisplayNameFor(m => m.DeviceSnapshotDtoHeader.Location)</label>
+                    <div>@Model.AfterSnapshot.Location</div>
+                </div>
+
+                @* 2段目：2列 *@
+                @* 種別(Category) *@
+                <div class="history-item">
+                    <label class="custom-label">@Html.DisplayNameFor(m => m.DeviceSnapshotDtoHeader.Category)</label>
+                    <div>@Model.AfterSnapshot.Category</div>
+                </div>
+
+                @* 使用者(UserName) *@
+                <div class="history-item">
+                    <label class="custom-label">@Html.DisplayNameFor(m => m.DeviceSnapshotDtoHeader.UserName)</label>
+                    <div>@Model.AfterSnapshot.UserName</div>
+                </div>
+
+                @* 3段目：2列 *@
+                @* 用途(Purpose) *@
+                <div class="history-item">
+                    <label class="custom-label">@Html.DisplayNameFor(m => m.DeviceSnapshotDtoHeader.Purpose)</label>
+                    <div>@Model.AfterSnapshot.Purpose</div>
+                </div>
+
+                @* 状態(Status) *@
+                <div class="history-item">
+                    <label class="custom-label">@Html.DisplayNameFor(m => m.DeviceSnapshotDtoHeader.Status)</label>
+                    <div>
+                        <span class="status-badge @Model.AfterSnapshot.StatusClass">
+                            @Model.AfterSnapshot.Status
+                        </span>
+                    </div>
+                </div>
+
+                @* 4段目：2列 *@
+                @* 型番(ModelNumber) *@
+                <div class="history-item">
+                    <label class="custom-label">@Html.DisplayNameFor(m => m.DeviceSnapshotDtoHeader.ModelNumber)</label>
+                    <div>@Model.AfterSnapshot.ModelNumber</div>
+                </div>
+
+                @* 購入日(PurchaseDate) *@
+                <div class="history-item">
+                    <label class="custom-label">@Html.DisplayNameFor(m => m.DeviceSnapshotDtoHeader.PurchaseDate)</label>
+                    <div>@Model.AfterSnapshot.PurchaseDate?.ToString("yyyy/MM/dd")</div>
+                </div>
+
+                @* 5段目：2列 *@
+                @* 製造番号(SerialNumber) *@
+                <div class="history-item">
+                    <label class="custom-label">@Html.DisplayNameFor(m => m.DeviceSnapshotDtoHeader.SerialNumber)</label>
+                    <div>@Model.AfterSnapshot.SerialNumber</div>
+                </div>
+
+                @* 更新日(UpdatedAt) *@
+                <div class="history-item">
+                    <label class="custom-label">@Html.DisplayNameFor(m => m.DeviceSnapshotDtoHeader.CreatedAt)</label>
+                    <div>@Model.AfterSnapshot.CreatedAt?.ToString("yyyy/MM/dd HH:mm:ss")</div>
+                </div>
+
+                @* 6段目：1列 *@
+                <div class="history-grid-1col">
+                    @* メモ *@
+                    <div class="history-item">
+                        <label class="custom-label">@Html.DisplayNameFor(m => m.DeviceSnapshotDtoHeader.Memo)</label>
+                        <div class="history-memo-box">@Model.AfterSnapshot.Memo</div>
+                    </div>
+                </div>
+
+                @* 削除 の場合のみ表示する *@
+                @if (Model.ChangeType == "削除")
+                {
+                    @* 2列 *@
+                    @* 削除実施者(DeletedBy) *@
+                    <div class="history-item">
+                        <label class="custom-label changed-field">@Html.DisplayNameFor(m => m.DeviceSnapshotDtoHeader.DeletedBy)</label>
+                        <div class="deleted-item">@Model.AfterSnapshot.DeletedBy</div>
+                    </div>
+
+                    @* 削除日(DeletedAt) *@
+                    <div class="history-item">
+                        <label class="custom-label changed-field">@Html.DisplayNameFor(m => m.DeviceSnapshotDtoHeader.DeletedAt)</label>
+                        <div class="deleted-item">@Model.AfterSnapshot.DeletedAt?.ToString("yyyy/MM/dd HH:mm:ss")</div>
+                    </div>
+                }
+            </div>
+        }
+
+    </div>
+</div>
+
+@* CSS *@
+@section Styles {
+    <link rel="stylesheet" href="~/css/history_details.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/badge.css" asp-append-version="true" />
+}

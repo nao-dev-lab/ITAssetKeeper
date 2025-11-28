@@ -23,18 +23,55 @@
             @foreach (var item in Model.Devices)
             {
                 <tr>
-                    <td><a asp-controller="Device" asp-action="Details" asp-route-id="@item.Id">@item.ManagementId</a></td>
-                    <td>@Html.DisplayFor(modelItem => item.Category)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Purpose)</td>
-                    <td>@Html.DisplayFor(modelItem => item.ModelNumber)</td>
-                    <td>@Html.DisplayFor(modelItem => item.SerialNumber)</td>
-                    <td>@Html.DisplayFor(modelItem => item.HostName)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Location)</td>
-                    <td>@Html.DisplayFor(modelItem => item.UserName)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Status)</td>
-                    <td>@Html.DisplayFor(modelItem => item.PurchaseDateText)</td>
-                    <td>@Html.DisplayFor(modelItem => item.CreatedAtDateText)</td>
-                    <td>@Html.DisplayFor(modelItem => item.UpdatedAtDateText)</td>
+                    <td>
+                        <a asp-controller="Device" asp-action="Details" asp-route-id="@item.Id">@item.ManagementId</a>
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Category)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Purpose)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ModelNumber)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SerialNumber)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.HostName)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Location)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserName)
+                    </td>
+
+                    <td class="badge-td">
+                        <span class="status-badge @item.StatusClass">
+                            @Html.DisplayFor(modelItem => item.Status)
+                        </span>
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PurchaseDateText)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreatedAtDateText)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UpdatedAtDateText)
+                    </td>
                 </tr>
             }
         </tbody>

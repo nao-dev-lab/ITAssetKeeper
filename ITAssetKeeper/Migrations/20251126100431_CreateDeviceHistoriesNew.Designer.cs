@@ -4,6 +4,7 @@ using ITAssetKeeper.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ITAssetKeeper.Migrations
 {
     [DbContext(typeof(ITAssetKeeperDbContext))]
-    partial class ITAssetKeeperDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251126100431_CreateDeviceHistoriesNew")]
+    partial class CreateDeviceHistoriesNew
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,6 +188,74 @@ namespace ITAssetKeeper.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AfterValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BeforeValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ChangeField")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("HistoryId")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("ManagementId")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ManagementId", "HistoryId")
+                        .IsUnique();
+
+                    b.ToTable("DeviceHistories", (string)null);
+                });
+
+            modelBuilder.Entity("ITAssetKeeper.Models.Entities.DeviceHistorySequence", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("LastUsedNumber")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DeviceHistorySequences", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            LastUsedNumber = 0
+                        });
+                });
+
+            modelBuilder.Entity("ITAssetKeeper.Models.Entities.DeviceHistory_New", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<string>("CategoryAtHistory")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -226,7 +297,7 @@ namespace ITAssetKeeper.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("MemoAtHistory")
-                        .HasColumnType("NVARCHAR(MAX)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ModelNumberAtHistory")
                         .HasMaxLength(100)
@@ -264,30 +335,7 @@ namespace ITAssetKeeper.Migrations
                     b.HasIndex("ManagementIdAtHistory", "HistoryId")
                         .IsUnique();
 
-                    b.ToTable("DeviceHistories", (string)null);
-                });
-
-            modelBuilder.Entity("ITAssetKeeper.Models.Entities.DeviceHistorySequence", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("LastUsedNumber")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DeviceHistorySequences", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            LastUsedNumber = 0
-                        });
+                    b.ToTable("DeviceHistories_New", (string)null);
                 });
 
             modelBuilder.Entity("ITAssetKeeper.Models.Entities.DeviceSequence", b =>

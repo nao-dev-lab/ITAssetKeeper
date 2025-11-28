@@ -1,53 +1,75 @@
 ﻿using ITAssetKeeper.Models.Enums;
-using ITAssetKeeper.Models.ViewModels.Dashboard;
+using ITAssetKeeper.Models.ViewModels.Device;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
-namespace ITAssetKeeper.Models.ViewModels.Device;
+namespace ITAssetKeeper.Models.ViewModels.DeviceHistory;
 
-// Index(機器一覧)のビューモデル
-public class DeviceListViewModel
+// DeviceHistoryのビューモデル
+public class DeviceHistoryListViewModel
 {
     // メタデータにアクセスする踏み台
-    public DeviceDto DeviceDtoHeader { get; } = new();
+    public DeviceHistoryListItemDto DeviceHistoryListItemDtoHeader { get; } = new();
 
     // ---ドロップダウン選択用 ---
-    public string? SelectedCategory { get; set; }
-    public string? SelectedPurpose { get; set; }
-    public string? SelectedStatus { get; set; }
-    public DeviceColumns SortKeyValue { get; set; } = DeviceColumns.ManagementId;
+    public string? SelectedChangeType { get; set; }
+    public string? SelectedCategoryAtHistory { get; set; }
+    public string? SelectedPurposeAtHistory { get; set; }
+    public string? SelectedStatusAtHistory { get; set; }
+
+    public DeviceHistoryColumns SortKeyValue { get; set; } = DeviceHistoryColumns.HistoryId;
     public SortOrders SortOrderValue { get; set; } = SortOrders.Desc;
 
     // --- 検索結果 ---
-    public List<DeviceDto> Devices { get; set; } = new();
+    public List<DeviceHistoryListItemDto> Histories { get; set; } = new();
 
     // --- 検索条件 ---
+    [Display(Name = "履歴ID")]
+    public string? HistoryId { get; set; }
+
     [Display(Name = "機器管理ID")]
     public string? ManagementId { get; set; }
 
-    [Display(Name = "種別")]
-    public SelectList? CategoryItems { get; set; }
+    [Display(Name = "更新種別")]
+    public SelectList? ChangeTypeItems { get; set; }
 
+    [Display(Name = "更新者")]
+    public string? UpdatedBy { get; set; }
+
+    [Display(Name = "更新日 (開始)")]
+    [DataType(DataType.Date)]
+    public DateTime? UpdatedDateFrom { get; set; }
+
+    [Display(Name = "更新日 (終了)")]
+    [DataType(DataType.Date)]
+    public DateTime? UpdatedDateTo { get; set; }
+
+    [Display(Name = "更新日時")]
+    public DateTime? UpdatedAt { get; set; }
+
+    [Display(Name = "種別")]
+    public SelectList? CategoryAtHistoryItems { get; set; }
+    
     [Display(Name = "用途")]
-    public SelectList? PurposeItems { get; set; }
+    public SelectList? PurposeAtHistoryItems { get; set; }
 
     [Display(Name = "型番(モデル)")]
-    public string? ModelNumber { get; set; }
+    public string? ModelNumberAtHistory { get; set; }
 
     [Display(Name = "製造番号(シリアル)")]
-    public string? SerialNumber { get; set; }
-
+    public string? SerialNumberAtHistory { get; set; }
+    
     [Display(Name = "ホスト名")]
-    public string? HostName { get; set; }
-
+    public string? HostNameAtHistory { get; set; }
+    
     [Display(Name = "設置場所")]
-    public string? Location { get; set; }
+    public string? LocationAtHistory { get; set; }
 
     [Display(Name = "使用者")]
-    public string? UserName { get; set; }
-
+    public string? UserNameAtHistory { get; set; }
+    
     [Display(Name = "状態")]
-    public SelectList? StatusItems { get; set; }
+    public SelectList? StatusAtHistoryItems { get; set; }
 
     [Display(Name = "購入日 (開始)")]
     [DataType(DataType.Date)]
@@ -58,18 +80,7 @@ public class DeviceListViewModel
     public DateTime? PurchaseDateTo { get; set; }
 
     [Display(Name = "購入日")]
-    public DateTime? PurchaseDate { get; set; }
-
-    [Display(Name = "更新日 (開始)")]
-    [DataType(DataType.Date)]
-    public DateTime? UpdatedDateFrom { get; set; }
-
-    [Display(Name = "更新日 (終了)")]
-    [DataType(DataType.Date)]
-    public DateTime? UpdatedDateTo { get; set; }
-
-    [Display(Name = "更新日")]
-    public DateTime? UpdatedAt { get; set; }
+    public DateTime? PurchaseDateAtHistory { get; set; }
 
     [Display(Name = "登録日 (開始)")]
     [DataType(DataType.Date)]
@@ -80,34 +91,36 @@ public class DeviceListViewModel
     public DateTime? CreatedDateTo { get; set; }
 
     [Display(Name = "登録日")]
-    public DateTime? CreatedAt { get; set; }
+    public DateTime? CreatedAtHistory { get; set; }
 
     [Display(Name = "フリーワード")]
     public string? FreeText { get; set; }
 
-    // 検索フォーム折り畳み判別用
+    // --- 検索フォーム折り畳み判別用 ---
     public bool IsSearchExecuted { get; set; }
 
-    // どちらの検索フォームを使用しているかの判別用
+    // --- どちらの検索フォームを使用しているかの判別用 ---
     public string ActiveSearchType { get; set; } = "simple";
 
-    // 検索フォームに項目が入って検索されたかをチェック
+    //  --- 検索フォームに項目が入って検索されたかをチェック  ---
     public bool HasAnyFilter =>
-    !string.IsNullOrWhiteSpace(ManagementId)
-    || !string.IsNullOrWhiteSpace(SelectedCategory)
-    || !string.IsNullOrWhiteSpace(SelectedPurpose)
-    || !string.IsNullOrWhiteSpace(ModelNumber)
-    || !string.IsNullOrWhiteSpace(SerialNumber)
-    || !string.IsNullOrWhiteSpace(HostName)
-    || !string.IsNullOrWhiteSpace(Location)
-    || !string.IsNullOrWhiteSpace(UserName)
-    || !string.IsNullOrWhiteSpace(SelectedStatus)
-    || PurchaseDateFrom != null
-    || PurchaseDateTo != null
-    || CreatedDateFrom != null
-    || CreatedDateTo != null
-    || UpdatedDateFrom != null
-    || UpdatedDateTo != null;
+        !string.IsNullOrWhiteSpace(HistoryId)
+        || !string.IsNullOrWhiteSpace(ManagementId)
+        || !string.IsNullOrWhiteSpace(SelectedChangeType)
+        || !string.IsNullOrWhiteSpace(SelectedCategoryAtHistory)
+        || !string.IsNullOrWhiteSpace(SelectedPurposeAtHistory)
+        || !string.IsNullOrWhiteSpace(UpdatedBy)
+        || !string.IsNullOrWhiteSpace(ModelNumberAtHistory)
+        || !string.IsNullOrWhiteSpace(SerialNumberAtHistory)
+        || !string.IsNullOrWhiteSpace(HostNameAtHistory)
+        || !string.IsNullOrWhiteSpace(LocationAtHistory)
+        || !string.IsNullOrWhiteSpace(UserNameAtHistory)
+        || PurchaseDateFrom != null
+        || PurchaseDateTo != null
+        || CreatedDateFrom != null
+        || CreatedDateTo != null
+        || UpdatedDateFrom != null
+        || UpdatedDateTo != null;
 
     // --- 並び替え ---
     [Display(Name = "並び替え基準")]
@@ -128,7 +141,7 @@ public class DeviceListViewModel
     public bool HasPreviousPage => PageNumber > 1;
     // 現在表示されているページの後にまだ表示するページが存在するか
     public bool HasNextPage => PageNumber < TotalPages;
-    
+
     // ページ番号リンクの生成
     public IEnumerable<int> PageRange
     {

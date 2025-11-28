@@ -20,10 +20,10 @@ public class DeviceHistoryController : Controller
     // GET: DeviceHistory/Index
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> Index(DeviceHistoryViewModel model)
+    public async Task<IActionResult> Index(DeviceHistoryListViewModel model)
     {
         // 検索メソッド実行、結果を取得
-        var vm = await _deviceHistoryService.SearchHistoriesAsync(model);
+        var vm = await _deviceHistoryService.SearchHistoriesAsync(model, User);
 
         // 詳細検索で何か値が入れられたかをチェックし、プロパティにセット
         vm.IsSearchExecuted = vm.HasAnyFilter;
@@ -36,14 +36,14 @@ public class DeviceHistoryController : Controller
     // JSから呼び出す
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> GetSortedList(DeviceHistoryColumns sortKey, SortOrders sortOrder, DeviceHistoryViewModel model)
+    public async Task<IActionResult> GetSortedList(DeviceHistoryColumns sortKey, SortOrders sortOrder, DeviceHistoryListViewModel model)
     {
         // SortKey と SortOrderをモデルに反映させる
         model.SortKeyValue = sortKey;
         model.SortOrderValue = sortOrder;
 
         // 結果を取得
-        var vm = await _deviceHistoryService.SearchHistoriesAsync(model);
+        var vm = await _deviceHistoryService.SearchHistoriesAsync(model, User);
 
         // 部分ビューに渡す
         return PartialView("_DeviceHistoryListPartial", vm);
@@ -53,10 +53,10 @@ public class DeviceHistoryController : Controller
     // JSから呼び出す
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> GetPagedList(DeviceHistoryViewModel model)
+    public async Task<IActionResult> GetPagedList(DeviceHistoryListViewModel model)
     {
         // 結果を取得
-        var vm = await _deviceHistoryService.SearchHistoriesAsync(model);
+        var vm = await _deviceHistoryService.SearchHistoriesAsync(model, User);
 
         // 部分ビューに渡す
         return PartialView("_DeviceHistoryListPartial", vm);
@@ -67,23 +67,45 @@ public class DeviceHistoryController : Controller
     [Authorize]
     public async Task<IActionResult> Details(int id)
     {
-        // Id が不正なら中断
+        //Id が不正なら中断
         if (id <= 0)
         {
-            return Json(new { success = false, message = "対象の履歴IDが不正です。" });
+            TempData["ErrorMessage"] = "対象の履歴が見つかりません。";
+            return RedirectToAction(nameof(Index));
         }
 
-        // 対象の履歴データを取得
-        var history = await _deviceHistoryService.GetHistoryDetailsByIdAsync(id);
+        // 差分ロジックを含む詳細データを取得
+        var historyDetail = await _deviceHistoryService.BuildHistoryDetailAsync(id);
 
         // 取得できなければ一覧に戻す
-        if (history == null)
+        if (historyDetail == null)
         {
             TempData["ErrorMessage"] = "対象の履歴情報が見つかりません。";
             return RedirectToAction(nameof(Index));
         }
 
-        // 部分ビューに履歴データのDTOを渡す
-        return PartialView("_DeviceHistoryDetailPartial", history);
+        return View(historyDetail);
     }
+
+    //public async Task<IActionResult> Details(int id)
+    //{
+    //    // Id が不正なら中断
+    //    if (id <= 0)
+    //    {
+    //        return Json(new { success = false, message = "対象の履歴IDが不正です。" });
+    //    }
+
+    //    // 対象の履歴データを取得
+    //    var history = await _deviceHistoryService.GetHistoryDetailsByIdAsync(id);
+
+    //    // 取得できなければ一覧に戻す
+    //    if (history == null)
+    //    {
+    //        TempData["ErrorMessage"] = "対象の履歴情報が見つかりません。";
+    //        return RedirectToAction(nameof(Index));
+    //    }
+
+    //    // 部分ビューに履歴データのDTOを渡す
+    //    return PartialView("_DeviceHistoryDetailPartial", history);
+    //}
 }

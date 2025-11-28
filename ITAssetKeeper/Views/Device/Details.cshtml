@@ -81,7 +81,11 @@
             @* 状態(Status) *@
             <div class="form-group mb-2">
                 <label class="custom-label">@Html.DisplayNameFor(m => m.Status)</label>
-                <div>@Model.Status</div>
+                <div>
+                    <span class="status-badge @Model.StatusClass">
+                        @Model.Status
+                    </span>
+                </div>
             </div>
         </div>
 
@@ -225,5 +229,6 @@
 @* CSS *@
 @section Styles {
     <link rel="stylesheet" href="~/css/device.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/badge.css" asp-append-version="true" />
 }
 
