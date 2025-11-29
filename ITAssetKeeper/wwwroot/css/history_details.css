@@ -143,8 +143,6 @@
 }
 
 .history-memo-box {
-    white-space: pre-wrap; /* ← 改行を反映 */
-    word-break: break-word; /* ← 長い文字も折り返し */
+    white-space: pre-wrap;
+    word-break: break-word;
 }
-
-

@@ -29,7 +29,7 @@ public class DeviceCreateViewModel
 
     [Required(ErrorMessage = "入力が必要です")]
     [StringLength(100, MinimumLength = 1, ErrorMessage = "{0} は{2}から{1}文字の範囲で入力してください")]
-    [RegularExpression(@"^[a-zA-Z0-9\-._/]+$", ErrorMessage = "半角英数字と - . _ / のみ使用できます")]
+    [RegularExpression(@"^(?!.* {2})[a-zA-Z0-9._/\- ]+$", ErrorMessage = "半角英数字と - . _ / 半角スペースのみ使用できます")]
     [Display(Name = "型番(モデル)")]
     public string ModelNumber { get; set; }
 

@@ -81,7 +81,8 @@ public class DeviceService : IDeviceService
     // フリーワード検索用フィルタリング
     private IQueryable<Device> FilterDevicesByFreeText(IQueryable<Device> query, DeviceListViewModel condition)
     {
-        var free = condition.FreeText;
+        // フリーワードの前後の空白をトリム
+        var free = condition.FreeText!.Trim();
 
         // フリーワードが日付として解釈できるかチェック
         DateTime dt;
@@ -122,7 +123,8 @@ public class DeviceService : IDeviceService
 
         if (!string.IsNullOrWhiteSpace(condition.ModelNumber))
         {
-            query = query.Where(x => x.ModelNumber.Contains(condition.ModelNumber));
+            // 前後の空白をトリムした上で部分一致検索
+            query = query.Where(x => x.ModelNumber.Contains(condition.ModelNumber.Trim()));
         }
 
         if (!string.IsNullOrWhiteSpace(condition.SerialNumber))
@@ -355,16 +357,17 @@ public class DeviceService : IDeviceService
             // 受け取ったビューモデルからEntity 作成
             var entity = new Device
             {
+                // ModelNumber, Memo は前後の空白を除去して登録
                 ManagementId = await GenerateManagementIdAsync(),
                 Category = model.SelectedCategory,
                 Purpose = model.SelectedPurpose,
-                ModelNumber = model.ModelNumber,
+                ModelNumber = model.ModelNumber.Trim(),
                 SerialNumber = model.SerialNumber,
                 HostName = model.HostName,
                 Location = model.Location,
                 UserName = model.UserName,
                 Status = model.SelectedStatus,
-                Memo = model.Memo,
+                Memo = model.Memo != null ? model.Memo.Trim() : null,
                 PurchaseDate = model.PurchaseDate!.Value,
                 CreatedAt = DateTime.Now
             };
@@ -612,15 +615,16 @@ public class DeviceService : IDeviceService
             // Role が Editor であれば Location, UserName, UpdateAt のみ更新
             if (role == Roles.Admin)
             {
+                // ModelNumber, Memo は前後の空白を除去して登録
                 entity.Category = model.SelectedCategory;
                 entity.Purpose = model.SelectedPurpose;
-                entity.ModelNumber = model.ModelNumber;
+                entity.ModelNumber = model.ModelNumber.Trim();
                 entity.SerialNumber = model.SerialNumber;
                 entity.HostName = model.HostName;
                 entity.Location = model.Location;
                 entity.UserName = model.UserName;
                 entity.Status = model.SelectedStatus;
-                entity.Memo = model.Memo;
+                entity.Memo = model.Memo != null ? model.Memo.Trim() : null;
                 entity.PurchaseDate = model.PurchaseDate!.Value;
                 entity.UpdatedAt = DateTime.Now;
             }

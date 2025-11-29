@@ -74,6 +74,7 @@
                     <input asp-for="HostName" class="custom-input" />
                     <button type="button" class="custom-clear-btn">×</button>
                 </div>
+                <span asp-validation-for="HostName" class="text-danger"></span>
             </div>
         </div>
 
@@ -119,6 +120,7 @@
                     <input asp-for="UserName" class="custom-input" placeholder="例: taro.yamada"/>
                     <button type="button" class="custom-clear-btn">×</button>
                 </div>
+                <span asp-validation-for="HostName" class="text-danger"></span>
             </div>
 
             @* 購入日(PurchaseDate) *@
