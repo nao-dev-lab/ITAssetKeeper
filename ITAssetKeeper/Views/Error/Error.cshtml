@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "エラーが発生しました";
+    Layout = "_ErrorLayout";
+}
+
+@* ロゴ表示 *@
+<div class="logo-box">
+    <div class="logo-container">
+        <img src="~/img/logo_error.png" class="logo-image" alt="logo" />
+        <span class="logo-title-text">IT Asset Keeper</span>
+    </div>
+</div>
+
+@* タイトル表示 *@
+<h1 class="error-title text-center mt-4">
+    Error
+</h1>
+
+<div class="error-wrapper">
+    <div class="error-message text-purple">
+        予期しないエラーが発生しました。<br>
+        一時的な問題の可能性があります。<br>
+        お手数ですが、時間をおいて再度お試しください。<br>
+    </div>
+
+    <div class="text-center mt-3">
+        <a asp-controller="Device" asp-action="Index" class="top-link">トップページへ戻る ></a>
+    </div>
+</div>

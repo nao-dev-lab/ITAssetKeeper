@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "ログインが必要です - 401";
+    Layout = "_ErrorLayout";
+}
+
+@* ロゴ表示 *@
+<div class="logo-box">
+    <div class="logo-container">
+        <img src="~/img/logo_error.png" class="logo-image" alt="logo" />
+        <span class="logo-title-text">IT Asset Keeper</span>
+    </div>
+</div>
+
+@* タイトル表示 *@
+<h1 class="error-title text-center mt-4">
+    401
+</h1>
+
+<div class="error-wrapper">
+    <div class="error-message text-purple">
+        このページを表示するにはログインが必要です。<br>
+        ログイン後に、再度アクセスをお試しください。<br>
+    </div>
+
+    <div class="text-center mt-3">
+        <a asp-controller="Account" asp-action="Login" class="top-link">ログインページへ戻る ></a>
+    </div>
+</div>
+

@@ -3,7 +3,6 @@ using ITAssetKeeper.Models.Entities;
 using ITAssetKeeper.Models.Enums;
 using ITAssetKeeper.Models.ViewModels.Account;
 using Microsoft.AspNetCore.Identity;
-using System.Reflection.Metadata.Ecma335;
 
 namespace ITAssetKeeper.Services;
 
@@ -25,14 +24,23 @@ public class AccountService : IAccountService
     // ログイン成功後のRole別のリダイレクト先の振り分け
     public async Task<string> ResolveRedirectAfterLoginAsync(ApplicationUser user)
     {
-        // Admin であれば Dashboardへリダイレクト
-        if (await _userManager.IsInRoleAsync(user, Roles.Admin.ToString()))
+        try
         {
-            return "/Dashboard/Admin";
+            // Admin であれば Dashboardへリダイレクト
+            if (await _userManager.IsInRoleAsync(user, Roles.Admin.ToString()))
+            {
+                return "/Dashboard/Admin";
+            }
+
+            // Admin以外は機器一覧にリダイレクト
+            return "/Device/Index";
         }
-        
-        // Admin以外は機器一覧にリダイレクト
-        return "/Device/Index";
+        catch (Exception ex)
+        {
+            // 例外にコンテキストを付与して上位へ再スロー
+            throw new InvalidOperationException(
+                "ロール判定中にエラーが発生しました。", ex);
+        }
     }
 
     // パスワード期限の更新処理

@@ -22,6 +22,12 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ITAssetKeeperDbContext>()
     .AddDefaultTokenProviders();
 
+// AccessDenied時、403エラーページへリダイレクト
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.AccessDeniedPath = "/Error/403";
+});
+
 // ユーザーID: ロックアウトの設定
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -58,13 +64,15 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// 本番環境では「開発者向けの詳細エラー」を隠し、500専用に飛ばす
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseExceptionHandler("/Error/500");
     app.UseHsts();
 }
+
+// ステータスコード別のエラーページへリダイレクト設定
+app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

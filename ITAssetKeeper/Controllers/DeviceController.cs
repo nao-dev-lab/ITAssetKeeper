@@ -1,5 +1,4 @@
-﻿using ITAssetKeeper.Data;
-using ITAssetKeeper.Models.Enums;
+﻿using ITAssetKeeper.Models.Enums;
 using ITAssetKeeper.Models.ViewModels.Device;
 using ITAssetKeeper.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -76,6 +75,13 @@ public class DeviceController : Controller
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create(DeviceCreateViewModel model)
     {
+        // モデルが null なら一覧に戻す
+        if (model == null)
+        {
+            TempData["ErrorMessage"] = "不正なデータが指定されました。";
+            return RedirectToAction(nameof(Index));
+        }
+
         // 入力エラーがあった場合はビューに戻す
         if (!ModelState.IsValid)
         {
@@ -114,6 +120,13 @@ public class DeviceController : Controller
     [Authorize]
     public async Task<IActionResult> Details(int id)
     {
+        // Id が不正なら一覧に戻す
+        if (id <= 0)
+        {
+            TempData["ErrorMessage"] = "不正なパラメータが指定されました。";
+            return RedirectToAction(nameof(Index));
+        }
+
         // 対象の機器データを取得
         var device = await _deviceService.GetDeviceDetailsByIdAsync(id);
 
@@ -133,6 +146,13 @@ public class DeviceController : Controller
     [Authorize(Roles = "Admin, Editor")]
     public async Task<IActionResult> Edit(int id)
     {
+        // Id が不正なら一覧に戻す
+        if (id <= 0)
+        {
+            TempData["ErrorMessage"] = "不正なパラメータが指定されました。";
+            return RedirectToAction(nameof(Index));
+        }
+
         // ユーザーのRole情報を取得
         Roles role;
         if (User.IsInRole("Admin"))
@@ -163,6 +183,20 @@ public class DeviceController : Controller
     [Authorize(Roles = "Admin, Editor")]
     public async Task<IActionResult> Edit(DeviceEditViewModel model)
     {
+        // モデルが null なら一覧に戻す
+        if (model == null)
+        {
+            TempData["ErrorMessage"] = "不正なデータが指定されました。";
+            return RedirectToAction(nameof(Index));
+        }
+
+        // Id が不正なら一覧に戻す
+        if (model.IdHidden <= 0)
+        {
+            TempData["ErrorMessage"] = "不正なパラメータが指定されました。";
+            return RedirectToAction(nameof(Index));
+        }
+
         // ユーザーのRole情報を取得
         Roles role;
         if (User.IsInRole("Admin"))
@@ -201,7 +235,7 @@ public class DeviceController : Controller
         if (string.IsNullOrEmpty(userName))
         {
             TempData["ErrorMessage"] = "認証情報の取得に失敗しました。";
-            return RedirectToAction(nameof(Create));
+            return RedirectToAction(nameof(Index));
         }
 
         // クエリ実行結果の状態のエントリ数を取得
@@ -232,7 +266,7 @@ public class DeviceController : Controller
         // Id が不正なら中断
         if (id <= 0)
         {
-            return Json(new { success = false, message = "削除対象のIDが不正です。" });
+            return Json(new { success = false, message = "不正なパラメータが指定されました。" });
         }
 
         // ログインユーザー名を取得

@@ -1,0 +1,105 @@
+﻿/* ===== 全体背景 ===== */
+.error-body {
+    background-color: #ffffff;
+}
+
+/* ===== 中央の背景ボックス ===== */
+.error-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px 10px;
+}
+
+.error-card {
+    background-color: #EDE7F9;
+    padding: 60px 40px; /* ← 横長に見えるよう左右の余白を増やす */
+    border-radius: 10px;
+    width: 900px; /* ← 横幅を広げる */
+    max-width: 95%; /* ← 画面が小さい時のレスポンシブ対策 */
+    text-align: center;
+}
+
+/* ===== タイトルロゴ ===== */
+.logo-box {
+    text-align: center;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+}
+
+/* ロゴ背景（紫） */
+.logo-container {
+    background-color: #7749F8;
+    padding: 8px 22px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* アイコン画像 */
+.logo-image {
+    height: 36px; /* 適宜調整 */
+    margin-right: 10px;
+}
+
+/* 文字 */
+.logo-title-text {
+    color: #FFFFFF;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+/* ===== タイトル文字 ===== */
+.error-title {
+    color: #520DC2;
+    font-size: 60px;
+    font-weight: bold;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+}
+
+.title-icon {
+    height: 28px; /* アイコン高さを h2 に合わせる */
+    vertical-align: middle; /* 行の中央に揃える */
+    margin-right: 6px; /* 文字との間隔 */
+    position: relative;
+    top: -3px; /* 微調整：上に 3px 動かす */
+}
+
+.error-wrapper {
+    max-width: 430px; 
+    margin: 0 auto; 
+}
+
+/* ===== テキスト ===== */
+.text-purple {
+    color: #520DC2 !important;
+}
+
+.error-message {
+    text-align: center;
+    font-size: 18px;
+    padding: 16px 16px;
+    margin-bottom: 32px;
+}
+
+/* ===== リンク ===== */
+.top-link {
+    color: #520DC2;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.top-link:hover {
+    text-decoration: underline;
+}
+
+/* ===== フッタ ===== */
+.error-footer {
+    margin-top: 40px;
+    color: #520DC2;
+    font-size: 14px;
+}
+
+

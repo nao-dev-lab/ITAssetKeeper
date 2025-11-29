@@ -1,6 +1,4 @@
-﻿using ITAssetKeeper.Data;
-using ITAssetKeeper.Models.Enums;
-using ITAssetKeeper.Models.ViewModels.Device;
+﻿using ITAssetKeeper.Models.Enums;
 using ITAssetKeeper.Models.ViewModels.DeviceHistory;
 using ITAssetKeeper.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -70,7 +68,7 @@ public class DeviceHistoryController : Controller
         //Id が不正なら中断
         if (id <= 0)
         {
-            TempData["ErrorMessage"] = "対象の履歴が見つかりません。";
+            TempData["ErrorMessage"] = "不正なパラメータが指定されました。";
             return RedirectToAction(nameof(Index));
         }
 
@@ -86,26 +84,4 @@ public class DeviceHistoryController : Controller
 
         return View(historyDetail);
     }
-
-    //public async Task<IActionResult> Details(int id)
-    //{
-    //    // Id が不正なら中断
-    //    if (id <= 0)
-    //    {
-    //        return Json(new { success = false, message = "対象の履歴IDが不正です。" });
-    //    }
-
-    //    // 対象の履歴データを取得
-    //    var history = await _deviceHistoryService.GetHistoryDetailsByIdAsync(id);
-
-    //    // 取得できなければ一覧に戻す
-    //    if (history == null)
-    //    {
-    //        TempData["ErrorMessage"] = "対象の履歴情報が見つかりません。";
-    //        return RedirectToAction(nameof(Index));
-    //    }
-
-    //    // 部分ビューに履歴データのDTOを渡す
-    //    return PartialView("_DeviceHistoryDetailPartial", history);
-    //}
 }

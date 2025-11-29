@@ -1,13 +1,9 @@
-﻿using ITAssetKeeper.Data;
-using ITAssetKeeper.Models.Entities;
-using ITAssetKeeper.Models.Enums;
+﻿using ITAssetKeeper.Models.Entities;
 using ITAssetKeeper.Models.ViewModels.Account;
+using ITAssetKeeper.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using ITAssetKeeper.Constants;
-using ITAssetKeeper.Services;
-using System.Threading.Tasks;
 
 namespace ITAssetKeeper.Controllers;
 
@@ -43,7 +39,9 @@ public class AccountController : Controller
     [AllowAnonymous]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Login([Bind("UserName, Password, RememberMe")] LoginViewModel model)
+    public async Task<IActionResult> Login(
+        [Bind("UserName, Password, RememberMe")] LoginViewModel model,
+        string? returnUrl = null)
     {
         // 入力エラーがある場合、ビューに戻す
         if (!ModelState.IsValid)
@@ -100,9 +98,25 @@ public class AccountController : Controller
         }
 
         // ログインに成功したら、
-        // AdminはDashboard、他RoleはIndexにリダイレクト
-        var redirectUrl = await _accountService.ResolveRedirectAfterLoginAsync(user);
-        return Redirect(redirectUrl);
+        // returnUrlが存在し、かつローカルURLであればリダイレクト
+        if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+        {
+            return LocalRedirect(returnUrl);
+        }
+
+        try
+        {
+            // 危険 or 未指定 returnUrl は無視して固定先に飛ばす
+            // AdminはDashboard、他RoleはIndex
+            var redirectUrl = await _accountService.ResolveRedirectAfterLoginAsync(user);
+            return Redirect(redirectUrl);
+        }
+        catch (Exception ex)
+        {
+            //_logger.LogError(ex, "ログイン後処理で例外発生");
+            TempData["ErrorMessage"] = "ログイン後の処理中にエラーが発生しました。";
+            return RedirectToAction("Login", "Account");
+        }
     }
 
     // POST: Account/Logout
@@ -225,7 +239,6 @@ public class AccountController : Controller
 
         // パスワード変更に成功したら、パスワード期限を更新
         _accountService.UpdatePasswordExpiration(user);
-        //user.PasswordExpirationDate = DateTime.Now.AddDays(ApplicationIdentityConstants.PASSWORD_VALID_DAYS);
         var updateResult = await _userManager.UpdateAsync(user);
 
         // DB側の更新に失敗していればコンソールにログを出力

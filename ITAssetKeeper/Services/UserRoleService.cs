@@ -17,30 +17,38 @@ public class UserRoleService : IUserRoleService
     // 引数で与えられたClaimsPrincipalからユーザーのロールを取得するメソッド
     public async Task<Roles?> GetUserRoleAsync(ClaimsPrincipal user)
     {
-        if (user.Identity == null || !user.Identity.IsAuthenticated)
+        try
         {
+            if (user.Identity == null || !user.Identity.IsAuthenticated)
+            {
+                return null;
+            }
+
+            // ユーザーのロールを取得
+            var appUser = await _userManager.GetUserAsync(user);
+
+            if (appUser == null)
+            {
+                return null;
+            }
+
+            var roles = await _userManager.GetRolesAsync(appUser);
+
+            // ロールの判定
+            var result = roles.FirstOrDefault() ?? "Unknown";
+
+            return result switch
+            {
+                "Admin" => Roles.Admin,
+                "Editor" => Roles.Editor,
+                "Viewer" => Roles.Viewer,
+                _ => null
+            };
+        }
+        catch (Exception ex)
+        {
+            //_logger.LogError(ex, "役割取得に失敗しました");
             return null;
         }
-
-        // ユーザーのロールを取得
-        var appUser = await _userManager.GetUserAsync(user);
-
-        if (appUser == null)
-        {
-            return null;
-        }
-
-        var roles = await _userManager.GetRolesAsync(appUser);
-
-        // ロールの判定
-        var result = roles.FirstOrDefault() ?? "Unknown";
-
-        return result switch
-        {
-            "Admin" => Roles.Admin,
-            "Editor" => Roles.Editor,
-            "Viewer" => Roles.Viewer,
-            _ => null
-        };
     }
 }

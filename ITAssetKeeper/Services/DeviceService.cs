@@ -352,40 +352,50 @@ public class DeviceService : IDeviceService
         var strategy = _context.Database.CreateExecutionStrategy();
         return await strategy.ExecuteAsync(async () =>
         {
+            // トランザクション開始
             await using var transaction = await _context.Database.BeginTransactionAsync();
 
-            // 受け取ったビューモデルからEntity 作成
-            var entity = new Device
+            try
             {
-                // ModelNumber, Memo は前後の空白を除去して登録
-                ManagementId = await GenerateManagementIdAsync(),
-                Category = model.SelectedCategory,
-                Purpose = model.SelectedPurpose,
-                ModelNumber = model.ModelNumber.Trim(),
-                SerialNumber = model.SerialNumber,
-                HostName = model.HostName,
-                Location = model.Location,
-                UserName = model.UserName,
-                Status = model.SelectedStatus,
-                Memo = model.Memo != null ? model.Memo.Trim() : null,
-                PurchaseDate = model.PurchaseDate!.Value,
-                CreatedAt = DateTime.Now
-            };
+                // 受け取ったビューモデルからEntity 作成
+                var entity = new Device
+                {
+                    // ModelNumber, Memo は前後の空白を除去して登録
+                    ManagementId = await GenerateManagementIdAsync(),
+                    Category = model.SelectedCategory,
+                    Purpose = model.SelectedPurpose,
+                    ModelNumber = model.ModelNumber.Trim(),
+                    SerialNumber = model.SerialNumber,
+                    HostName = model.HostName,
+                    Location = model.Location,
+                    UserName = model.UserName,
+                    Status = model.SelectedStatus,
+                    Memo = model.Memo != null ? model.Memo.Trim() : null,
+                    PurchaseDate = model.PurchaseDate!.Value,
+                    CreatedAt = DateTime.Now
+                };
 
-            // Device を追加
-            _context.Devices.Add(entity);
+                // Device を追加
+                _context.Devices.Add(entity);
 
-            // 新規登録に関する履歴を追加
-            await _deviceHistoryService.AddCreateHistoryAsync(entity, userName);
+                // 新規登録に関する履歴を追加
+                await _deviceHistoryService.AddCreateHistoryAsync(entity, userName);
 
-            // DBへの登録処理を実施
-            var result = await _context.SaveChangesAsync();
+                // DBへの登録処理を実施
+                var result = await _context.SaveChangesAsync();
 
-            // Commitする
-            await transaction.CommitAsync();
+                // Commitする
+                await transaction.CommitAsync();
 
-            // 結果の状態エントリの数を返す
-            return result;
+                // 結果の状態エントリの数を返す
+                return result;
+            }
+            catch
+            {
+                // 失敗したら Rollback
+                await transaction.RollbackAsync();
+                throw;
+            }
         });
     }
 
@@ -641,43 +651,53 @@ public class DeviceService : IDeviceService
         var strategy = _context.Database.CreateExecutionStrategy();
         return await strategy.ExecuteAsync(async () =>
         {
+            // トランザクション開始
             await using var transaction = await _context.Database.BeginTransactionAsync();
 
-            // Role判定
-            // Role が Editor であれば Location, UserName, UpdateAt のみ更新
-            if (role == Roles.Admin)
+            try
             {
-                // ModelNumber, Memo は前後の空白を除去して登録
-                entity.Category = model.SelectedCategory;
-                entity.Purpose = model.SelectedPurpose;
-                entity.ModelNumber = model.ModelNumber.Trim();
-                entity.SerialNumber = model.SerialNumber;
-                entity.HostName = model.HostName;
-                entity.Location = model.Location;
-                entity.UserName = model.UserName;
-                entity.Status = model.SelectedStatus;
-                entity.Memo = model.Memo != null ? model.Memo.Trim() : null;
-                entity.PurchaseDate = model.PurchaseDate!.Value;
-                entity.UpdatedAt = DateTime.Now;
+                // Role判定
+                // Role が Editor であれば Location, UserName, UpdateAt のみ更新
+                if (role == Roles.Admin)
+                {
+                    // ModelNumber, Memo は前後の空白を除去して登録
+                    entity.Category = model.SelectedCategory;
+                    entity.Purpose = model.SelectedPurpose;
+                    entity.ModelNumber = model.ModelNumber.Trim();
+                    entity.SerialNumber = model.SerialNumber;
+                    entity.HostName = model.HostName;
+                    entity.Location = model.Location;
+                    entity.UserName = model.UserName;
+                    entity.Status = model.SelectedStatus;
+                    entity.Memo = model.Memo != null ? model.Memo.Trim() : null;
+                    entity.PurchaseDate = model.PurchaseDate!.Value;
+                    entity.UpdatedAt = DateTime.Now;
+                }
+                else
+                {
+                    entity.Location = model.Location;
+                    entity.UserName = model.UserName;
+                    entity.UpdatedAt = DateTime.Now;
+                }
+
+                // 更新に関する履歴レコードを追加
+                await _deviceHistoryService.AddUpdateHistoryAsync(before, entity, userName);
+
+                // DBへの登録処理を実施、状態エントリの数を受け取る
+                var result = await _context.SaveChangesAsync();
+
+                // Commitする
+                await transaction.CommitAsync();
+
+                // 結果の状態エントリの数を返す
+                return result;
             }
-            else
+            catch
             {
-                entity.Location = model.Location;
-                entity.UserName = model.UserName;
-                entity.UpdatedAt = DateTime.Now;
+                // 失敗したら Rollback
+                await transaction.RollbackAsync();
+                throw;
             }
-
-            // 更新に関する履歴レコードを追加
-            await _deviceHistoryService.AddUpdateHistoryAsync(before, entity, userName);
-
-            // DBへの登録処理を実施、状態エントリの数を受け取る
-            var result = await _context.SaveChangesAsync();
-
-            // Commitする
-            await transaction.CommitAsync();
-
-            // 結果の状態エントリの数を返す
-            return result;
         });
     }
 
@@ -738,28 +758,38 @@ public class DeviceService : IDeviceService
         var strategy = _context.Database.CreateExecutionStrategy();
         return await strategy.ExecuteAsync(async () =>
         {
+            // トランザクション開始
             await using var transaction = await _context.Database.BeginTransactionAsync();
 
-            // 現在日時を取得
-            var now = DateTime.Now;
+            try
+            {
+                // 現在日時を取得
+                var now = DateTime.Now;
 
-            // 削除フラグ と 削除実施者を更新する
-            entity.IsDeleted = true;
-            entity.DeletedBy = deletedBy;
-            entity.UpdatedAt = now;
-            entity.DeletedAt = now;
+                // 削除フラグ と 削除実施者を更新する
+                entity.IsDeleted = true;
+                entity.DeletedBy = deletedBy;
+                entity.UpdatedAt = now;
+                entity.DeletedAt = now;
 
-            // 削除に関する履歴レコードを追加
-            await _deviceHistoryService.AddDeleteHistoryAsync(before, entity, deletedBy);
+                // 削除に関する履歴レコードを追加
+                await _deviceHistoryService.AddDeleteHistoryAsync(before, entity, deletedBy);
 
-            // DBへの更新処理を実施、状態エントリの数を受け取る
-            var result = await _context.SaveChangesAsync();
+                // DBへの更新処理を実施、状態エントリの数を受け取る
+                var result = await _context.SaveChangesAsync();
 
-            // Commitする
-            await transaction.CommitAsync();
+                // Commitする
+                await transaction.CommitAsync();
 
-            // 結果の状態エントリの数を返す
-            return result;
+                // 結果の状態エントリの数を返す
+                return result;
+            }
+            catch
+            {
+                // 失敗したら Rollback
+                await transaction.RollbackAsync();
+                throw;
+            }
         });
     }
 }

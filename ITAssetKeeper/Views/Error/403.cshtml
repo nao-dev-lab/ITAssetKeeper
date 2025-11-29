@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "アクセスする権限がありません - 403";
+    Layout = "_ErrorLayout";
+}
+
+@* ロゴ表示 *@
+<div class="logo-box">
+    <div class="logo-container">
+        <img src="~/img/logo_error.png" class="logo-image" alt="logo" />
+        <span class="logo-title-text">IT Asset Keeper</span>
+    </div>
+</div>
+
+@* タイトル表示 *@
+<h1 class="error-title text-center mt-4">
+    403
+</h1>
+
+<div class="error-wrapper">
+    <div class="error-message text-purple">
+        このページにアクセスできません。<br>
+        権限がないか、アクセス制限が設定されています。<br>
+        管理者にお問い合わせください。<br>
+    </div>
+
+    <div class="text-center mt-3">
+        <a asp-controller="Device" asp-action="Index" class="top-link">トップページへ戻る ></a>
+    </div>
+</div>
+

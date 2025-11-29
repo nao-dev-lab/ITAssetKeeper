@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "お探しのページが見つかりません - 404";
+    Layout = "_ErrorLayout";
+}
+
+@* ロゴ表示 *@
+<div class="logo-box">
+    <div class="logo-container">
+        <img src="~/img/logo_error.png" class="logo-image" alt="logo" />
+        <span class="logo-title-text">IT Asset Keeper</span>
+    </div>
+</div>
+
+@* タイトル表示 *@
+<h1 class="error-title text-center mt-4">
+    404
+</h1>
+
+<div class="error-wrapper">
+    <div class="error-message text-purple">
+        お探しのページが見つかりません。<br>
+        一時的にアクセスできない状況にあるか、<br>
+        移動もしくは削除された可能性があります。<br>
+    </div>
+
+    <div class="text-center mt-3">
+        <a asp-controller="Device" asp-action="Index" class="top-link">トップページへ戻る ></a>
+    </div>
+</div>
+

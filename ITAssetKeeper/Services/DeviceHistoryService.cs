@@ -517,32 +517,48 @@ public class DeviceHistoryService : IDeviceHistoryService
     // 採番テーブルを使って、HistoryId が競合しないようにする
     private async Task<string> GenerateHistoryIdAsync()
     {
-        var seq = await _sequenceService.GetNextHistoryIdAsync();
+        try
+        {
+            // 採番サービスを使って、次の連番を取得
+            var seq = await _sequenceService.GetNextHistoryIdAsync();
 
-        return DeviceHistoryConstants.HISTORY_ID_PREFIX +
-               seq.ToString($"D{DeviceHistoryConstants.HISTORY_ID_NUM_DIGIT_COUNT}");
+            // 取得した連番を元に HistoryId を生成して返す
+            return DeviceHistoryConstants.HISTORY_ID_PREFIX +
+                   seq.ToString($"D{DeviceHistoryConstants.HISTORY_ID_NUM_DIGIT_COUNT}");
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException("履歴IDの採番に失敗しました。", ex);
+        }
     }
 
     // HistoryIdの自動採番を履歴テーブル内の最大 HistoryId からの連番になるよう同期
     // ダミーデータ追加時などの整合性の担保
     public async Task SyncHistorySequenceAsync()
     {
-        // 履歴テーブルから全ての HistoryId を取得
-        var historyIdList = await _context.DeviceHistories
-            .Select(h => h.HistoryId)
-            .ToListAsync();
+        try
+        {
+            // 履歴テーブルから全ての HistoryId を取得
+            var historyIdList = await _context.DeviceHistories
+                .Select(h => h.HistoryId)
+                .ToListAsync();
 
-        // HistoryId の数字部分の最大値を取得
-        // "UH000001" → 数字部分 "000001" → 1 に変換
-        int maxNum = historyIdList
-            .Select(id => int.Parse(id.Substring(DeviceHistoryConstants.HISTORY_ID_PREFIX.Length)))
-            .DefaultIfEmpty(0)
-            .Max();
+            // HistoryId の数字部分の最大値を取得
+            // "UH000001" → 数字部分 "000001" → 1 に変換
+            int maxNum = historyIdList
+                .Select(id => int.Parse(id.Substring(DeviceHistoryConstants.HISTORY_ID_PREFIX.Length)))
+                .DefaultIfEmpty(0)
+                .Max();
 
-        // 採番テーブルを最新の値に同期
-        // 最大値をプレースホルダーで渡す
-        await _context.Database.ExecuteSqlRawAsync(
-            "UPDATE DeviceHistorySequences SET LastUsedNumber = @p0 WHERE Id = 1", maxNum);
+            // 採番テーブルを最新の値に同期
+            // 最大値をプレースホルダーで渡す
+            await _context.Database.ExecuteSqlRawAsync(
+                "UPDATE DeviceHistorySequences SET LastUsedNumber = @p0 WHERE Id = 1", maxNum);
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException("履歴シーケンスの同期に失敗しました。", ex);
+        }
     }
 
 
