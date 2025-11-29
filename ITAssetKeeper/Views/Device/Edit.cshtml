@@ -33,7 +33,7 @@
 
 @* キャンセルボタン *@
 <div class="form-cancel-area">
-    <a asp-controller="Device" asp-action="Details" asp-route-id="@Model.IdHidden" class="form-cancel-btn">キャンセル</a>
+    <a class="form-cancel-btn no-warning" id="cancel" data-from="edit" data-hiddenid="@Model.IdHidden">キャンセル</a>
 </div>
 
 @* 機器情報編集フォーム *@
@@ -78,6 +78,7 @@
                     @Html.TextBoxFor(m => m.HostName,
                                         new { @class = "custom-input disable-target", data_disable = Model.IsReadOnlyHostName })
                 </div>
+                <span asp-validation-for="HostName" class="text-danger"></span>
             </div>
         </div>
 
@@ -89,8 +90,8 @@
                 <div class="custom-input-wrapper">
                     @Html.TextBoxFor(m => m.Location,
                                         new { @class = "custom-input disable-target", data_disable = Model.IsReadOnlyLocation })
-                    <span asp-validation-for="Location" class="text-danger"></span>
                 </div>
+                <span asp-validation-for="Location" class="text-danger"></span>
             </div>
 
             @* ModelNumber(型番) *@
@@ -123,6 +124,7 @@
                     @Html.TextBoxFor(m => m.UserName,
                                         new { @class = "custom-input disable-target", data_disable = Model.IsReadOnlyUserName })
                 </div>
+                <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
 
             @* PurchaseDate(購入日) *@
@@ -168,6 +170,8 @@
 @section Scripts {
     <script src="~/js/device/device-edit-permissions.js"></script>
     <script src="~/js/common/dropdown-toggle.js"></script>
+    <script src="~/js/common/alert-leave.js"></script>
+    <script src="~/js/common/alert-cancel.js"></script>
 }
 
 @* CSS *@

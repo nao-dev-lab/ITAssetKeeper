@@ -43,6 +43,9 @@ public interface IDeviceService
     // 入力エラー時用：SelectList ＆ ReadOnly 制御だけ再設定する
     Task RestoreEditViewSettingsAsync(DeviceEditViewModel model, Roles role);
 
+    // 更新前の状態と変更があるかチェック
+    Task<bool> HasDeviceChangedAsync(DeviceEditViewModel model);
+
     // 機器情報の更新処理
     Task<int> UpdateDeviceAsync(DeviceEditViewModel model, Roles role, string userName);
 

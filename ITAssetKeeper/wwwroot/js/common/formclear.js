@@ -22,12 +22,22 @@ function bindClearSingleInputs() {
     document.querySelectorAll(".custom-clear-btn").forEach(btn => {
         btn.addEventListener("click", () => {
 
-            // クリア対象の input を探す (ボタンの兄弟要素)
-            const wrapper = btn.closest(".search-detail-input-wrapper");
-            const input = wrapper?.querySelector(".search-detail-input");
+            // クリア対象の input を探してクリアする
 
-            if (input) {
-                input.value = "";
+            // search-detail の input
+            const detailWrapper = btn.closest(".search-detail-input-wrapper");
+            const detailInput = detailWrapper?.querySelector(".search-detail-input");
+            if (detailInput) {
+                detailInput.value = "";
+                return;
+            }
+
+            // custom-input-wrapper の input
+            const customWrapper = btn.closest(".custom-input-wrapper");
+            const customInput = customWrapper?.querySelector("input");
+            if (customInput) {
+                customInput.value = "";
+                return;
             }
         });
     });

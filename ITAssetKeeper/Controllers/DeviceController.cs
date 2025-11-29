@@ -183,6 +183,17 @@ public class DeviceController : Controller
             return View(model);
         }
 
+        // 変更された項目があるかチェック
+        var isChanged = await _deviceService.HasDeviceChangedAsync(model);
+
+        // 変更がない場合は、該当の機器情報画面に戻す
+        if (!isChanged)
+        {
+            await _deviceService.RestoreEditViewSettingsAsync(model, role);
+            TempData["ErrorMessage"] = "変更された項目がありません。";
+            return View(model);
+        }
+
         // ログインユーザー名を取得
         string userName = User.Identity.Name;
 

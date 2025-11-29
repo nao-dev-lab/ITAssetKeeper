@@ -33,7 +33,7 @@
 
 @* キャンセルボタン *@
 <div class="form-cancel-area">
-    <a asp-controller="Device" asp-action="Create" class="form-cancel-btn">キャンセル</a>
+    <a class="form-cancel-btn no-warning" id="cancel" data-from="create">キャンセル</a>
 </div>
 
 @* 機器登録フォーム *@
@@ -161,6 +161,8 @@
 @section Scripts {
     <script src="~/js/common/formclear.js"></script>
     <script src="~/js/common/dropdown-toggle.js"></script>
+    <script src="~/js/common/alert-leave.js"></script>
+    <script src="~/js/common/alert-cancel.js"></script>
 }
 
 @* CSS *@

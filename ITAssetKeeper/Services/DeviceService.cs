@@ -582,6 +582,38 @@ public class DeviceService : IDeviceService
         }
     }
 
+    // 更新前の状態と変更があるかチェック
+    // 1つでも異なっていれば true を返す
+    public async Task<bool> HasDeviceChangedAsync(DeviceEditViewModel model)
+    {
+        // Devicesテーブルから指定のIdの更新前データを取得する
+        var device = await _context.Devices
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == model.IdHidden);
+
+        // 見つからなかった場合は false を返す
+        if (device == null)
+        {
+            return false;
+        }
+        // 各項目を比較し、1つでも異なっていれば true を返す
+        if (device.Category != model.SelectedCategory ||
+            device.Purpose != model.SelectedPurpose ||
+            device.ModelNumber != model.ModelNumber.Trim() ||
+            device.SerialNumber != model.SerialNumber ||
+            device.HostName != model.HostName ||
+            device.Location != model.Location ||
+            device.UserName != model.UserName ||
+            device.Status != model.SelectedStatus ||
+            device.Memo != (model.Memo != null ? model.Memo.Trim() : null) ||
+            device.PurchaseDate != model.PurchaseDate!.Value)
+        {
+            return true;
+        }
+        // すべて同じ場合は false を返す
+        return false;
+    }
+
     // 機器情報の更新処理
     public async Task<int> UpdateDeviceAsync(DeviceEditViewModel model, Roles role, string userName)
     {
