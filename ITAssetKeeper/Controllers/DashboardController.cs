@@ -11,10 +11,13 @@ namespace ITAssetKeeper.Controllers;
 public class DashboardController : Controller
 {
     private readonly IDashboardService _dashboardService;
-
-    public DashboardController(IDashboardService dashboardService)
+    private readonly ILogger<DashboardController> _logger;
+    public DashboardController(
+        IDashboardService dashboardService,
+        ILogger<DashboardController> logger)
     {
         _dashboardService = dashboardService;
+        _logger = logger;
     }
 
     // GET: Dashboard/Admin

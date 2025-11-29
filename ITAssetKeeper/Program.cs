@@ -4,8 +4,21 @@ using ITAssetKeeper.Models.Entities;
 using ITAssetKeeper.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Serilogの設定
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .WriteTo.File(
+        "Logs/app-.log",
+        rollingInterval: RollingInterval.Day,
+        retainedFileCountLimit: 30,
+        encoding: System.Text.Encoding.UTF8)
+    .CreateLogger();
+builder.Host.UseSerilog();
 
 // DB接続処理
 // 接続リトライを有効にする
@@ -63,6 +76,9 @@ builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+// Serilogのリクエストロギングミドルウェア
+app.UseSerilogRequestLogging();
 
 // 本番環境では「開発者向けの詳細エラー」を隠し、500専用に飛ばす
 if (!app.Environment.IsDevelopment())

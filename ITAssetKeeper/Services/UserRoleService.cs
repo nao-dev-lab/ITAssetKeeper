@@ -1,4 +1,5 @@
-﻿using ITAssetKeeper.Models.Entities;
+﻿using ITAssetKeeper.Controllers;
+using ITAssetKeeper.Models.Entities;
 using ITAssetKeeper.Models.Enums;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
@@ -8,10 +9,12 @@ namespace ITAssetKeeper.Services;
 public class UserRoleService : IUserRoleService
 {
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly ILogger<UserRoleService> _logger;
 
-    public UserRoleService(UserManager<ApplicationUser> userManager)
+    public UserRoleService(UserManager<ApplicationUser> userManager, ILogger<UserRoleService> logger)
     {
         _userManager = userManager;
+        _logger = logger;
     }
 
     // 引数で与えられたClaimsPrincipalからユーザーのロールを取得するメソッド

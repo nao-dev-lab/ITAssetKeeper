@@ -1,4 +1,5 @@
 ﻿using ITAssetKeeper.Constants;
+using ITAssetKeeper.Controllers;
 using ITAssetKeeper.Models.Entities;
 using ITAssetKeeper.Models.Enums;
 using ITAssetKeeper.Models.ViewModels.Account;
@@ -9,10 +10,12 @@ namespace ITAssetKeeper.Services;
 public class AccountService : IAccountService
 {
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly ILogger<AccountService> _logger;
 
-    public AccountService(UserManager<ApplicationUser> userManager)
+    public AccountService(UserManager<ApplicationUser> userManager, ILogger<AccountService> logger)
     {
         _userManager = userManager;
+        _logger = logger;
     }
 
     // パスワード期限が超過しているかチェック

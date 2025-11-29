@@ -5,6 +5,13 @@ namespace ITAssetKeeper.Controllers;
 
 public class ErrorController : Controller
 {
+    private readonly ILogger<ErrorController> _logger;
+
+    public ErrorController(ILogger<ErrorController> logger)
+    {
+        _logger = logger;
+    }
+
     // 400番台エラー (404, 403, 401)
     [Route("Error/{statusCode}")]
     public IActionResult HttpStatusHandler(int statusCode)

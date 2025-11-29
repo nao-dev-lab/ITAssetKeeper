@@ -14,16 +14,19 @@ public class AccountController : Controller
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IAccountService _accountService;
+    private readonly ILogger<AccountController> _logger;
 
     // コンストラクタ
     public AccountController(
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
-        IAccountService accountService)
+        IAccountService accountService,
+        ILogger<AccountController> logger)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _accountService = accountService;
+        _logger = logger;
     }
 
     // GET: Account/Login

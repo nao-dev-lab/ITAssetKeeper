@@ -1,4 +1,5 @@
-﻿using ITAssetKeeper.Data;
+﻿using ITAssetKeeper.Controllers;
+using ITAssetKeeper.Data;
 using ITAssetKeeper.Helpers;
 using ITAssetKeeper.Models.Enums;
 using ITAssetKeeper.Models.ViewModels.Dashboard;
@@ -10,10 +11,12 @@ namespace ITAssetKeeper.Services;
 public class DashboardService : IDashboardService
 {
     private readonly ITAssetKeeperDbContext _context;
+    private readonly ILogger<DashboardService> _logger;
 
-    public DashboardService(ITAssetKeeperDbContext context)
+    public DashboardService(ITAssetKeeperDbContext context, ILogger<DashboardService> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     // Admin用Dashboardのデータを取得し、ビューモデルを返す

@@ -1,4 +1,5 @@
 ﻿using ITAssetKeeper.Constants;
+using ITAssetKeeper.Controllers;
 using ITAssetKeeper.Data;
 using ITAssetKeeper.Helpers;
 using ITAssetKeeper.Models.Entities;
@@ -17,17 +18,20 @@ public class DeviceService : IDeviceService
     private readonly IDeviceHistoryService _deviceHistoryService;
     private readonly IDeviceSequenceService _deviceSequenceService;
     private readonly IUserRoleService _userRoleService;
+    private readonly ILogger<DeviceService> _logger;
 
     public DeviceService(
         ITAssetKeeperDbContext context,
         IDeviceHistoryService deviceHistoryService,
         IDeviceSequenceService deviceSequenceService,
-        IUserRoleService userRoleService)
+        IUserRoleService userRoleService,
+        ILogger<DeviceService> logger)
     {
         _context = context;
         _deviceHistoryService = deviceHistoryService;
         _deviceSequenceService = deviceSequenceService;
         _userRoleService = userRoleService;
+        _logger = logger;
     }
 
     ///////////////////////////////////////////////////

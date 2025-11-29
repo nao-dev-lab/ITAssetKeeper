@@ -9,10 +9,11 @@ namespace ITAssetKeeper.Controllers;
 public class DeviceController : Controller
 {
     private readonly IDeviceService _deviceService;
-
-    public DeviceController(IDeviceService deviceService)
+    private readonly ILogger<DeviceController> _logger;
+    public DeviceController(IDeviceService deviceService, ILogger<DeviceController> logger)
     {
         _deviceService = deviceService;
+        _logger = logger;
     }
 
     // GET: Device/Index

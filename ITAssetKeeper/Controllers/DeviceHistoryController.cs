@@ -9,10 +9,13 @@ namespace ITAssetKeeper.Controllers;
 public class DeviceHistoryController : Controller
 {
     private readonly IDeviceHistoryService _deviceHistoryService;
-
-    public DeviceHistoryController(IDeviceHistoryService deviceHistoryService)
+    private readonly ILogger<DeviceHistoryController> _logger;
+    public DeviceHistoryController(
+        IDeviceHistoryService deviceHistoryService,
+        ILogger<DeviceHistoryController> logger)
     {
         _deviceHistoryService = deviceHistoryService;
+        _logger = logger;
     }
 
     // GET: DeviceHistory/Index

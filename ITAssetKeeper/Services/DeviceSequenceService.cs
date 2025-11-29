@@ -1,4 +1,5 @@
-﻿using ITAssetKeeper.Data;
+﻿using ITAssetKeeper.Controllers;
+using ITAssetKeeper.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace ITAssetKeeper.Services;
@@ -6,9 +7,14 @@ namespace ITAssetKeeper.Services;
 public class DeviceSequenceService : IDeviceSequenceService
 {
     private readonly ITAssetKeeperDbContext _context;
-    public DeviceSequenceService(ITAssetKeeperDbContext context)
+    private readonly ILogger<DeviceSequenceService> _logger;
+
+    public DeviceSequenceService(
+        ITAssetKeeperDbContext context,
+        ILogger<DeviceSequenceService> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     public async Task<int> GetNextManagementIdAsync()
