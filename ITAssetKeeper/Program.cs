@@ -1,5 +1,6 @@
 using ITAssetKeeper.Data;
 using ITAssetKeeper.Infrastructure.Identity;
+using ITAssetKeeper.Middleware;
 using ITAssetKeeper.Models.Entities;
 using ITAssetKeeper.Services;
 using Microsoft.AspNetCore.Identity;
@@ -8,17 +9,11 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Serilogの設定
-Log.Logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(builder.Configuration)
-    .Enrich.FromLogContext()
-    .WriteTo.File(
-        "Logs/app-.log",
-        rollingInterval: RollingInterval.Day,
-        retainedFileCountLimit: 30,
-        encoding: System.Text.Encoding.UTF8)
-    .CreateLogger();
-builder.Host.UseSerilog();
+// Serilogの設定をappsettings.jsonから読み込む
+builder.Host.UseSerilog((context, configuration) =>
+{
+    configuration.ReadFrom.Configuration(context.Configuration);
+});
 
 // DB接続処理
 // 接続リトライを有効にする
@@ -77,7 +72,10 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Serilogのリクエストロギングミドルウェア
+// カスタムミドルウェアを追加 (ユーザー名ログ出力用)
+app.UseMiddleware<UserNameLoggingMiddleware>();
+
+// Serilogのリクエストロギングミドルウェアを追加
 app.UseSerilogRequestLogging();
 
 // 本番環境では「開発者向けの詳細エラー」を隠し、500専用に飛ばす

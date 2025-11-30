@@ -18,7 +18,8 @@ public class DeviceConstants
         DeviceCategory.Switch_L3,
         DeviceCategory.Router_Core,
         DeviceCategory.Server,
-        DeviceCategory.Firewall
+        DeviceCategory.Firewall,
+        DeviceCategory.Ups
     ];
 
     // Deviceの各カラムに対応するdintionary

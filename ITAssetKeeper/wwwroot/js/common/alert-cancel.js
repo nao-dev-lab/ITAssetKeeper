@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             else if (from === "edit") {
                 const id = cancelBtn.dataset.hiddenid;
-                return window.location.href = "/Device/Edit/" + id;
+                return window.location.href = "/Device/Index/";
             }
         };
 

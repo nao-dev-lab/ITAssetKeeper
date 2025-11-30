@@ -22,8 +22,7 @@ public class DashboardService : IDashboardService
     // Admin用Dashboardのデータを取得し、ビューモデルを返す
     public async Task<DashboardAdminViewModel?> GetAdminDashboardDataAsync()
     {
-        // Deviceテーブルから全てのデータを取得する
-        //var devices = await _context.Devices.ToListAsync();
+        _logger.LogInformation("GetAdminDashboardDataAsync 開始");
 
         // 取得したDeviceテーブルのデータから新規登録された直近5件分を取得
         // 登録日で降順にソート、先頭から5件分
@@ -46,6 +45,7 @@ public class DashboardService : IDashboardService
                 Status = EnumDisplayHelper.ResolveDisplayName<DeviceStatus>(x.Status)
             })
             .ToListAsync();
+        _logger.LogInformation("GetAdminDashboardDataAsync 直近5件の新規登録機器データ取得完了 件数={Count}", recentlyAdded5.Count);
 
         // DeviceHistoryテーブルから直近7日分の件数を日別で取得
         // 当日から7日前までを取得し、更新日で降順にソート
@@ -61,11 +61,13 @@ public class DashboardService : IDashboardService
                 DisplayDate = g.Key.ToString("MM/dd")
             })
             .ToListAsync();
+        _logger.LogInformation("GetAdminDashboardDataAsync 直近7日間の更新履歴データ取得完了 件数={Count}", historyLast7days.Count);
 
         // 取得したDeviceテーブルのデータから機器の状態の件数を取得
         var status = _context.Devices
             .AsNoTracking()
             .Select(x => x.Status);
+        _logger.LogInformation("GetAdminDashboardDataAsync 機器状態別の台数集計データ取得完了 件数={Count}", status.Count());
 
         // DashboardAdminViewModelのインスタンス生成
         // StatusCountを該当のDTO型で初期化しておく
@@ -88,6 +90,7 @@ public class DashboardService : IDashboardService
         adminVM.StatusCount.RetiringCount = status.Count(x => x == DeviceStatus.Retiring.ToString());
         adminVM.StatusCount.RetiredCount = status.Count(x => x == DeviceStatus.Retired.ToString());
 
+        _logger.LogInformation("GetAdminDashboardDataAsync 終了");
         return adminVM;
     }
 }

@@ -37,17 +37,21 @@ public class DeviceHistoryService : IDeviceHistoryService
     // 検索 & 一覧表示
     public async Task<DeviceHistoryListViewModel> SearchHistoriesAsync(DeviceHistoryListViewModel condition, ClaimsPrincipal user)
     {
+        _logger.LogInformation("SearchHistoriesAsync 開始");
+
         // Deviceテーブルから全てのデータを取得する
         IQueryable<DeviceHistory> query = _context.DeviceHistories;
 
         // ユーザーのRoleを取得
         var role = await _userRoleService.GetUserRoleAsync(user);
+        _logger.LogInformation("SearchHistoriesAsync ユーザーロール取得 Role={Role}", role);
 
         // Roleに応じてDeviceテーブルから取得する内容を変更
         // Admin:すべて表示
         // それ以外:インフラに関わる機器は除外して表示
         if (role != Roles.Admin)
         {
+            _logger.LogInformation("SearchHistoriesAsync インフラ機器除外フィルタ適用");
             // Deviceテーブルからインフラに関わる機器は除外して取得
             var hideCategoryList = DeviceConstants.HIDE_CATEGORIES.Select(c => c.ToString()).ToList();
             query = query.Where(x => x.CategoryAtHistory != null && !hideCategoryList.Contains(x.CategoryAtHistory));
@@ -56,11 +60,15 @@ public class DeviceHistoryService : IDeviceHistoryService
         if (!string.IsNullOrWhiteSpace(condition.FreeText))
         {
             // フリーワードに入力があれば、フリーワード検索
+            _logger.LogInformation("SearchHistoriesAsync フリーワード検索適用 FreeText={FreeText}", condition.FreeText);
+            
             query = FilterHistoryByFreeText(query, condition);
         }
         else
         {
             // なければ、詳細検索
+            _logger.LogInformation("SearchHistoriesAsync 詳細検索適用");
+            
             query = FilterHistories(query, condition);
         }
 
@@ -74,15 +82,28 @@ public class DeviceHistoryService : IDeviceHistoryService
         query = PagingHistories(query, condition.PageNumber, condition.PageSize);
 
         // SQLを実行
-        var devices = await query.ToListAsync();
+        List<DeviceHistory> histories;
+        _logger.LogInformation("SearchHistoriesAsync SQL実行開始");
+        try
+        {
+            histories = await query.ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "SearchHistoriesAsync SQL実行エラー");
+            throw;
+        }
 
         // ビューモデルに詰めて、呼び出し元に返す
-        return ToViewModel(condition, devices, role);
+        _logger.LogInformation("SearchHistoriesAsync SQL実行完了 取得件数={Count}", histories.Count);
+        return ToViewModel(condition, histories, role);
     }
 
     // フリーワード検索用フィルタリング
     private IQueryable<DeviceHistory> FilterHistoryByFreeText(IQueryable<DeviceHistory> query, DeviceHistoryListViewModel condition)
     {
+        _logger.LogInformation("FilterHistoryByFreeText 開始 FreeText={FreeText}", condition.FreeText);
+
         var free = condition.FreeText;
 
         // フリーワードが日付として解釈できるかチェック
@@ -118,12 +139,15 @@ public class DeviceHistoryService : IDeviceHistoryService
             || (isDate && x.CreatedAtHistory != null && x.CreatedAtHistory.Value.Date == dt.Date)
             );
 
+        _logger.LogInformation("FilterHistoryByFreeText 終了 FreeText={FreeText}", condition.FreeText);
         return query;
     }
 
     // フィルタリング (条件に応じて IQueryable<DeviceHistory> を返す)
     private IQueryable<DeviceHistory> FilterHistories(IQueryable<DeviceHistory> query, DeviceHistoryListViewModel condition)
     {
+        _logger.LogInformation("FilterHistories 開始");
+
         // --- 部分一致 ---
         if (!string.IsNullOrWhiteSpace(condition.HistoryId))
         {
@@ -314,12 +338,15 @@ public class DeviceHistoryService : IDeviceHistoryService
             }
         }
 
+        _logger.LogInformation("FilterHistories 終了");
         return query;
     }
 
     // ソート (フィルタ済み IQueryable を昇順 / 降順に並べ替える)
     private IQueryable<DeviceHistory> SortHistories(IQueryable<DeviceHistory> query, DeviceHistoryColumns sortKey, SortOrders sortOrder)
     {
+        _logger.LogInformation("SortHistories 開始 SortKey={SortKey}, SortOrder={SortOrder}", sortKey, sortOrder);
+
         // 指定されたSortKeyを基準に、
         // 指定されたSortOrderに応じて、昇順 or 降順でソートする
         if (sortOrder == SortOrders.Asc)
@@ -331,22 +358,28 @@ public class DeviceHistoryService : IDeviceHistoryService
             query = query.OrderByDescending(DeviceHistoryConstants.SORT_KEY_SELECTORS[sortKey]);
         }
 
+        _logger.LogInformation("SortHistories 終了 SortKey={SortKey}, SortOrder={SortOrder}", sortKey, sortOrder);
         return query;
     }
 
     // ページング (Skip/Take の適用)
     private IQueryable<DeviceHistory> PagingHistories(IQueryable<DeviceHistory> query, int pageNumber, int pageSize)
     {
+        _logger.LogInformation("PagingHistories 開始 PageNumber={PageNumber}, PageSize={PageSize}", pageNumber, pageSize);
+        
         // ページングを適用
         query = query.Skip((pageNumber - 1) * pageSize);
         query = query.Take(pageSize);
 
+        _logger.LogInformation("PagingHistories 終了 PageNumber={PageNumber}, PageSize={PageSize}", pageNumber, pageSize);
         return query;
     }
 
     // ViewModel 変換(結果を DeviceHistoryListViewModel に詰める)
     private DeviceHistoryListViewModel ToViewModel(DeviceHistoryListViewModel condition, List<DeviceHistory> histories, Roles? role)
     {
+        _logger.LogInformation("ToViewModel 開始");
+
         // プルダウン用のデータを定数から取得
         EnumDisplayHelper.SetEnumSelectList<SortOrders>(condition, selectList => condition.SortOrderList = selectList);
         EnumDisplayHelper.SetEnumSelectList<DeviceHistoryColumns>(condition, selectList => condition.SortKeyList = selectList);
@@ -358,10 +391,12 @@ public class DeviceHistoryService : IDeviceHistoryService
         // Admin：すべて、それ以外：インフラに関わる機器を除外したもの
         if (role == Roles.Admin)
         {
+            _logger.LogInformation("ToViewModel プルダウン用Categoryデータ設定 Admin");
             EnumDisplayHelper.SetEnumSelectList<DeviceCategory>(condition, selectList => condition.CategoryAtHistoryItems = selectList);
         }
         else
         {
+            _logger.LogInformation("ToViewModel プルダウン用Categoryデータ設定 非Admin");
             EnumDisplayHelper.SetEnumSelectList<DeviceCategory>(condition, selectList =>
             condition.CategoryAtHistoryItems = new SelectList(
                 EnumDisplayHelper.EnumToDictionary(
@@ -369,6 +404,7 @@ public class DeviceHistoryService : IDeviceHistoryService
         }
 
         // 検索結果の一覧表示のデータをDTO型で詰める
+        _logger.LogInformation("ToViewModel 検索結果のDTO変換 開始");
         condition.Histories = histories
             .Select(x => new DeviceHistoryListItemDto
             {
@@ -394,6 +430,7 @@ public class DeviceHistoryService : IDeviceHistoryService
             })
             .ToList();
 
+        _logger.LogInformation("ToViewModel 検索結果のDTO変換 終了 件数={Count}", condition.Histories.Count);
         return condition;
     }
 
@@ -405,7 +442,10 @@ public class DeviceHistoryService : IDeviceHistoryService
     // 新規登録時の履歴作成
     public async Task AddCreateHistoryAsync(Device created, string userName)
     {
+        _logger.LogInformation("AddCreateHistoryAsync 開始 ManagementId={ManagementId}", created.ManagementId);
+
         // 履歴の Entity 作成
+        _logger.LogInformation("AddCreateHistoryAsync 履歴Entity作成開始 ManagementId={ManagementId}", created.ManagementId);
         var history = new DeviceHistory
         {
             HistoryId = await GenerateHistoryIdAsync(),    // 新しい履歴IDを生成して設定
@@ -433,6 +473,7 @@ public class DeviceHistoryService : IDeviceHistoryService
 
         // 履歴テーブルにレコードを追加
         _context.DeviceHistories.Add(history);
+        _logger.LogInformation("AddCreateHistoryAsync 履歴Entity作成完了 ManagementId={ManagementId}, HistoryId={HistoryId}", created.ManagementId, history.HistoryId);
     }
 
     // =====================================================
@@ -440,6 +481,8 @@ public class DeviceHistoryService : IDeviceHistoryService
     // DeviceDiffService で取得した差分データを元に履歴データを作成する
     public async Task AddUpdateHistoryAsync(Device before, Device after, string userName)
     {
+        _logger.LogInformation("AddUpdateHistoryAsync 開始 ManagementId={ManagementId}", after.ManagementId);
+
         // 変更前・変更後のスナップショットの取得
         var beforeSnapshot = MapSnapshot(before);
         var afterSnapshot = MapSnapshot(after);
@@ -450,10 +493,12 @@ public class DeviceHistoryService : IDeviceHistoryService
         // 変更がなければ履歴作成をせずに抜ける
         if (!diff.Any(x => x.IsChanged))
         {
+            _logger.LogInformation("AddUpdateHistoryAsync 変更なしのため履歴作成スキップ ManagementId={ManagementId}", after.ManagementId);
             return;
         }
 
         // 履歴の Entity 作成
+        _logger.LogInformation("AddUpdateHistoryAsync 履歴Entity作成開始 ManagementId={ManagementId}", after.ManagementId);
         var history = new DeviceHistory
         {
             HistoryId = await GenerateHistoryIdAsync(),
@@ -481,13 +526,17 @@ public class DeviceHistoryService : IDeviceHistoryService
 
         // 履歴テーブルにレコードを追加
         _context.DeviceHistories.Add(history);
+        _logger.LogInformation("AddUpdateHistoryAsync 履歴Entity作成完了 ManagementId={ManagementId}, HistoryId={HistoryId}", after.ManagementId, history.HistoryId);
     }
 
     // =====================================================
     // 削除時の履歴作成
     public async Task AddDeleteHistoryAsync(Device before, Device after, string userName)
     {
+        _logger.LogInformation("AddDeleteHistoryAsync 開始 ManagementId={ManagementId}", after.ManagementId);
+
         // 履歴の Entity 作成
+        _logger.LogInformation("AddDeleteHistoryAsync 履歴Entity作成開始 ManagementId={ManagementId}", after.ManagementId);
         var history = new DeviceHistory
         {
             HistoryId = await GenerateHistoryIdAsync(),
@@ -515,23 +564,31 @@ public class DeviceHistoryService : IDeviceHistoryService
 
         // 履歴テーブルにレコードを追加
         _context.DeviceHistories.Add(history);
+        _logger.LogInformation("AddDeleteHistoryAsync 履歴Entity作成完了 ManagementId={ManagementId}, HistoryId={HistoryId}", after.ManagementId, history.HistoryId);
     }
 
     // HistoryId を生成して返す
     // 採番テーブルを使って、HistoryId が競合しないようにする
     private async Task<string> GenerateHistoryIdAsync()
     {
+        _logger.LogInformation("GenerateHistoryIdAsync 開始");
+
         try
         {
             // 採番サービスを使って、次の連番を取得
             var seq = await _sequenceService.GetNextHistoryIdAsync();
+            _logger.LogInformation("GenerateHistoryIdAsync 連番取得成功 Seq={Seq}", seq);
 
             // 取得した連番を元に HistoryId を生成して返す
-            return DeviceHistoryConstants.HISTORY_ID_PREFIX +
-                   seq.ToString($"D{DeviceHistoryConstants.HISTORY_ID_NUM_DIGIT_COUNT}");
+            var id = DeviceHistoryConstants.HISTORY_ID_PREFIX +
+                     seq.ToString($"D{DeviceHistoryConstants.HISTORY_ID_NUM_DIGIT_COUNT}");
+
+            _logger.LogInformation("GenerateHistoryIdAsync 履歴ID生成成功 HistoryId={HistoryId}", id);
+            return id;
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "GenerateHistoryIdAsync 履歴ID生成失敗");
             throw new InvalidOperationException("履歴IDの採番に失敗しました。", ex);
         }
     }
@@ -540,12 +597,15 @@ public class DeviceHistoryService : IDeviceHistoryService
     // ダミーデータ追加時などの整合性の担保
     public async Task SyncHistorySequenceAsync()
     {
+        _logger.LogInformation("SyncHistorySequenceAsync 開始");
+
         try
         {
             // 履歴テーブルから全ての HistoryId を取得
             var historyIdList = await _context.DeviceHistories
                 .Select(h => h.HistoryId)
                 .ToListAsync();
+            _logger.LogInformation("SyncHistorySequenceAsync DeviceHistoriesテーブルからHistoryId取得 件数={Count}", historyIdList.Count);
 
             // HistoryId の数字部分の最大値を取得
             // "UH000001" → 数字部分 "000001" → 1 に変換
@@ -553,16 +613,24 @@ public class DeviceHistoryService : IDeviceHistoryService
                 .Select(id => int.Parse(id.Substring(DeviceHistoryConstants.HISTORY_ID_PREFIX.Length)))
                 .DefaultIfEmpty(0)
                 .Max();
+            _logger.LogInformation("SyncHistorySequenceAsync HistoryIdの最大値取得 MaxNum={MaxNum}", maxNum);
 
+            _logger.LogInformation("SyncHistorySequenceAsync 採番テーブル更新開始 MaxNum={MaxNum}", maxNum);
+            
             // 採番テーブルを最新の値に同期
             // 最大値をプレースホルダーで渡す
             await _context.Database.ExecuteSqlRawAsync(
                 "UPDATE DeviceHistorySequences SET LastUsedNumber = @p0 WHERE Id = 1", maxNum);
+            
+            _logger.LogInformation("SyncHistorySequenceAsync 採番テーブル更新完了 MaxNum={MaxNum}", maxNum);
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "SyncHistorySequenceAsync 履歴シーケンス同期失敗");
             throw new InvalidOperationException("履歴シーケンスの同期に失敗しました。", ex);
         }
+
+        _logger.LogInformation("SyncHistorySequenceAsync 終了");
     }
 
 
@@ -573,13 +641,17 @@ public class DeviceHistoryService : IDeviceHistoryService
     // 履歴詳細(差分を取得)
     public async Task<DeviceHistoryDetailViewModel> BuildHistoryDetailAsync(int id)
     {
+        _logger.LogInformation("BuildHistoryDetailAsync 開始 Id={Id}", id);
+
         // 対象IDの最新の履歴を取得
         var current = await _context.DeviceHistories
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id);
+        _logger.LogInformation("BuildHistoryDetailAsync 対象履歴取得完了 Id={Id}, HistoryId={HistoryId}", id, current?.HistoryId);
 
         if (current == null)
         {
+            _logger.LogWarning("BuildHistoryDetailAsync 対象履歴なし Id={Id}", id);
             return null;
         }
 
@@ -590,17 +662,21 @@ public class DeviceHistoryService : IDeviceHistoryService
             .Where(x => x.UpdatedAt < current.UpdatedAt)
             .OrderByDescending(x => x.UpdatedAt)
             .FirstOrDefaultAsync();
+        _logger.LogInformation("BuildHistoryDetailAsync 直前履歴取得完了 Id={Id}, PreviousHistoryId={PreviousHistoryId}", id, previous?.HistoryId);
 
         // 最新の履歴をスナップショット化
         var after = CreateSnapshot(current);
+        _logger.LogInformation("BuildHistoryDetailAsync 最新履歴スナップショット化完了 Id={Id}, HistoryId={HistoryId}", id, current.HistoryId);
 
         // 直前の履歴をスナップショット化
         // 直前の履歴がなければ null
         DeviceSnapshotDto? before = previous != null ? CreateSnapshot(previous) : null;
+        _logger.LogInformation("BuildHistoryDetailAsync 直前履歴スナップショット化完了 Id={Id}, PreviousHistoryId={PreviousHistoryId}", id, previous?.HistoryId);
 
         // 新規登録(Created) / 削除(Deleted) → 差分なし
         if (current.ChangeType == "Created" || current.ChangeType == "Deleted")
         {
+            _logger.LogInformation("BuildHistoryDetailAsync CreatedまたはDeletedのため差分リスト作成スキップ Id={Id}, HistoryId={HistoryId}, ChangeType={ChangeType}", id, current.HistoryId, current.ChangeType);
             // 差分リストは作らずに返す
             return new DeviceHistoryDetailViewModel
             {
@@ -617,8 +693,10 @@ public class DeviceHistoryService : IDeviceHistoryService
         // Updated → 差分あり
         // before, after の全項目を比較した差分リストを取得
         var diffList = BuildDiffList(before!, after);
+        _logger.LogInformation("BuildHistoryDetailAsync 差分リスト作成完了 Id={Id}, HistoryId={HistoryId}, ChangeType={ChangeType}", id, current.HistoryId, current.ChangeType);
 
         // 差分リストを含めて返す
+        _logger.LogInformation("BuildHistoryDetailAsync 終了 Id={Id}, HistoryId={HistoryId}", id, current.HistoryId);
         return new DeviceHistoryDetailViewModel
         {
             HistoryId = current.HistoryId,
@@ -639,6 +717,8 @@ public class DeviceHistoryService : IDeviceHistoryService
     // EntityからDTOに変換し、Snapshotを取得
     private DeviceSnapshotDto CreateSnapshot(DeviceHistory entity)
     {
+        _logger.LogInformation("CreateSnapshot 開始 HistoryId={HistoryId}", entity.HistoryId);
+
         return new DeviceSnapshotDto
         {
             ManagementId = entity.ManagementIdAtHistory,
@@ -663,6 +743,8 @@ public class DeviceHistoryService : IDeviceHistoryService
     // Entity から Snapshot DTO に変換し、SnapShotを取得
     private DeviceSnapshotDto MapSnapshot(Device device)
     {
+        _logger.LogInformation("MapSnapshot 開始 ManagementId={ManagementId}", device.ManagementId);
+
         return new DeviceSnapshotDto
         {
             ManagementId = device.ManagementId,
@@ -688,6 +770,8 @@ public class DeviceHistoryService : IDeviceHistoryService
     // Snapshotの before, after の全項目を比較し、差分リストを作成して返す
     private List<DeviceHistoryFieldDiffDto> BuildDiffList(DeviceSnapshotDto before, DeviceSnapshotDto after)
     {
+        _logger.LogInformation("BuildDiffList 開始 ManagementId={ManagementId}", after.ManagementId);
+
         // 返す為のリストを用意
         var list = new List<DeviceHistoryFieldDiffDto>();
 
@@ -696,8 +780,10 @@ public class DeviceHistoryService : IDeviceHistoryService
         {
             list.Add(BuildDiffItem(before, after, field));
         }
+        _logger.LogInformation("BuildDiffList 各フィールドの差分作成完了 ManagementId={ManagementId}", after.ManagementId);
 
         // 差分リストを返す
+        _logger.LogInformation("BuildDiffList 終了 ManagementId={ManagementId}", after.ManagementId);
         return list;
     }
 
@@ -731,6 +817,8 @@ public class DeviceHistoryService : IDeviceHistoryService
     // プロパティに付与された DisplayAttribute の Name を取得する
     private string GetDisplayNameByProperty(Type dtoType,string fieldName)
     {
+        _logger.LogInformation("GetDisplayNameByProperty 開始 FieldName={FieldName}", fieldName);
+
         // Dto のプロパティ情報を取得
         var prop = dtoType.GetProperty(fieldName);
 
@@ -752,6 +840,7 @@ public class DeviceHistoryService : IDeviceHistoryService
         }
 
         // DisplayAttribute の Name を返す
+        _logger.LogInformation("GetDisplayNameByProperty 終了");
         return attr.Name;
     }
 
@@ -759,12 +848,15 @@ public class DeviceHistoryService : IDeviceHistoryService
     // スナップショット用の値フォーマット
     private string FormatSnapshotValue(object? value, string fieldName)
     {
+        _logger.LogInformation("FormatSnapshotValue 開始 FieldName={FieldName}, Value={Value}", fieldName, value);
+
         if (value == null)
         {
             return "-";
         }
 
         // 型ごとにフォーマットを分ける
+        _logger.LogInformation("FormatSnapshotValue 終了");
         return value switch
         {
             // CreatedAt と DeletedAt は時刻までで変換

@@ -1,10 +1,6 @@
-﻿using ITAssetKeeper.Data;
-using ITAssetKeeper.Models.Enums;
-using ITAssetKeeper.Models.ViewModels.Dashboard;
-using ITAssetKeeper.Services;
+﻿using ITAssetKeeper.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ITAssetKeeper.Controllers;
 
@@ -25,10 +21,13 @@ public class DashboardController : Controller
     [HttpGet]
     public async Task<IActionResult> Admin()
     {
+        _logger.LogInformation("Admin Dashboard 開始");
+
         // AdminのDashboard用のデータを取得
         var model = await _dashboardService.GetAdminDashboardDataAsync();
 
         // 実行結果をビューに返す
+        _logger.LogInformation("Admin Dashboard 終了");
         return View(model);
     }
 }
