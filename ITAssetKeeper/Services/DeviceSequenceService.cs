@@ -1,5 +1,4 @@
-﻿using ITAssetKeeper.Controllers;
-using ITAssetKeeper.Data;
+﻿using ITAssetKeeper.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace ITAssetKeeper.Services;

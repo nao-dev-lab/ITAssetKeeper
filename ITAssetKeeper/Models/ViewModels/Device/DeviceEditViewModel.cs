@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using ITAssetKeeper.Models.Enums;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
+using ITAssetKeeper.Constants;
 
 namespace ITAssetKeeper.Models.ViewModels.Device;
 
@@ -10,6 +12,7 @@ public class DeviceEditViewModel
     public int IdHidden { get; set; }
 
     // -- Role制御用 ---
+    public Roles Role { get; set; }
     public bool IsReadOnlyCategory { get; set; } = true;
     public bool IsReadOnlyPurpose { get; set; } = true;
     public bool IsReadOnlyStatus { get; set; } = true;
@@ -22,13 +25,13 @@ public class DeviceEditViewModel
     public bool IsReadOnlyPurchaseDate { get; set; } = true;
 
     // ---ドロップダウン選択用 ---
-    [Required(ErrorMessage = "項目の選択が必要です")]
+    [Required(ErrorMessage = ValidationMessages.REQUIRED_DROPDOWN)]
     public string SelectedCategory { get; set; }
 
-    [Required(ErrorMessage = "項目の選択が必要です")]
+    [Required(ErrorMessage = ValidationMessages.REQUIRED_DROPDOWN)]
     public string SelectedPurpose { get; set; }
 
-    [Required(ErrorMessage = "項目の選択が必要です")]
+    [Required(ErrorMessage = ValidationMessages.REQUIRED_DROPDOWN)]
     public string SelectedStatus { get; set; }
 
     // --- 入力(表示)項目 ---
@@ -41,30 +44,30 @@ public class DeviceEditViewModel
     [Display(Name = "用途")]
     public SelectList? PurposeItems { get; set; }
 
-    [Required(ErrorMessage = "入力が必要です")]
-    [StringLength(100, MinimumLength = 1, ErrorMessage = "{0} は{2}から{1}文字の範囲で入力してください")]
-    [RegularExpression(@"^(?!.* {2})[a-zA-Z0-9._/\- ]+$", ErrorMessage = "半角英数字と - . _ / 半角スペースのみ使用できます")]
+    [Required(ErrorMessage = ValidationMessages.REQUIRED_FIELD_SHORT)]
+    [StringLength(100, MinimumLength = 1, ErrorMessage = ValidationMessages.STRING_LENGTH)]
+    [RegularExpression(RegexPatterns.MODEL_NUMBER_PATTERN, ErrorMessage = ValidationMessages.INVALID_MODEL_NUMBER)]
     [Display(Name = "型番(モデル)")]
     public string ModelNumber { get; set; }
 
-    [Required(ErrorMessage = "入力が必要です")]
-    [StringLength(100, MinimumLength = 1, ErrorMessage = "{0} は{2}から{1}文字の範囲で入力してください")]
-    [RegularExpression(@"^[a-zA-Z0-9\-._/]+$", ErrorMessage = "半角英数字と - . _ / のみ使用できます")]
+    [Required(ErrorMessage = ValidationMessages.REQUIRED_FIELD_SHORT)]
+    [StringLength(100, MinimumLength = 1, ErrorMessage = ValidationMessages.STRING_LENGTH)]
+    [RegularExpression(RegexPatterns.SERIAL_NUMBER_PATTERN, ErrorMessage = ValidationMessages.INVALID_SERIAL_NUMBER)]
     [Display(Name = "製造番号(シリアル)")]
     public string SerialNumber { get; set; }
 
     [Display(Name = "ホスト名")]
-    [RegularExpression(@"^[a-zA-Z0-9\-._]+$", ErrorMessage = "半角英数字と - . _ のみ使用できます")]
+    [RegularExpression(RegexPatterns.HOST_USER_NAME_PATTERN, ErrorMessage = ValidationMessages.INVALID_HOST_USER_NAME)]
     public string? HostName { get; set; }
 
-    [Required(ErrorMessage = "入力が必要です")]
-    [StringLength(200, MinimumLength = 1, ErrorMessage = "{0} は{2}から{1}文字の範囲で入力してください")]
-    [RegularExpression(@"^[a-zA-Z0-9\-]+$", ErrorMessage = "半角英数字と - のみ使用できます")]
+    [Required(ErrorMessage = ValidationMessages.REQUIRED_FIELD_SHORT)]
+    [StringLength(200, MinimumLength = 1, ErrorMessage = ValidationMessages.STRING_LENGTH)]
+    [RegularExpression(RegexPatterns.LOCATION_PATTERN, ErrorMessage = ValidationMessages.INVALID_LOCATION)]
     [Display(Name = "設置場所")]
     public string Location { get; set; }
 
     [Display(Name = "使用者")]
-    [RegularExpression(@"^[a-zA-Z0-9\-._]+$", ErrorMessage = "半角英数字と - . _ のみ使用できます")]
+    [RegularExpression(RegexPatterns.HOST_USER_NAME_PATTERN, ErrorMessage = ValidationMessages.INVALID_HOST_USER_NAME)]
     public string? UserName { get; set; }
 
     [Display(Name = "状態")]
@@ -73,7 +76,7 @@ public class DeviceEditViewModel
     [Display(Name = "メモ")]
     public string? Memo { get; set; }
 
-    [Required(ErrorMessage = "日付の選択が必要です")]
+    [Required(ErrorMessage = ValidationMessages.REQUIRED_DATE)]
     [DataType(DataType.Date)]
     [Display(Name = "購入日")]
     public DateTime? PurchaseDate { get; set; }

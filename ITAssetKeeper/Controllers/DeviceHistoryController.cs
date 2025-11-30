@@ -33,6 +33,13 @@ public class DeviceHistoryController : Controller
         vm.IsSearchExecuted = vm.HasAnyFilter;
         _logger.LogInformation("Index(GET) 詳細検索実行フラグ={IsSearchExecuted}", vm.IsSearchExecuted);
 
+        // 検索結果が0件の場合、メッセージをセット
+        if (vm.Histories == null || vm.Histories.Count == 0)
+        {
+            _logger.LogInformation("Index(GET) 検索結果0件");
+            TempData["ErrorMessage"] = "該当する機器が見つかりませんでした。検索条件を変更して再度お試しください。";
+        }
+
         // ビューに渡す
         _logger.LogInformation("Index(GET) 終了");
         return View(vm);

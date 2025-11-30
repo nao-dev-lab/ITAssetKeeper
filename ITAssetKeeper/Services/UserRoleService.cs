@@ -1,5 +1,4 @@
-﻿using ITAssetKeeper.Controllers;
-using ITAssetKeeper.Models.Entities;
+﻿using ITAssetKeeper.Models.Entities;
 using ITAssetKeeper.Models.Enums;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;

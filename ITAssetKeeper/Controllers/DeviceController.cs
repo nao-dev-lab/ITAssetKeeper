@@ -3,7 +3,6 @@ using ITAssetKeeper.Models.ViewModels.Device;
 using ITAssetKeeper.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.ConstrainedExecution;
 
 namespace ITAssetKeeper.Controllers;
 
@@ -31,6 +30,13 @@ public class DeviceController : Controller
         // 詳細検索で何か値が入れられたかをチェックし、プロパティにセット
         vm.IsSearchExecuted = vm.HasAnyFilter;
         _logger.LogInformation("Index(GET) 詳細検索実行フラグ IsSearchExecuted={IsSearchExecuted}", vm.IsSearchExecuted);
+
+        // 検索結果が0件の場合、メッセージをセット
+        if (vm.Devices == null || vm.Devices.Count == 0)
+        {
+            _logger.LogInformation("Index(GET) 検索結果0件");
+            TempData["ErrorMessage"] = "該当する機器が見つかりませんでした。検索条件を変更して再度お試しください。";
+        }
 
         // ビューに渡す
         _logger.LogInformation("Index(GET) 終了");
@@ -255,11 +261,19 @@ public class DeviceController : Controller
         _logger.LogInformation("Edit(POST) ユーザーロール Role={Role}", role);
 
         // 入力エラーがあった場合は、
-        // SelectList ＆ ReadOnly 制御だけ再設定し、ビューに戻す
+        // SelectList ＆ ReadOnly 制御を再設定し、ビューに戻す
         if (!ModelState.IsValid)
         {
             _logger.LogWarning("Edit(POST) ModelState エラー");
-            await _deviceService.RestoreEditViewSettingsAsync(model, role);
+            model = await _deviceService.RestoreEditViewSettingsAsync(model, role);
+
+            // モデルが null なら一覧に戻す
+            if (model == null)
+            {
+                _logger.LogWarning("Edit(POST) モデルが null");
+                TempData["ErrorMessage"] = "不正なデータが指定されました。";
+                return RedirectToAction(nameof(Index));
+            }
 
             return View(model);
         }

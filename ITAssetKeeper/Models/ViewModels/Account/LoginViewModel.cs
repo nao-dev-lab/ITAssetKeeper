@@ -1,17 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ITAssetKeeper.Constants;
+using System.ComponentModel.DataAnnotations;
 
 namespace ITAssetKeeper.Models.ViewModels.Account;
 
 // Login画面のビューモデル
 public class LoginViewModel
 {
-    [Required(ErrorMessage = "{0} が入力されていません")]
-    [StringLength(30, ErrorMessage ="{0} は{2}から{1}文字の範囲で入力してください")]
+    [Required(ErrorMessage = ValidationMessages.REQUIRED_FIELD)]
+    [StringLength(30, ErrorMessage = ValidationMessages.STRING_LENGTH)]
     [Display(Name = "ユーザーID")]
     public string UserName { get; set; }
 
-    [Required(ErrorMessage = "{0} が入力されていません")]
-    [StringLength(256, ErrorMessage = "{0} は{2}から{1}文字の範囲で入力してください")]
+    [Required(ErrorMessage = ValidationMessages.REQUIRED_FIELD)]
+    [StringLength(256, ErrorMessage = ValidationMessages.STRING_LENGTH)]
     [DataType(DataType.Password)]
     [Display(Name = "パスワード")]
     public string Password { get; set; }

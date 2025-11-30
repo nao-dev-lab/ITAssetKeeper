@@ -60,8 +60,6 @@ public class DeviceDto
     public string CreatedAtDateTimeText => CreatedAt.ToString("yyyy/MM/dd HH:mm:ss");
     public string UpdatedAtDateText => UpdatedAt.ToString("yyyy/MM/dd");
     public string UpdatedAtDateTimeText => UpdatedAt.ToString("yyyy/MM/dd HH:mm:ss");
-    public string DeletedAtDateText => DeletedAt.ToString("yyyy/MM/dd");
-    public string DeletedAtDateTimeText => DeletedAt.ToString("yyyy/MM/dd HH:mm:ss");
 
     // バッジ用プロパティ
     public string StatusClass =>

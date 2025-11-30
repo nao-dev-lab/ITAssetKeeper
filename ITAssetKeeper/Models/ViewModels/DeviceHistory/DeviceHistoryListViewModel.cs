@@ -1,5 +1,4 @@
 ﻿using ITAssetKeeper.Models.Enums;
-using ITAssetKeeper.Models.ViewModels.Device;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 

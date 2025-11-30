@@ -1,6 +1,5 @@
 ﻿using ITAssetKeeper.Constants;
 using ITAssetKeeper.Models.Enums;
-using ITAssetKeeper.Models.ViewModels.DeviceHistory;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
@@ -139,54 +138,6 @@ public class EnumDisplayHelper
 
         // 取得した値が入ったListを返す
         return raws;
-    }
-
-    // 履歴用：
-    // ChangeField を見て「どのEnum/変換を使うか」決める
-    public static string ResolveHistoryDisplay(string changeField, string? value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            return "-";
-        }
-
-        switch (changeField)
-        {
-            // ChangeField = Category
-            case nameof(DeviceColumns.Category):
-                return ResolveDisplayName<DeviceCategory>(value);
-
-            // ChangeField = Purpose
-            case nameof(DeviceColumns.Purpose):
-                return ResolveDisplayName<DevicePurpose>(value);
-
-            // ChangeField = Status
-            case nameof(DeviceColumns.Status):
-                return ResolveDisplayName<DeviceStatus>(value);
-
-            // ChangeField = PurchaseDate 
-            case nameof(DeviceColumns.PurchaseDate):
-                // TryParseでチェックしてからパースする
-                if (DateTime.TryParse(value, out var dtPurchase))
-                {
-                    return dtPurchase.ToString("yyyy/MM/dd");
-                }
-                // NGの場合そのまま返す
-                return value;
-
-            case nameof(DeviceColumns.UpdatedAt):
-                // TryParseでチェックしてからパースする
-                if (DateTime.TryParse(value, out var dtUpdated))
-                {
-                    return dtUpdated.ToString("yyyy/MM/dd");
-                }
-                // NGの場合そのまま返す
-                return value;
-
-            default:
-                // それ以外(Location, UserName など)は DB の文字列のまま
-                return value;
-        }
     }
 
     // SelectList生成用：

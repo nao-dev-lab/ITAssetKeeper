@@ -101,13 +101,16 @@ app.MapControllerRoute(
 
 // Seed Adminの作成
 // サービススコープ内で実行する
-using (var scope = app.Services.CreateScope())
+if (app.Environment.IsDevelopment())
 {
-    // Seed処理に必要なサービスを取得し、Seedメソッドを呼び出す
-    var services = scope.ServiceProvider;
-    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-    await DbInitializer.SeedAsync(userManager, roleManager);
+    using (var scope = app.Services.CreateScope())
+    {
+        // Seed処理に必要なサービスを取得し、Seedメソッドを呼び出す
+        var services = scope.ServiceProvider;
+        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+        await DbInitializer.SeedAsync(userManager, roleManager);
+    }
 }
 
 // ManagementId,HistoryId採番の開始位置を調整

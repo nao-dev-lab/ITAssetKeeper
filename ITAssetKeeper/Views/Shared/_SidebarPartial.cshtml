@@ -1,13 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using ITAssetKeeper.Models.Entities
-@* @inject UserManager<ApplicationUser> UserManager
-@inject SignInManager<ApplicationUser> SignInManager *@
 @using ITAssetKeeper.Models.Enums
 @using ITAssetKeeper.Models.ViewModels.Shared
 @model SidebarViewModel
 
 @{
-    // var user = await UserManager.GetUserAsync(User);
     bool isAdmin = Model.Role == Roles.Admin;
     bool isEditor = Model.Role == Roles.Editor;
     bool isViewer = Model.Role == Roles.Viewer;
@@ -35,11 +32,11 @@
             </li>
         }
 
-        @* 機器一覧(全ロール) *@
+        @* 機器一覧 + 機器情報詳細(全ロール) *@
         <li>
             <a asp-controller="Device" asp-action="Index"
                class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Device"
-                        && ViewContext.RouteData.Values["action"]?.ToString() == "Index"
+                        && ViewContext.RouteData.Values["action"]?.ToString() != "Create"
                         ? "active" : "")">
                 <i class="bi bi-laptop"></i> 機器情報
             </a>
@@ -66,8 +63,8 @@
             </a>
         </li>
 
-        @* ユーザー一覧 (Admin/Editor) *@
-        @if (isAdmin || isEditor)
+        @* ユーザー一覧 (Admin/Editor) ※作成中*@
+        @* @if (isAdmin || isEditor)
         {
             <li>
                 <a asp-controller="Account" asp-action="UserList"
@@ -77,10 +74,10 @@
                 <i class="bi bi-shield-lock"></i> ユーザー 一覧
             </a>
         </li>
-        }
+        } *@
 
-        @* ユーザー登録 (Adminのみ) *@
-        @if (isAdmin)
+        @* ユーザー登録 (Adminのみ) ※作成中 *@
+        @* @if (isAdmin)
         {
             <li>
                 <a asp-controller="Account" asp-action="Create"
@@ -90,7 +87,7 @@
                 <i class="bi bi-people"></i> ユーザー 登録
             </a>
         </li>
-        }
+        } *@
 
     </ul>
 

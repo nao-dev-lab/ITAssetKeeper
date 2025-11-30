@@ -35,11 +35,5 @@ public interface IDeviceHistoryService
     // --- Details ---
 
     // 履歴情報を ID から取得し、DTO型で返す
-    //Task<DeviceHistoryDto?> GetHistoryDetailsByIdAsync(int id);
-
-
-    //////////////////////////////////////////
-    // ★新しく構成しなおした方
-    // 履歴詳細(差分ロジック)
     Task<DeviceHistoryDetailViewModel> BuildHistoryDetailAsync(int id);
 }

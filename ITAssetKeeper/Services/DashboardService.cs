@@ -1,5 +1,4 @@
-﻿using ITAssetKeeper.Controllers;
-using ITAssetKeeper.Data;
+﻿using ITAssetKeeper.Data;
 using ITAssetKeeper.Helpers;
 using ITAssetKeeper.Models.Enums;
 using ITAssetKeeper.Models.ViewModels.Dashboard;

@@ -1,5 +1,4 @@
-﻿using ITAssetKeeper.Models.Entities;
-using ITAssetKeeper.Models.Enums;
+﻿using ITAssetKeeper.Models.Enums;
 using ITAssetKeeper.Models.ViewModels.Device;
 using System.Security.Claims;
 
@@ -41,7 +40,7 @@ public interface IDeviceService
     Task<DeviceEditViewModel?> InitializeEditView(int id, Roles role);
 
     // 入力エラー時用：SelectList ＆ ReadOnly 制御だけ再設定する
-    Task RestoreEditViewSettingsAsync(DeviceEditViewModel model, Roles role);
+    Task<DeviceEditViewModel> RestoreEditViewSettingsAsync(DeviceEditViewModel model, Roles role);
 
     // 更新前の状態と変更があるかチェック
     Task<bool> HasDeviceChangedAsync(DeviceEditViewModel model);

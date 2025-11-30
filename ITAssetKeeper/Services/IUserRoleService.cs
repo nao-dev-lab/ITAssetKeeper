@@ -1,6 +1,4 @@
-﻿using ITAssetKeeper.Models.Entities;
-using ITAssetKeeper.Models.Enums;
-using Microsoft.AspNetCore.Identity;
+﻿using ITAssetKeeper.Models.Enums;
 using System.Security.Claims;
 
 namespace ITAssetKeeper.Services;

@@ -1,4 +1,5 @@
-﻿@model ITAssetKeeper.Models.ViewModels.Device.DeviceEditViewModel
+﻿@using ITAssetKeeper.Models.Enums
+@model ITAssetKeeper.Models.ViewModels.Device.DeviceEditViewModel
 
 @{
     ViewData["Title"] = "機器情報 編集";
@@ -59,7 +60,7 @@
             <div class="form-group">
                 <label asp-for="CategoryItems" class="custom-label"></label>
                 @Html.DropDownListFor(m => m.SelectedCategory, Model.CategoryItems,"-- 未選択 --",
-                                new { @class = "custom-dropdown disable-target", data_disable = Model.IsReadOnlyCategory })
+                                new { @class = "custom-dropdown disable-target ", data_disable = Model.IsReadOnlyCategory })
                 <span asp-validation-for="SelectedCategory" class="text-danger"></span>
             </div>
 
@@ -67,7 +68,7 @@
             <div class="form-group">
                 <label asp-for="PurposeItems" class="custom-label"></label>
                 @Html.DropDownListFor(m => m.SelectedPurpose, Model.PurposeItems,"-- 未選択 --",
-                                new { @class = "custom-dropdown disable-target", data_disable = Model.IsReadOnlyPurpose })
+                                new { @class = "custom-dropdown disable-target ", data_disable = Model.IsReadOnlyPurpose })
                 <span asp-validation-for="SelectedPurpose" class="text-danger"></span>
             </div>
 
@@ -76,7 +77,7 @@
                 <label asp-for="HostName" class="custom-label"></label>
                 <div class="custom-input-wrapper">
                     @Html.TextBoxFor(m => m.HostName,
-                                        new { @class = "custom-input disable-target", data_disable = Model.IsReadOnlyHostName })
+                                        new { @class = "custom-input disable-target ", data_disable = Model.IsReadOnlyHostName })
                 </div>
                 <span asp-validation-for="HostName" class="text-danger"></span>
             </div>
@@ -89,7 +90,7 @@
                 <label asp-for="Location" class="custom-label"></label>
                 <div class="custom-input-wrapper">
                     @Html.TextBoxFor(m => m.Location,
-                                        new { @class = "custom-input disable-target", data_disable = Model.IsReadOnlyLocation })
+                                        new { @class = "custom-input disable-target ", data_disable = Model.IsReadOnlyLocation })
                 </div>
                 <span asp-validation-for="Location" class="text-danger"></span>
             </div>
@@ -99,7 +100,7 @@
                 <label asp-for="ModelNumber" class="custom-label"></label>
                 <div class="custom-input-wrapper">
                     @Html.TextBoxFor(m => m.ModelNumber,
-                                        new { @class = "custom-input disable-target", data_disable = Model.IsReadOnlyModelNumber })
+                                        new { @class = "custom-input disable-target ", data_disable = Model.IsReadOnlyModelNumber })
                 </div>
                 <span asp-validation-for="ModelNumber" class="text-danger"></span>
             </div>
@@ -109,7 +110,7 @@
                 <label asp-for="SerialNumber" class="custom-label"></label>
                 <div class="custom-input-wrapper">
                     @Html.TextBoxFor(m => m.SerialNumber,
-                                        new { @class = "custom-input disable-target", data_disable = Model.IsReadOnlySerialNumber })
+                                        new { @class = "custom-input disable-target ", data_disable = Model.IsReadOnlySerialNumber })
                 </div>
                 <span asp-validation-for="SerialNumber" class="text-danger"></span>
             </div>
@@ -122,7 +123,7 @@
                 <label asp-for="UserName" class="custom-label"></label>
                 <div class="custom-input-wrapper">
                     @Html.TextBoxFor(m => m.UserName,
-                                        new { @class = "custom-input disable-target", data_disable = Model.IsReadOnlyUserName })
+                                        new { @class = "custom-input disable-target ", data_disable = Model.IsReadOnlyUserName })
                 </div>
                 <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
@@ -133,7 +134,7 @@
                 <div class="custom-input-wrapper">
                     @Html.TextBoxFor(m => m.PurchaseDate,
                                         "{0:yyyy-MM-dd}",
-                                        new { @class = "custom-input disable-target", type = "date", data_disable = Model.IsReadOnlyPurchaseDate })
+                                        new { @class = "custom-input disable-target ", type = "date", data_disable = Model.IsReadOnlyPurchaseDate })
                 </div>
                 <span asp-validation-for="PurchaseDate" class="text-danger"></span>
             </div>
@@ -142,7 +143,7 @@
             <div class="form-group">
                 <label asp-for="StatusItems" class="custom-label"></label>
                 @Html.DropDownListFor(m => m.SelectedStatus, Model.StatusItems,"-- 未選択 --",
-                                new { @class = "custom-dropdown disable-target", data_disable = Model.IsReadOnlyStatus })
+                                new { @class = "custom-dropdown disable-target ", data_disable = Model.IsReadOnlyStatus })
                 <span asp-validation-for="SelectedStatus" class="text-danger"></span>
             </div>
         </div>
@@ -153,9 +154,22 @@
             <div class="form-group">
                 <label asp-for="Memo" class="custom-label"></label>
                 @Html.TextAreaFor(m => m.Memo,
-                                new { @class = "custom-textarea disable-target", data_disable = Model.IsReadOnlyMemo })
+                                new { @class = "custom-textarea disable-target ", data_disable = Model.IsReadOnlyMemo })
             </div>
         </div>
+
+        @* Editor権限の場合、編集可以外の全てhiddenで値を渡す *@
+        @if (Model.Role == Roles.Editor)
+        {
+            <input type="hidden" name="SelectedCategory" value="@Model.SelectedCategory" />
+            <input type="hidden" name="SelectedPurpose" value="@Model.SelectedPurpose" />
+            <input type="hidden" name="HostName" value="@Model.HostName" />
+            <input type="hidden" name="ModelNumber" value="@Model.ModelNumber" />
+            <input type="hidden" name="SerialNumber" value="@Model.SerialNumber" />
+            <input type="hidden" name="PurchaseDate" value="@Model.PurchaseDate" />
+            <input type="hidden" name="SelectedStatus" value="@Model.SelectedStatus" />
+            <input type="hidden" name="Memo" value="@Model.Memo" />
+        }
 
         @* 更新ボタン：フォーム送信 *@
         <div class="form-submit-area">

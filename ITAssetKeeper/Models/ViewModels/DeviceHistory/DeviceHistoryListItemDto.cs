@@ -5,7 +5,6 @@ namespace ITAssetKeeper.Models.ViewModels.DeviceHistory;
 // Index一覧表示用 DTO
 public class DeviceHistoryListItemDto
 {
-
     public int Id { get; set; }
 
     [Display(Name = "履歴ID")]

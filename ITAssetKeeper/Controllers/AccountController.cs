@@ -4,8 +4,6 @@ using ITAssetKeeper.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ITAssetKeeper.Controllers;
 
@@ -302,24 +300,25 @@ public class AccountController : Controller
         return RedirectToAction("Login", "Account");
     }
 
-    [HttpGet]
-    [Authorize(Roles = "Admin, Editor")]
-    public IActionResult UserList()
-    {
-        return View();
-    }
+    // 以下、将来実装予定の機能
+    //[HttpGet]
+    //[Authorize(Roles = "Admin, Editor")]
+    //public IActionResult UserList()
+    //{
+    //    return View();
+    //}
 
-    [HttpGet]
-    [Authorize(Roles = "Admin")]
-    public IActionResult Create()
-    {
-        return View();
-    }
+    //[HttpGet]
+    //[Authorize(Roles = "Admin")]
+    //public IActionResult Create()
+    //{
+    //    return View();
+    //}
 
-    [HttpGet]
-    [AllowAnonymous]
-    public IActionResult ForgotPassword()
-    {
-        return View();
-    }
+    //[HttpGet]
+    //[AllowAnonymous]
+    //public IActionResult ForgotPassword()
+    //{
+    //    return View();
+    //}
 }

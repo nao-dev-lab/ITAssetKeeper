@@ -27,6 +27,7 @@
 /* テキストボックス：内部に×を置くため relative */
 .freeword-input-wrapper {
     position: relative;
+    max-width: 500px;
     flex-grow: 1; /* 横に伸びる */
     min-width: 0; /* flex のオーバーフロー防止 */
 }
@@ -128,6 +129,7 @@
 .search-detail-input-wrapper {
     position: relative;
     flex-grow: 1;
+    max-width: 300px;
 }
 
 .search-detail-input {

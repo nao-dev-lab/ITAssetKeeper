@@ -75,6 +75,7 @@
 .custom-dropdown {
     font-size: 15px;
     width: 100%;
+    max-width: 300px;
     padding: 6px 36px 6px 12px;
     border: 1px solid #D4D6D8;
     border-radius: 8px;

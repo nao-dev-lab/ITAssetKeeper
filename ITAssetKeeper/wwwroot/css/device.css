@@ -88,9 +88,6 @@
 }
 
 .memo-box {
-/*    border: 1px solid #F1EDFF;*/
-/*    background-color: #FFFFFF;*/
-/*    padding: 10px 0;*/
     border-radius: 8px;
     height: 120px; /* 高さ固定 */
     overflow-y: auto; /* スクロール */

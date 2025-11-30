@@ -1,6 +1,4 @@
-﻿using ITAssetKeeper.Models.ViewModels.Device;
-using Microsoft.AspNetCore.Http.HttpResults;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ITAssetKeeper.Models.ViewModels.DeviceHistory;
 

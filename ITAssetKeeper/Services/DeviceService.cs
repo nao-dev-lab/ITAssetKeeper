@@ -409,6 +409,8 @@ public class DeviceService : IDeviceService
             {
                 _logger.LogInformation("RegisterNewDeviceAsync Entity作成開始");
 
+                var now = DateTime.Now;
+
                 // 受け取ったビューモデルからEntity 作成
                 var entity = new Device
                 {
@@ -424,7 +426,8 @@ public class DeviceService : IDeviceService
                     Status = model.SelectedStatus,
                     Memo = model.Memo != null ? model.Memo.Trim() : null,
                     PurchaseDate = model.PurchaseDate!.Value,
-                    CreatedAt = DateTime.Now
+                    CreatedAt = now,
+                    UpdatedAt = now
                 };
 
                 // Device を追加
@@ -618,35 +621,13 @@ public class DeviceService : IDeviceService
             UserName = device.UserName,
             SelectedStatus = device.Status,
             PurchaseDate = device.PurchaseDate,
-            Memo = device.Memo
+            Memo = device.Memo,
+            Role = role
         };
         _logger.LogInformation("GetDeviceEditViewAsync ビューモデル変換完了 Id={Id}", id);
 
         // Role別 ReadOnly制御設定
         var vm = SetIsReadOnly(model, role);
-
-        //// Admin
-        //if (role == Roles.Admin)
-        //{
-        //    // すべてReadOnlyとしない(すべて編集可)
-        //    model.IsReadOnlyCategory = false;
-        //    model.IsReadOnlyPurpose = false;
-        //    model.IsReadOnlyStatus = false;
-        //    model.IsReadOnlyModelNumber = false;
-        //    model.IsReadOnlySerialNumber = false;
-        //    model.IsReadOnlyHostName = false;
-        //    model.IsReadOnlyLocation = false;
-        //    model.IsReadOnlyUserName = false;
-        //    model.IsReadOnlyMemo = false;
-        //    model.IsReadOnlyPurchaseDate = false;
-        //}
-        //// それ以外(Editor)
-        //else
-        //{
-        //    // 編集可とする項目のみfalseを指定
-        //    model.IsReadOnlyLocation = false;
-        //    model.IsReadOnlyUserName = false;
-        //}
 
         // モデルを返す
         _logger.LogInformation("GetDeviceEditViewAsync 終了 Id={Id}", id);
@@ -654,43 +635,50 @@ public class DeviceService : IDeviceService
     }
 
     // 入力エラー時、SelectList ＆ ReadOnly 制御だけ再設定する
-    public async Task RestoreEditViewSettingsAsync(DeviceEditViewModel model, Roles role)
+    public async Task<DeviceEditViewModel> RestoreEditViewSettingsAsync(DeviceEditViewModel model, Roles role)
     {
         _logger.LogInformation("RestoreEditViewSettingsAsync 開始 Id={Id}, Role={Role}", model.IdHidden, role);
+
+        // RoleがEditorの場合、DBから値を取得して、再度編集不可項目のみ上書きする
+        if (role == Roles.Editor)
+        {
+            // Devicesテーブルから指定のIdのデータを取得する
+            var device = await _context.Devices.FindAsync(model.IdHidden);
+
+            // 見つからなかった場合は null を返す
+            if (device == null)
+            {
+                _logger.LogInformation("RestoreEditViewSettingsAsync 終了 Id={Id} NotFound", model.IdHidden);
+                return null;
+            }
+
+            model = new DeviceEditViewModel
+            {
+                SelectedCategory = device.Category,
+                SelectedPurpose = device.Purpose,
+                ModelNumber = device.ModelNumber,
+                SerialNumber = device.SerialNumber,
+                HostName = device.HostName,
+                SelectedStatus = device.Status,
+                PurchaseDate = device.PurchaseDate,
+                Memo = device.Memo,
+                Role = role
+            };
+        }
+
+        // Role別 ReadOnly制御設定
+        _logger.LogInformation("RestoreEditViewSettingsAsync ReadOnly制御設定 Admin Id={Id}", model.IdHidden);
+        var vm = SetIsReadOnly(model, role);
 
         // ビューモデルに、ドロップダウン用のSelectListをセット
         EnumDisplayHelper.SetEnumSelectList<DeviceCategory>(model, selectList => model.CategoryItems = selectList);
         EnumDisplayHelper.SetEnumSelectList<DevicePurpose>(model, selectList => model.PurposeItems = selectList);
         EnumDisplayHelper.SetEnumSelectList<DeviceStatus>(model, selectList => model.StatusItems = selectList);
 
-        // Role別 ReadOnly制御設定
-        _logger.LogInformation("RestoreEditViewSettingsAsync ReadOnly制御設定 Admin Id={Id}", model.IdHidden);
-        var vm = SetIsReadOnly(model, role);
+        _logger.LogInformation("RestoreEditViewSettingsAsync 終了 Id={Id}", model.IdHidden);
 
-        // Admin
-        //if (role == Roles.Admin)
-        //{
-        //    _logger.LogInformation("RestoreEditViewSettingsAsync ReadOnly制御設定 Admin Id={Id}", model.IdHidden);
-
-        //    // すべてReadOnlyとしない(すべて編集可)
-        //    model.IsReadOnlyCategory = false;
-        //    model.IsReadOnlyPurpose = false;
-        //    model.IsReadOnlyStatus = false;
-        //    model.IsReadOnlyModelNumber = false;
-        //    model.IsReadOnlySerialNumber = false;
-        //    model.IsReadOnlyHostName = false;
-        //    model.IsReadOnlyLocation = false;
-        //    model.IsReadOnlyUserName = false;
-        //    model.IsReadOnlyMemo = false;
-        //    model.IsReadOnlyPurchaseDate = false;
-        //}
-        //// それ以外(Editor)
-        //else
-        //{
-        //    // 編集可とする項目のみfalseを指定
-        //    model.IsReadOnlyLocation = false;
-        //    model.IsReadOnlyUserName = false;
-        //}
+        // Adminの場合、そのまま返す
+        return vm;
     }
 
     // Role別 ReadOnly制御設定
