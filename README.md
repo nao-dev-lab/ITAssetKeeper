@@ -112,7 +112,7 @@ ITAssetKeeper/
 - ViewModel：画面ごとの入力専用モデル
 - Service：ビジネスロジックを集約
 
-**🔷 ER図**
+**🔷 ER図**  
 ※ER図は後日追加予定
 
 ***
