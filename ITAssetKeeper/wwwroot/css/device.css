@@ -96,7 +96,7 @@
 
 .memo-box {
     border-radius: 8px;
-    height: 120px; /* 高さ固定 */
+    height: 60px; /* 高さ固定 */
     overflow-y: auto; /* スクロール */
     white-space: pre-wrap;
 }
