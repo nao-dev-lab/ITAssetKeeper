@@ -32,8 +32,10 @@
     </div>
 }
 
-@* キャンセルボタン *@
-<div class="form-cancel-area">
+<div class="form-top-area">
+    @* 入力必須項目のテキスト *@
+    <span class="required-text">＊は必須項目です</span>
+    @* キャンセルボタン *@
     <a class="form-cancel-btn no-warning" id="cancel" data-from="edit" data-hiddenid="@Model.IdHidden">キャンセル</a>
 </div>
 
@@ -58,7 +60,10 @@
         <div class="form-grid grid-3col">
             @* Category(種別) *@
             <div class="form-group">
-                <label asp-for="CategoryItems" class="custom-label"></label>
+                <div class="label-wrapper">
+                    <label asp-for="CategoryItems" class="custom-label"></label>
+                    <span class="required-mark">＊</span>
+                </div>
                 @Html.DropDownListFor(m => m.SelectedCategory, Model.CategoryItems,"-- 未選択 --",
                                 new { @class = "custom-dropdown disable-target ", data_disable = Model.IsReadOnlyCategory })
                 <span asp-validation-for="SelectedCategory" class="text-danger"></span>
@@ -66,7 +71,10 @@
 
             @* Purpose(用途) *@
             <div class="form-group">
-                <label asp-for="PurposeItems" class="custom-label"></label>
+                <div class="label-wrapper">
+                    <label asp-for="PurposeItems" class="custom-label"></label>
+                    <span class="required-mark">＊</span>
+                </div>
                 @Html.DropDownListFor(m => m.SelectedPurpose, Model.PurposeItems,"-- 未選択 --",
                                 new { @class = "custom-dropdown disable-target ", data_disable = Model.IsReadOnlyPurpose })
                 <span asp-validation-for="SelectedPurpose" class="text-danger"></span>
@@ -87,7 +95,10 @@
         <div class="form-grid grid-3col">
             @* Location(設置場所) *@
             <div class="form-group">
-                <label asp-for="Location" class="custom-label"></label>
+                <div class="label-wrapper">
+                    <label asp-for="Location" class="custom-label"></label>
+                    <span class="required-mark">＊</span>
+                </div>
                 <div class="custom-input-wrapper">
                     @Html.TextBoxFor(m => m.Location,
                                         new { @class = "custom-input disable-target ", data_disable = Model.IsReadOnlyLocation })
@@ -97,7 +108,10 @@
 
             @* ModelNumber(型番) *@
             <div class="form-group">
-                <label asp-for="ModelNumber" class="custom-label"></label>
+                <div class="label-wrapper">
+                    <label asp-for="ModelNumber" class="custom-label"></label>
+                    <span class="required-mark">＊</span>
+                </div>
                 <div class="custom-input-wrapper">
                     @Html.TextBoxFor(m => m.ModelNumber,
                                         new { @class = "custom-input disable-target ", data_disable = Model.IsReadOnlyModelNumber })
@@ -107,7 +121,10 @@
 
             @* SerialNumber(製造番号) *@
             <div class="form-group">
-                <label asp-for="SerialNumber" class="custom-label"></label>
+                <div class="label-wrapper">
+                    <label asp-for="SerialNumber" class="custom-label"></label>
+                    <span class="required-mark">＊</span>
+                </div>
                 <div class="custom-input-wrapper">
                     @Html.TextBoxFor(m => m.SerialNumber,
                                         new { @class = "custom-input disable-target ", data_disable = Model.IsReadOnlySerialNumber })
@@ -130,7 +147,10 @@
 
             @* PurchaseDate(購入日) *@
             <div class="form-group">
-                <label asp-for="PurchaseDate" class="custom-label"></label>
+                <div class="label-wrapper">
+                    <label asp-for="PurchaseDate" class="custom-label"></label>
+                    <span class="required-mark">＊</span>
+                </div>
                 <div class="custom-input-wrapper">
                     @Html.TextBoxFor(m => m.PurchaseDate,
                                         "{0:yyyy-MM-dd}",
@@ -141,7 +161,10 @@
 
             @* Status(状態) *@
             <div class="form-group">
-                <label asp-for="StatusItems" class="custom-label"></label>
+                <div class="label-wrapper">
+                    <label asp-for="StatusItems" class="custom-label"></label>
+                    <span class="required-mark">＊</span>
+                </div>
                 @Html.DropDownListFor(m => m.SelectedStatus, Model.StatusItems,"-- 未選択 --",
                                 new { @class = "custom-dropdown disable-target ", data_disable = Model.IsReadOnlyStatus })
                 <span asp-validation-for="SelectedStatus" class="text-danger"></span>

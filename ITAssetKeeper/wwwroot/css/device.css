@@ -9,13 +9,20 @@
     padding: 24px 28px;
 }
 
-/* キャンセル */
-.form-cancel-area {
+/* フォーム外上部エリア */
+.form-top-area {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: flex-end;
     margin-bottom: 8px;
 }
 
+/* 必須項目のテキスト */
+.required-text {
+    color: #C20D86;
+}
+
+/* キャンセルボタン */
 .form-cancel-btn {
     background-color: #7749F8;
     color: #fff;
@@ -67,15 +74,15 @@
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.22);
 }
 
+/* ラベルと必須マークの横並び */
+.label-wrapper {
+    display: flex;
+}
 
-/* ==============================
-   Create
-============================== */
-/* 自動採番メッセージ */
-.create-note {
+/* 必須項目のマーク */
+.required-mark {
     color: #C20D86;
-    font-size: 15px;
-    font-weight: 500;
+    font-size: 14px;
 }
 
 /* ==============================

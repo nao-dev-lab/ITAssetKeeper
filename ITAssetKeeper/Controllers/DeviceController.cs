@@ -286,7 +286,7 @@ public class DeviceController : Controller
         if (!isChanged)
         {
             _logger.LogInformation("Edit(POST) 変更なし Id={Id}", model.IdHidden);
-            await _deviceService.RestoreEditViewSettingsAsync(model, role);
+            model = await _deviceService.RestoreEditViewSettingsAsync(model, role);
             TempData["ErrorMessage"] = "変更された項目がありません。";
             return View(model);
         }

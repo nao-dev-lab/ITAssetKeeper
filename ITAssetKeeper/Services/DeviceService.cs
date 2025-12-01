@@ -654,6 +654,7 @@ public class DeviceService : IDeviceService
 
             model = new DeviceEditViewModel
             {
+                IdHidden = model.IdHidden,
                 SelectedCategory = device.Category,
                 SelectedPurpose = device.Purpose,
                 ModelNumber = device.ModelNumber,
@@ -667,7 +668,6 @@ public class DeviceService : IDeviceService
         }
 
         // Role別 ReadOnly制御設定
-        _logger.LogInformation("RestoreEditViewSettingsAsync ReadOnly制御設定 Admin Id={Id}", model.IdHidden);
         var vm = SetIsReadOnly(model, role);
 
         // ビューモデルに、ドロップダウン用のSelectListをセット

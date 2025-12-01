@@ -31,8 +31,11 @@
     </div>
 }
 
-@* キャンセルボタン *@
-<div class="form-cancel-area">
+<div class="form-top-area">
+    @* 入力必須項目のテキスト *@
+    <span class="required-text">＊は必須項目です</span>
+
+    @* キャンセルボタン *@
     <a class="form-cancel-btn no-warning" id="cancel" data-from="create">キャンセル</a>
 </div>
 
@@ -47,7 +50,7 @@
             @* 機器管理ID(ManagementId) *@
             <div class="form-group">
                 <label asp-for="ManagementId" class="custom-label"></label>
-                <span class="create-note">※登録後に自動で採番されます</span>
+                <span>登録後に自動で採番されます</span>
             </div>
         </div>
 
@@ -55,14 +58,20 @@
         <div class="form-grid grid-3col">
             @* 種別(Category) *@
             <div class="form-group">
-                <label asp-for="CategoryItems" class="custom-label"></label>
+                <div class="label-wrapper">
+                    <label asp-for="CategoryItems" class="custom-label"></label>
+                <span class="required-mark">＊</span>
+                </div>
                 @Html.DropDownListFor(model => model.SelectedCategory, Model.CategoryItems, "-- 未選択 --", new { @class = "custom-dropdown" })
                 <span asp-validation-for="SelectedCategory" class="text-danger"></span>
             </div>
 
             @* 用途(Purpose) *@
             <div class="form-group">
-                <label asp-for="PurposeItems" class="custom-label"></label>
+                <div class="label-wrapper">
+                    <label asp-for="PurposeItems" class="custom-label"></label>
+                    <span class="required-mark">＊</span>
+                </div>
                 @Html.DropDownListFor(model => model.SelectedPurpose, Model.PurposeItems, "-- 未選択 --", new { @class = "custom-dropdown" })
                 <span asp-validation-for="SelectedPurpose" class="text-danger"></span>
             </div>
@@ -82,7 +91,10 @@
         <div class="form-grid grid-3col">
             @* 設置場所(Location) *@
             <div class="form-group">
-                <label asp-for="Location" class="custom-label"></label>
+                <div class="label-wrapper">
+                    <label asp-for="Location" class="custom-label"></label>
+                    <span class="required-mark">＊</span>
+                </div>
                 <div class="custom-input-wrapper">
                     <input asp-for="Location" class="custom-input" placeholder="IDで入力 (例: F3A2N11)"/>
                     <button type="button" class="custom-clear-btn">×</button>
@@ -92,7 +104,10 @@
 
             @* 型番(ModelNumber) *@
             <div class="form-group">
-                <label asp-for="ModelNumber" class="custom-label"></label>
+                <div class="label-wrapper">
+                    <label asp-for="ModelNumber" class="custom-label"></label>
+                    <span class="required-mark">＊</span>
+                </div>
                 <div class="custom-input-wrapper">
                     <input asp-for="ModelNumber" class="custom-input" />
                     <button type="button" class="custom-clear-btn">×</button>
@@ -102,7 +117,10 @@
 
             @* 製造番号(SerialNumber) *@
             <div class="form-group">
-                <label asp-for="SerialNumber" class="custom-label"></label>
+                <div class="label-wrapper">
+                    <label asp-for="SerialNumber" class="custom-label"></label>
+                    <span class="required-mark">＊</span>
+                </div>
                 <div class="custom-input-wrapper">
                     <input asp-for="SerialNumber" class="custom-input" />
                     <button type="button" class="custom-clear-btn">×</button>
@@ -125,7 +143,10 @@
 
             @* 購入日(PurchaseDate) *@
             <div class="form-group">
-                <label asp-for="PurchaseDate" class="custom-label"></label>
+                <div class="label-wrapper">
+                    <label asp-for="PurchaseDate" class="custom-label"></label>
+                    <span class="required-mark">＊</span>
+                </div>
                 <div class="custom-input-wrapper">
                     <input asp-for="PurchaseDate" class="custom-input" type="date" />
                 </div>
@@ -134,7 +155,10 @@
 
             @* 状態(Status) *@
             <div class="form-group">
-                <label asp-for="StatusItems" class="custom-label"></label>
+                <div class="label-wrapper">
+                    <label asp-for="StatusItems" class="custom-label"></label>
+                    <span class="required-mark">＊</span>
+                </div>
                 @Html.DropDownListFor(model => model.SelectedStatus, Model.StatusItems, "-- 未選択 --", new { @class = "custom-dropdown" })
                 <span asp-validation-for="SelectedStatus" class="text-danger"></span>
             </div>
