@@ -9,6 +9,7 @@ IT Asset Keeper は、社内の IT 機器 (PC・サーバー・NW機器 等) の
 Azure App Service + Azure SQL へのデプロイまで一連の構築を行っています。  
 <br>
 **🔗 公開中のアプリケーション（Azure App Service）**  
+※現在 Azure App Service は停止中（必要時のみ起動）  
 https://itassetkeeper20251201105549-gpa2f7a8fgcpd6gr.eastasia-01.azurewebsites.net
 <br><br>
 ## スクリーンショット (代表）
