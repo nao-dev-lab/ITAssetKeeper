@@ -113,7 +113,8 @@ ITAssetKeeper/
 - Service：ビジネスロジックを集約
 
 **🔷 ER図**  
-※ER図は後日追加予定
+<img width="476" height="457.8" alt="er" src="https://github.com/user-attachments/assets/5c88c227-8bd6-435d-b6dc-4d2b6723e85d" />
+
 
 ***
 
