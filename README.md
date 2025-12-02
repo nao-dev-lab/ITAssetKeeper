@@ -1,13 +1,13 @@
 # IT Asset Keeper – IT資産・機器管理システム
 ※本リポジトリはポートフォリオ用途として公開しています  
-<br>
+
 IT Asset Keeper は、社内の IT 機器 (PC・サーバー・NW機器 等) の情報を一元管理し、
 変更履歴を追跡しやすくすることを目的とした ASP.NET Core MVC (.NET 8) ベースの Web アプリケーションです。
-
+  
 ロール制御（Admin / Editor / Viewer）による権限管理、
 機器の CRUD、更新履歴の自動生成、Dashboard 表示に加え、
 Azure App Service + Azure SQL へのデプロイまで一連の構築を行っています。  
-<br>
+  
 **🔗 公開中のアプリケーション（Azure App Service）**  
 ※現在 Azure App Service は停止中（必要時のみ起動）  
 https://itassetkeeper20251201105549-gpa2f7a8fgcpd6gr.eastasia-01.azurewebsites.net
@@ -38,7 +38,6 @@ https://itassetkeeper20251201105549-gpa2f7a8fgcpd6gr.eastasia-01.azurewebsites.n
 **🔶 認証・認可（Identity）**
 - ASP.NET Core Identity を利用
 - ロール：Admin / Editor / Viewer
-- Admin のみ登録・削除等が可能
 
 **🔶 機器管理（CRUD）**
 - 登録 / 編集 / 詳細 / 削除
