@@ -59,6 +59,7 @@ public class DeviceHistoryListItemDto
     // 表示専用プロパティ(読み取り専用)
     public string UpdatedAtText => UpdatedAt.ToString("yyyy/MM/dd HH:mm:ss");
     public string PurchaseDateAtHistoryText => PurchaseDateAtHistory.ToString("yyyy/MM/dd");
+    public string CreatedAtHistoryText => CreatedAtHistory.ToString("yyyy/MM/dd");
 
     // バッジ用プロパティ
     public string ChangeTypeClass =>
