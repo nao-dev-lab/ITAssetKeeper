@@ -9,11 +9,12 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Serilog‚Ìİ’è‚ğappsettings.json‚©‚ç“Ç‚İ‚Ş
-builder.Host.UseSerilog((context, configuration) =>
-{
-    configuration.ReadFrom.Configuration(context.Configuration);
-});
+// Serilog ‰Šú‰»
+Log.Logger = new LoggerConfiguration()  // Serilog‚Ìİ’è‚ğappsettings.json‚©‚ç“Ç‚İ‚Ş
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
+builder.Logging.ClearProviders();
+builder.Host.UseSerilog(Log.Logger);
 
 // DBÚ‘±ˆ—
 // Ú‘±ƒŠƒgƒ‰ƒC‚ğ—LŒø‚É‚·‚é
