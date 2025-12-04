@@ -43,9 +43,12 @@
 
             @* モーダルフッター *@
             <div class="modal-footer">
-                <button type="button" class="modal-info-btn me-auto" id="openChangePasswordConfirm">
-                    パスワード変更
-                </button>
+                @if (Model.UserName != "demo-admin")
+                {
+                    <button type="button" class="modal-info-btn me-auto" id="openChangePasswordConfirm">
+                        パスワード変更
+                    </button>
+                }
                 <button type="button" class="modal-close-btn" data-bs-dismiss="modal">閉じる</button>
             </div>
         </div>
