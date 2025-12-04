@@ -212,7 +212,13 @@
                     <div>@Model.AfterSnapshot.CreatedAt?.ToString("yyyy/MM/dd HH:mm:ss")</div>
                 </div>
 
-                @* 6段目：1列 *@
+                @* 6段目：2列 *@
+                <div class="history-item">
+                    <label class="custom-label">@Html.DisplayNameFor(m => m.DeviceSnapshotDtoHeader.HostName)</label>
+                    <div>@Model.AfterSnapshot.HostName</div>
+                </div>
+
+                @* 7段目：1列 *@
                 <div class="history-grid-1col">
                     @* メモ *@
                     <div class="history-item">
