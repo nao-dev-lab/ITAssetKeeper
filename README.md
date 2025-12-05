@@ -170,7 +170,7 @@ ITAssetKeeper/
 
 ***
 
-## 7.使い方（Usage / How to use）
+## 7. 使い方（Usage / How to use）
 このアプリケーションは、デモ環境として公開しています。  
 機器管理や変更履歴など、主要な機能を 管理者権限 で自由にお試しいただけます。  
 
@@ -183,7 +183,7 @@ ITAssetKeeper/
 
 ***
 
-## 8. デモ URL / デモアカウント
+## 8. デモ URL / デモアカウント (Demo URL / Demo Accounts)
 **🔷 公開中のアプリケーション（Azure App Service）**  
 URL：https://itassetkeeper20251201105549-gpa2f7a8fgcpd6gr.eastasia-01.azurewebsites.net
 - 無料プラン(F1)で公開しているため、アクセス時にアプリの起動で数秒ほどお時間をいただく場合があります。
