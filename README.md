@@ -54,7 +54,6 @@ Azure App Service + Azure SQL へのデプロイまで一連の構築を行っ�
 **🔶 クラウドデプロイ**
 - Azure App Service
 - Azure SQL
-- Cold Start 対策としての loading index.html
 
 **🔶 エラー処理**
 - カスタム 400番台/ 500 ページ
@@ -162,7 +161,7 @@ ITAssetKeeper/
 - Serilog による詳細ログ（スタックトレース・ModelState エラー）
 
 **🔶 Utility / Helper**
-- EEnumDisplay名変換 (EnumDisplayHelper)
+- EnumDisplay名変換 (EnumDisplayHelper)
 - 履歴表示のためのカスタム変換ロジック
 - 共通処理 (文字列整形・日付変換等)の集約
 
@@ -185,7 +184,7 @@ ITAssetKeeper/
 ## 8. デモ URL / デモアカウント (Demo URL / Demo Accounts)
 **🔷 公開中のアプリケーション（Azure App Service）**  
 URL：https://itassetkeeper20251201105549-gpa2f7a8fgcpd6gr.eastasia-01.azurewebsites.net
-- 無料プラン(F1)で公開しているため、アクセス時にアプリの起動で数秒ほどお時間をいただく場合があります。
+- 無料プラン(F1)で公開しているため、アクセス時にアプリの起動で1分ほどお時間をいただく場合があります。
 - アプリの挙動確認のため、デモ用データは定期的に初期状態へリフレッシュされます。
 
 **🔷 デモアカウント（管理者権限）**  
@@ -222,7 +221,7 @@ Web アプリケーション開発の学習のため、設計から実装・デ�
 - Services・Helper による責務分離
 - Identity を用いた認証・認可設計
 - Azure App Service + Azure SQL のデプロイ・運用
-- ユーザー体験を考慮した UI / エラー処理 / ローディング画面
+- ユーザー体験を考慮した UI / エラー処理
 
 ***
 
