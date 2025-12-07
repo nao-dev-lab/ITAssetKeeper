@@ -49,9 +49,10 @@ public class DashboardService : IDashboardService
         // DeviceHistoryテーブルから直近7日分の件数を日別で取得
         // 当日から7日前までを取得し、更新日で降順にソート
         // 更新日でグルーピングし、件数を取得する
+        var today = DateTime.Today;
         var historyLast7days = await _context.DeviceHistories
             .AsNoTracking()
-            .Where(x => x.UpdatedAt >= DateTime.Now.AddDays(-7) && x.UpdatedAt <= DateTime.Now)
+            .Where(x => x.UpdatedAt >= today.AddDays(-6) && x.UpdatedAt <= today.AddDays(1))
             .OrderByDescending(x => x.UpdatedAt)
             .GroupBy(g => g.UpdatedAt.Date)
             .Select(g => new DeviceHistoryLast7DaysDto
