@@ -185,7 +185,7 @@ ITAssetKeeper/
 **🔷 公開中のアプリケーション（Azure App Service）**  
 URL：https://itassetkeeper20251201105549-gpa2f7a8fgcpd6gr.eastasia-01.azurewebsites.net
 - 無料プラン(F1)で公開しているため、アクセス時にアプリの起動で1分ほどお時間をいただく場合があります。
-- アプリの挙動確認のため、デモ用データは定期的に初期状態へリフレッシュされます。
+- Azure Functions(TimerTrigger)によって、デモ用データは定期的に初期状態へリフレッシュされます。
 
 **🔷 デモアカウント（管理者権限）**  
 - ユーザー名： demo-admin
