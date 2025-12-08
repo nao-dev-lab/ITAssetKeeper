@@ -16,9 +16,9 @@ public class SnapshotSyncFunction
         _logger = logger;
     }
 
-    // 毎日深夜2時に実行されるタイマートリガー関数
+    // 毎日深夜2:10に実行されるタイマートリガー関数
     [Function("SnapshotSync")]
-    public async Task Run([TimerTrigger("0 0 2 * * *")] TimerInfo timer)
+    public async Task Run([TimerTrigger("0 10 2 * * *")] TimerInfo timer)
     {
         _logger.LogInformation("SnapshotSync function started at: {time}", DateTime.Now);
 

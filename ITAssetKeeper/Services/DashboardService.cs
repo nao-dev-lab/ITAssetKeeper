@@ -52,7 +52,7 @@ public class DashboardService : IDashboardService
         var today = DateTime.Today;
         var historyLast7days = await _context.DeviceHistories
             .AsNoTracking()
-            .Where(x => x.UpdatedAt >= today.AddDays(-6) && x.UpdatedAt <= today.AddDays(1))
+            .Where(x => x.UpdatedAt >= today.AddDays(-7))
             .OrderByDescending(x => x.UpdatedAt)
             .GroupBy(g => g.UpdatedAt.Date)
             .Select(g => new DeviceHistoryLast7DaysDto
