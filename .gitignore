@@ -402,6 +402,8 @@ FodyWeavers.xsd
 
 # ログ出力フォルダ
 Logs/
+**/Logs/
+%HOME%/
 
 # Azure Functions用の設定ファイル
 /ITAssetKeeper.Functions/local.settings.json
